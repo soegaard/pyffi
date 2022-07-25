@@ -190,7 +190,7 @@
   ; like #%top, but dotted identifiers are python qualified references
   (syntax-parse stx
     [(_.top . id:id)
-     (displayln (list '.top #'id))
+     #;(displayln (list '.top #'id))
      (cond
        [(identifier-begins-with? #'id #\.)
         #'(#%top . id)]
