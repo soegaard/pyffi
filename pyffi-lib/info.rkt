@@ -3,7 +3,7 @@
 (define collection 'multi)
 
 (define deps '("base"
-               "python"
+               "pyffi"
                ;; If we want to distribute Python as a package, we will need:
                ;; ("python-i386-macosx"          #:platform "i386-macosx")
                ;; ("python-x86_64-macosx"        #:platform "x86_64-macosx")
