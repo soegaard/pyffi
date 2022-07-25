@@ -14,9 +14,7 @@
 
 ;;; Import and initialize Numpy
 
-(require ; (except-in "../python.rkt" #%app #%top)
-         "../python.rkt"
-         "../numpy.rkt")
+(require pyffi pyffi/numpy)
          
 (set-environment-variables)
 (initialize)                

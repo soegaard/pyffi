@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../python.rkt")
+(require pyffi)
 
 ;;;
 ;;; Mix Racket and Pything

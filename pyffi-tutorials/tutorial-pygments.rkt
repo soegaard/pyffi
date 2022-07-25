@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../python.rkt")
+(require pyffi)
 
 ;;;
 ;;; PYGMENTS
@@ -36,15 +36,6 @@
 ; (displayln ((HtmlFormatter) .get_style_defs ".hightlight"))
 
 ;; from pygments.lexers import get_all_lexers
-(import-from pygments.lexers get_all_lexers)
-(define i (get_all_lexers))
-i
-i.__next__
-(i.__next__)
-(i.__next__)
-(i.__next__)
-(i.__next__)
-;(i.next)
-;; (i.next)
-;; (i.next)
-;; (i.next)
+;; (import-from pygments.lexers get_all_lexers)
+;; (define i (get_all_lexers))
+;; (i.__next__)

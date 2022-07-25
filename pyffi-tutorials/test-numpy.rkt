@@ -1,6 +1,7 @@
 #lang racket
 
-(require "../python.rkt" "../numpy.rkt")
+(require pyffi pyffi/numpy)
+
 (set-environment-variables)
 (initialize)                
 (import-numpy)
