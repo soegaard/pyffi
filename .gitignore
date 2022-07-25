@@ -1,0 +1,7 @@
+# Ignore files that end in ~  (Emacs autosave files)
+*~
+\#*
+.#*
+.DS_Store
+*.bak
+TAGS
