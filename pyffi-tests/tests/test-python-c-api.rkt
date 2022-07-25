@@ -1,10 +1,10 @@
 #lang racket
 
-(require "../python-c-api.rkt"
-         "../python-initialization.rkt"
-         "../python-environment.rkt"
-         "../python-evaluation.rkt"
-         "../python-types.rkt")
+(require pyffi/python-c-api
+         pyffi/python-initialization
+         pyffi/python-environment
+         pyffi/python-evaluation
+         pyffi/python-types)
 
 (set-environment-variables)
 (Py_Initialize)

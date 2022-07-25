@@ -1,7 +1,5 @@
 #lang racket/base
-(require "../python.rkt"
-         "../numpy.rkt"
-         "../numpy-core.rkt"
+(require pyffi pyffi/numpy pyffi/numpy-core
          ;; "../python-c-api.rkt"
          ;; "python-initialization.rkt"
          ;; "python-environment.rkt"

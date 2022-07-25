@@ -1,5 +1,5 @@
 #lang racket
-(require "../python.rkt")
+(require pyffi)
 
 (define hw (string->pystring "Hello World"))
 

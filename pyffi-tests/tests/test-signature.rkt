@@ -1,20 +1,17 @@
 #lang racket/base
 (require (for-syntax racket/base syntax/parse racket/require-transform))
-(require "../prefix-in.rkt")
 
 (require
- (prefix-in ".."
-            "structs.rkt"
-            "python-c-api.rkt"
-            "python-initialization.rkt"
-            "python-environment.rkt"
-            "python-evaluation.rkt"
-            "python-types.rkt"
-            ;"python-constants.rkt"
-            "python-builtins.rkt"
-            "python-operators.rkt"
-            "python-attributes.rkt"
-            "python-functions.rkt")
+ pyffi/structs
+ pyffi/python-c-api
+ pyffi/python-initialization
+ pyffi/python-environment
+ pyffi/python-evaluation
+ pyffi/python-types
+ pyffi/python-builtins
+ pyffi/python-operators
+ pyffi/python-attributes
+ pyffi/python-functions
  racket/format
  racket/list
  racket/match)

@@ -1,8 +1,7 @@
 #lang racket/base
-(require "../python-environment.rkt")
+(require pyffi)
 (require (for-syntax racket/base syntax/parse racket/syntax))
 
-(require "../python.rkt")
 (set-environment-variables)
 (initialize)                
 (finish-initialization)

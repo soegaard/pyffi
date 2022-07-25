@@ -1,6 +1,6 @@
 #lang racket
-(require "../python-attributes.rkt")
-(provide (all-from-out "../python-attributes.rkt"))
+(require pyffi/python-attributes)
+(provide (all-from-out pyffi/python-attributes))
 
 (test-special foo)
 (test-special bar)

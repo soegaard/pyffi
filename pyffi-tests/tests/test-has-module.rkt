@@ -1,11 +1,10 @@
 #lang racket/base
-(require "../structs.rkt"
-         "../python-c-api.rkt"
-         "../python-initialization.rkt"
-         "../python-environment.rkt"
-         "../python-evaluation.rkt"
-         "../python-types.rkt"
-;         "numpy.rkt"
+(require pyffi/structs
+         pyffi/python-c-api
+         pyffi/python-initialization
+         pyffi/python-environment
+         pyffi/python-evaluation
+         pyffi/python-types
          racket/format
          )
 

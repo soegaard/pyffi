@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../python.rkt" "../python-evaluation.rkt")
+(require pyffi)
 (set-environment-variables)
 (initialize)                
 (finish-initialization)

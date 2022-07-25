@@ -1,13 +1,13 @@
 #lang racket/base
 (require pyffi/structs
-         pyffi/pyffi-c-api
-         pyffi/pyffi-initialization
-         pyffi/pyffi-environment
-         pyffi/pyffi-evaluation
-         pyffi/pyffi-types
-         pyffi/pyffi-builtins
-         pyffi/pyffi-operators
-         pyffi/pyffi-attributes
+         pyffi/python-c-api
+         pyffi/python-initialization
+         pyffi/python-environment
+         pyffi/python-evaluation
+         pyffi/python-types
+         pyffi/python-builtins
+         pyffi/python-operators
+         pyffi/python-attributes
          racket/format
          racket/match)
 

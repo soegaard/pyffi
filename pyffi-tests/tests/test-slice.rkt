@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../python.rkt")
+(require pyffi)
 
 (set-environment-variables)
 (initialize)                

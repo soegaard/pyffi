@@ -1,15 +1,15 @@
 #lang racket/base
-(require "../structs.rkt"
-         "../python-c-api.rkt"
-         "../python-initialization.rkt"
-         "../python-environment.rkt"
-         "../python-evaluation.rkt"
-         "../python-types.rkt"
-         ;"python-constants.rkt"
-         "../python-builtins.rkt"
-         "../python-operators.rkt"
-         "../python-attributes.rkt"
-         "../python-functions.rkt"
+(require pyffi/structs
+         pyffi/python-c-api
+         pyffi/python-initialization
+         pyffi/python-environment
+         pyffi/python-evaluation
+         pyffi/python-types
+         ;"python-constants
+         pyffi/python-builtins
+         pyffi/python-operators
+         pyffi/python-attributes
+         pyffi/python-functions
          racket/format
          racket/list
          racket/match)

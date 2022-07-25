@@ -1,5 +1,5 @@
 #lang racket
-(require "../python.rkt" "../numpy.rkt")
+(require pyffi pyffi/numpy)
 
 ;;; Conway's Game of Life
 

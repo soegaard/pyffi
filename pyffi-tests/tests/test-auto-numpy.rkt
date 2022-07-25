@@ -1,5 +1,5 @@
 #lang racket/base
-(require "../python.rkt" "../numpy.rkt"
+(require pyffi pyffi/numpy
          racket/format racket/list racket/match
          (for-syntax racket/base racket/syntax syntax/parse))
 
