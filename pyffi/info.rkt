@@ -2,8 +2,8 @@
 
 (define collection 'multi)
 
-(define deps       '("pyffi-doc" "pyffi-tests" "pyffi-lib"))
-(define build-deps '("pyffi-doc" "pyffi-tests")) ; omittable from a binary package
+(define deps       '("pyffi-doc" "pyffi-lib"))
+(define build-deps '("pyffi-doc" )) ; omittable from a binary package
 (define implies    '("pyffi-lib"))
 
 (define pkg-desc "Use Python from Racket.")
