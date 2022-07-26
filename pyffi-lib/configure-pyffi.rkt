@@ -49,7 +49,9 @@
 (define (get-configuration [given-path-to-python #f])
   (define path-to-python
     (or given-path-to-python
-        (find-executable-path "python3")))
+        (or (find-executable-path "python3")
+            (find-executable-path "python")
+            (find-executable-path "python3.10"))))
 
   (displayln "Configuration tool for `pyffi`.")
   (displayln "-------------------------------") 
