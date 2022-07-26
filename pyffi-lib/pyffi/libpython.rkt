@@ -1,6 +1,6 @@
 #lang at-exp racket/base
 
-;;;  This module loads the shared libarary `libpython` and
+;;;  This module loads the shared library `libpython` and
 ;;;  provides the form `define-python` which is used to 
 ;;;  create bindings for Python's C-API.
 
@@ -8,49 +8,42 @@
 
 ;;; Imports
 
-(require ffi/unsafe ffi/unsafe/define)
+(require ffi/unsafe ffi/unsafe/define racket/file) 
 
 
 ;;; Configuration
 
-;; (define folder  "/Users/soegaard/Dropbox/GitHub/build-python/cpython")
-;; (define libname "libpython3.12") ; .dylib
-;; (define path    (build-path folder libname))
+(define libpython-folder (get-preference 'pyffi:libdir (λ () #f)))
+(unless libpython-folder
+  (displayln "There is no preference for 'pyffi:libdir' set.")
+  (displayln "In order for `pyffi` to find the shared library `libpython3` (or `libpython3.10`) ")
+  (displayln "you must set the 'pyffi:libdir' preference to the folder of the shared library.")
+  (displayln "The most convenient way to do this, is to run `configure-pyffi`.")
+  (exit 1))
 
 
-(define brew-folder  "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib")            ; stdlib/python3.10 
-(define brew-folder2 "/usr/local/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib")
-(define brew-libname "libpython3.10.dylib")
+(define extension
+  (case (system-type 'os)
+    [(macosx)  "dylib"]
+    [(unix)    "so"]
+    [(windows) "dll"]
+    [else      (error 'internal-error:extension "File a bug report on Github.")]))
 
-; 
-; /Library/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib
+(define (build-full-path name)
+  (build-path libpython-folder
+              (string->path (string-append name "." extension))))
 
-(define brew-path   (build-path brew-folder2 brew-libname))
-
+(define libpython-path
+  (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
+              #:when (let ()
+                       (displayln (build-full-path name))
+                       (file-exists? (build-full-path name))))
+    (build-full-path name)))
+    
 ; Note: If the Python interpreter loads a shared library dynamically,
 ;       it needs access to the Python C-API. To make the symbols
 ;       exported by a shared library visible to other shared libaries,
 ;       we need to use a "flat namespace" and therefore use `#:global? #t`,
 ;       when loading the library.
 
-(define-ffi-definer define-python (ffi-lib brew-path #:global? #t))
-
-
-
-;; soegaard@mbp2 tmp % ./python3 -m sysconfig
-;; Platform: "macosx-12-x86_64"
-;; Python version: "3.10"
-;; Current installation scheme: "osx_framework_library"
-
-;; Paths: 
-;; data =        "/usr/local"
-;; scripts =     "/usr/local/bin"
-
-;; platlib =     "/usr/local/lib/python3.10/site-packages"
-;; purelib =     "/usr/local/lib/python3.10/site-packages"
-
-;; include =     "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10"
-;; platinclude = "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10"
-
-;; platstdlib =  "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10"
-;; stdlib =      "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10"
+(define-ffi-definer define-python (ffi-lib libpython-path #:global? #t))
