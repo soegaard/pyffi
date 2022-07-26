@@ -147,6 +147,10 @@
   (define result (assoc "LIBDIR" (second (python-variables))))
   (and result (second result)))
 
+(define (python-bindir)
+  (define result (assoc "BINDIR" (second (python-variables))))
+  (and result (second result)))
+
 (define (get-old-libdir)
   (get-preference 'pyffi:libdir (λ () #f)))
 
@@ -167,6 +171,8 @@
   (get-configuration path-to-python)
   (cond
     [(python-libdir) => set-new-libdir]
+    [(and (equal? (system-type 'os) 'windows)
+          (python-bindir)) => set-new-libdir]
     [else
      (displayln "The LIBDIR key wasn't found.")
      (newline)
