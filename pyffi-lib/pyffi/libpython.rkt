@@ -15,11 +15,12 @@
 
 (define libpython-folder (get-preference 'pyffi:libdir (λ () #f)))
 (unless libpython-folder
-  (displayln "There is no preference for 'pyffi:libdir' set.")
-  (displayln "In order for `pyffi` to find the shared library `libpython3` (or `libpython3.10`) ")
-  (displayln "you must set the 'pyffi:libdir' preference to the folder of the shared library.")
-  (displayln "The most convenient way to do this, is to run `configure-pyffi`.")
-  (exit 1))
+  (parameterize ([current-output-port current-error-port])
+    (displayln "There is no preference for 'pyffi:libdir' set.")
+    (displayln "In order for `pyffi` to find the shared library `libpython3` (or `libpython3.10`) ")
+    (displayln "you must set the 'pyffi:libdir' preference to the folder of the shared library.")
+    (displayln "The most convenient way to do this, is to run `configure-pyffi`.")
+    (exit 1)))
 
 
 (define extension
