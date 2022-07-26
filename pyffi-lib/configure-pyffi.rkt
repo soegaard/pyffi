@@ -65,7 +65,8 @@
     [else
      (displayln "The executable `python3` was not found in the current path.")
      (displayln "Double check that `python3` starts Python your terminal.")
-     (displayln "Then run this configuration tool in the same terminal.")])
+     (displayln "Then run this configuration tool in the same terminal.")
+     (exit 1)])
   (newline)
 
   (define success 'not-available-yet)
