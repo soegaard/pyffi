@@ -42,6 +42,8 @@
 ;;  The parser below parses the entire output (maybe we need
 ;;  more information at a later date).
 
+(require raco/command-name)
+
 (define system-configuration        #f)
 (define system-configuration-string #f)
 
@@ -167,7 +169,7 @@
   (display   "    ")
   (displayln new-libdir-path))
 
-(define (configure [path-to-python #f])
+(define (configure-pyffi [path-to-python #f])
   (get-configuration path-to-python)
   (cond
     [(python-libdir) => set-new-libdir]
@@ -180,8 +182,10 @@
      (newline)
      (displayln system-configuration-string)]))
 
-(module* main #f
+(define (configure)
   (command-line
-   #:program     "configure-pyffi"
+   #:program (short-program+command-name)
    #:args ([path-to-python #f])
-   (configure path-to-python)))
+   (configure-pyffi path-to-python)))
+  
+(configure)
