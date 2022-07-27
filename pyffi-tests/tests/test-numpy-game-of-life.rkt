@@ -3,7 +3,6 @@
 
 ;;; Conway's Game of Life
 
-(set-environment-variables)
 (initialize)                 ; handles `main` and `builtins`
 (import-numpy)
 ;                            ; load the `numpy` module

@@ -17,7 +17,6 @@
 ;;; Start Python and import "numpy"
 ;;;
 
-(set-environment-variables)
 (initialize)                 ; handles `main` and `builtins`
 (initialize-numpy)           ; load the `numpy` module
 ;                            ; import and initialize numpy before

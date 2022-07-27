@@ -1,8 +1,8 @@
 #lang racket
 
-(require pyffi pyffi/numpy)
+(require pyffi #;pyffi/numpy)
 
 (set-environment-variables)
 (initialize)                
-(import-numpy)
+;(import-numpy)
 (finish-initialization)

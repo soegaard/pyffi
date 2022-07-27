@@ -1,7 +1,6 @@
 #lang racket
 
 (require pyffi)
-(set-environment-variables)
 (initialize)                
 (finish-initialization)
 

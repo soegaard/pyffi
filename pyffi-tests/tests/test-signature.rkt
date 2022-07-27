@@ -22,7 +22,6 @@
 ;;; Start Python and import "numpy"
 ;;;
 
-(set-environment-variables)
 (initialize)                 ; handles `main` and `builtins`
 ;(import-inspect)
 ;(require "numpy.rkt")

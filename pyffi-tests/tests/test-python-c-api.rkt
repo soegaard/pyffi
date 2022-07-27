@@ -6,7 +6,6 @@
          pyffi/python-evaluation
          pyffi/python-types)
 
-(set-environment-variables)
 (Py_Initialize)
          
 ;;; Informative functions:

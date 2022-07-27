@@ -6,7 +6,6 @@
 ;;;
 
 ;; Setup Python
-(set-environment-variables)
 (initialize)                
 (finish-initialization)
 

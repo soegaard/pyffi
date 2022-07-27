@@ -79,11 +79,13 @@
            ...)))]))
 
 (define-functions numpy
-  __dir__ __getattr__ add_newdoc alen all allclose alltrue amax amin
+  ; deprecated and removed in latest numpy:
+  ;   alen asscalar
+  __dir__ __getattr__ add_newdoc #;alen all allclose alltrue amax amin
   angle any append apply_along_axis apply_over_axes argmax argmin
   argpartition argsort argwhere around array2string array_equal
   array_equiv array_repr array_split array_str asarray_chkfinite
-  asfarray asmatrix asscalar atleast_1d atleast_2d atleast_3d average
+  asfarray asmatrix #;asscalar atleast_1d atleast_2d atleast_3d average
   bartlett base_repr binary_repr blackman block bmat broadcast_arrays
   broadcast_shapes broadcast_to byte_bounds choose clip column_stack
   common_type compress convolve copy corrcoef correlate count_nonzero

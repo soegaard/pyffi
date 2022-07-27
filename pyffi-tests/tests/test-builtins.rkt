@@ -18,7 +18,6 @@
 
 ;;; Start Python and load "numpy"
 
-(set-environment-variables)
 'before-initialize
 (initialize)                 ; handles `main` and `builtins`
 'initialize-done

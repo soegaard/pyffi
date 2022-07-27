@@ -1,7 +1,6 @@
 #lang racket/base
 (require pyffi)
 
-(set-environment-variables)
 (initialize)                
 (import-numpy)
 (finish-initialization)
