@@ -78,6 +78,10 @@ For now @tt{pyffi} supports Python 3.10 on macOS, Linux/Unix and Windows.
 The plan is simple: install Python 3.10 then tell @tt{pyffi} where
 Python is installed.
 
+Optional: install @hyperlink["https://numpy.org/"]{NumPy} if you want
+to use @racket[pyffi/numpy].
+
+
 @subsection{Python 3.10}
 
 In order to use @tt{pyffi} you need Python 3.10.
@@ -98,12 +102,41 @@ The easiest way of doing this is to run the script @tt{configure-pyffi}.
 
 @itemlist[
           @item{Open a terminal.}
-          @item{Check that @tt{python3} or @tt{python} invokes your Python interpreter.@linebreak[]
-                If not, adjust your @tt{PATH}.}
-          @item{Run: @tt{racket configure-pyff.rkt}}]
+          @item{Check that @tt{python3} or @tt{python} invokes your Python interpreter.@linebreak[]}
+          @item{Run: @tt{raco pyffi configure}}]
+
+If the command @tt{python3} is not in your path, then you can write this instead:
+
+@itemlist[
+          @item{@tt{raco pyffi configure <path-to-your-python-command>}}]
 
 This will find the location of your shared library, print it, and,
 store it in your Racket preferences under the key @tt{pyffi:libdir}.
+
+You are now ready to use @tt{pyffi}.
+
+
+@subsection{Optional: Install @tt{NumPy}}
+
+The Python package NumPy has the slogan:
+
+@nested[#:style 'inset]{The fundamental package for scientific computing with Python.}
+
+If you want to use @tt{pyffi/numpy} then you need to install @tt{NumPy}
+in your Python environment first.
+
+There are many ways of installing @tt{NumPy}, but the simplest is to use
+the following in a terminal:
+
+@itemlist[
+          @item{@tt{python3 -m pip install numpy}}]
+
+
+
+@section{An introduction to @tt{pyffi}}
+
+Think of @tt{pyffi} as a bridge between Racket and Python.
+
 
 
 

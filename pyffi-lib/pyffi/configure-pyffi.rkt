@@ -1,4 +1,4 @@
-#lang racket
+#lang at-exp racket
 ;;;
 ;;; Run this file to configure `pyffi`.
 ;;;
@@ -169,7 +169,7 @@
   (display   "    ")
   (displayln new-libdir-path))
 
-(define (configure-pyffi [path-to-python #f])
+(define (configure [path-to-python #f])
   (get-configuration path-to-python)
   (cond
     [(python-libdir) => set-new-libdir]
@@ -182,10 +182,51 @@
      (newline)
      (displayln system-configuration-string)]))
 
-(define (configure)
+(define (show)
+  (displayln  "Current configuration for 'pyffi'.")
+  (newline)
+  (display    "    libdir = ")
+  (write      (get-preference 'pyffi:libdir))
+  (newline)
+  (newline)
+  (displayln  "Meaning:")
+  (newline)
+  (displayln  "    libdir:  location of the shared library 'libpython'"))
+
+(define usage
+  @~a{
+      Usage: raco pyffi <subcommand> <arg...>
+
+        raco pyffi configure
+            configure 'pyffi' using auto-detected python executable
+
+        raco pyffi configure <path-to-python>
+            configure 'pyffi' using  <path-to-python>
+
+        raco pyffi show
+            show the current 'pyffi' configuration})
+(define (display-usage)
+  (displayln usage))
+
+(define (run)
   (command-line
-   #:program (short-program+command-name)
-   #:args ([path-to-python #f])
-   (configure-pyffi path-to-python)))
+   #:program    (short-program+command-name)
+   #:usage-help
+   "
+       raco pyffi configure
+           configure 'pyffi' using auto-detected python executable
+
+       raco pyffi configure <path-to-python>
+           configure 'pyffi' using  <path-to-python>
+
+       raco pyffi show
+           show the current 'pyffi' configuration})"
+   #:args args
+   (match args
+     [(list "configure")                (configure)]
+     [(list "configure" path-to-python) (configure path-to-python)]
+     [(list "show")                     (show)]
+     [else                              (display-usage)
+                                        (exit 1)])))
   
-(configure)
+(run)
