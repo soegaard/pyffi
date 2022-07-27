@@ -4,7 +4,8 @@
          "python-environment.rkt"
          "python-delayed.rkt"
          "python-constants.rkt"
-         "structs.rkt")
+         "structs.rkt"
+         racket/file)
 
 (provide set-environment-variables
          initialize finish-initialization
@@ -14,10 +15,17 @@
 ;;; Configuration
 ;;;
 
-(define program-full-path
-  "/usr/local/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/bin/python3.10")
+;(define program-full-path "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10")
+(define program-full-path "pyffi")
 
-(define home "/usr/local/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10")
+(define home (get-preference 'pyffi:data (λ () #f)))
+(unless home
+  (parameterize ([current-output-port current-error-port])
+    (displayln "There is no preference for 'pyffi:data' set.")
+    (displayln "You must set the 'pyffi:libdir' preference to the home folder of python.")
+    (displayln "The most convenient way to do this, is to run `raco pyffi configure`.")
+    (displayln "See details in the documentation.")
+    (exit 1)))
 
 (define (set-environment-variables)
   (define (decode s) (Py_DecodeLocale s #f))

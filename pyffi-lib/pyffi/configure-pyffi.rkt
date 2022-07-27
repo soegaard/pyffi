@@ -139,8 +139,16 @@
 
 ;; Now the information is available in `system-configuration`.
 
+
+;;; PATHS
 (define (python-paths)
   (assoc  "Paths" system-configuration))
+
+(define (python-data)
+  (define result (assoc "data" (second (python-paths))))
+  (and result (second result)))
+
+;;; VARIABLES
 
 (define (python-variables)
   (assoc  "Variables" system-configuration))
@@ -148,6 +156,7 @@
 (define (python-libdir)
   (define result (assoc "LIBDIR" (second (python-variables))))
   (and result (second result)))
+
 
 (define (python-bindir)
   (define result (assoc "BINDIR" (second (python-variables))))
@@ -169,18 +178,53 @@
   (display   "    ")
   (displayln new-libdir-path))
 
-(define (configure [path-to-python #f])
-  (get-configuration path-to-python)
+
+(define (get-old-data)
+  (get-preference 'pyffi:data (λ () #f)))
+
+(define (set-new-data new-data)
+  (define old (get-preference 'pyffi:data (λ () #f)))
+  (unless (equal? old new-data)
+    (put-preferences (list 'pyffi:data)
+                     (list new-data)))
+  (when old
+    (displayln "The previous value of DATA was:")
+    (display   "    ")
+    (displayln old))
+  (displayln "The preference for DATA is now set to:")
+  (display   "    ")
+  (displayln new-data))
+
+
+(define (handle-libdir path-to-python)
   (cond
     [(python-libdir) => set-new-libdir]
     [(and (equal? (system-type 'os) 'windows)
           (python-bindir)) => set-new-libdir]
     [else
-     (displayln "The LIBDIR key wasn't found.")
-     (newline)
-     (displayln "The sysconfiguration produced by the Python module `sysconfig` was:")
-     (newline)
-     (displayln system-configuration-string)]))
+     (parameterize ([current-output-port (current-error-port)])
+       (displayln "The LIBDIR key wasn't found.")
+       (newline)
+       (displayln "The sysconfiguration produced by the Python module `sysconfig` was:")
+       (newline)
+       (displayln system-configuration-string))]))
+
+(define (handle-data path-to-python)
+  (cond
+    [(python-data) => set-new-data]
+    [else
+     (parameterize ([current-output-port (current-error-port)])
+       (displayln "The DATA key wasn't found.")
+       (newline)
+       (displayln "The sysconfiguration produced by the Python module `sysconfig` was:")
+       (newline)
+       (displayln system-configuration-string))]))
+
+(define (configure [path-to-python #f])
+  (get-configuration path-to-python)
+  (handle-libdir path-to-python)
+  (newline)
+  (handle-data   path-to-python))
 
 (define (show)
   (displayln  "Current configuration for 'pyffi'.")
@@ -188,10 +232,16 @@
   (display    "    libdir = ")
   (write      (get-preference 'pyffi:libdir))
   (newline)
+
+  (display    "    data   = ")
+  (write      (get-preference 'pyffi:data))
+  (newline)
+
   (newline)
   (displayln  "Meaning:")
   (newline)
-  (displayln  "    libdir:  location of the shared library 'libpython'"))
+  (displayln  "    libdir:  location of the shared library 'libpython'")
+  (displayln  "    data:    location of bin/ lib/ share/ etc."))
 
 (define usage
   @~a{
@@ -205,6 +255,7 @@
 
         raco pyffi show
             show the current 'pyffi' configuration})
+
 (define (display-usage)
   (displayln usage))
 
