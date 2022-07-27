@@ -19,7 +19,8 @@
     (displayln "There is no preference for 'pyffi:libdir' set.")
     (displayln "In order for `pyffi` to find the shared library `libpython3` (or `libpython3.10`) ")
     (displayln "you must set the 'pyffi:libdir' preference to the folder of the shared library.")
-    (displayln "The most convenient way to do this, is to run `configure-pyffi`.")
+    (displayln "The most convenient way to do this, is to run `raco pyffi`.")
+    (displayln "See details in the documentation.")
     (exit 1)))
 
 
@@ -36,9 +37,7 @@
 
 (define libpython-path
   (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
-              #:when (let ()
-                       (displayln (build-full-path name))
-                       (file-exists? (build-full-path name))))
+              #:when (file-exists? (build-full-path name)))
     (build-full-path name)))
     
 ; Note: If the Python interpreter loads a shared library dynamically,
