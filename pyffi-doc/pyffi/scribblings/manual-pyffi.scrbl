@@ -6,6 +6,7 @@
 @(require scribble/core scribble/html-properties (only-in xml cdata))
 @(require scribble/example)
 @(require (for-syntax racket/base syntax/parse))
+@(require (for-label pyffi))
 
 @; Used to reference other manuals.
 @(define reference.scrbl '(lib "scribblings/reference/reference.scrbl"))
@@ -45,6 +46,8 @@
 
 
 @title[#:tag "pyffi"]{pyffi - Use Python from Racket}
+
+@defmodule[pyffi]
 
 This library @tt{pyffi} allows you to use Python from Racket.
 
@@ -161,6 +164,7 @@ be used to evaluate expressions and statements in the Python process.
 @examples[#:label #f #:eval pe
           (require pyffi)
           (initialize)
+          (post-initialize)
           (run "1+2")]
 
 Here Racket starts an embed Python process.
@@ -175,6 +179,7 @@ to their corresponding Racket values.
 @examples[#:label #f #:eval pe
           (require pyffi)
           (initialize)
+          (post-initialize)
           (run "12")
           (run "34.")
           (run "5+6j")
@@ -357,6 +362,108 @@ The exception will be printed with a full traceback.
 
 @examples[#:label #f #:eval pe
           (eval:error (run "1/0"))]
+
+
+@section{Initialization of the Python Interpreter}
+
+@subsection{The Big Picture}
+
+In order to use the functions in @racket[pyffi] you need to start a Python interpreter.
+The call @racket[(initialize)] does just that. A standard approach would be to
+make the call in your "main" module of your program.
+
+That the Python interpreter isn't available until the main module has been instantiated
+leads to a few complications. The problem is the interpreter instance is not available
+when the modules required by "main" is instantiated.
+
+As an example: The module @racket[pyffi/numpy] contains bindings for NumPy.
+If the main module looks like this:
+
+@nested[#:style 'inset]{
+  @verbatim{#lang racket
+            (require pyffi pyffi/numpy)
+            (initialize)}}
+
+Then @racket[pyffi/numpy] is instantiated before the interpreter is started.
+This means @racket[pyffi/numpy] can't use inspect the Python module @tt{numpy}
+to get the function signatures it needs.
+
+To solve this problem @racket[pyffi/numpy] registers a number of initialization
+thunks to be run after the interpreter has started. The function
+@racket[post-initialize] runs these initialization thunks.
+
+To sum up, the typical main module for a program that uses @tt{pyffi} starts:
+
+@nested[#:style 'inset]{
+  @verbatim{#lang racket
+            (require pyffi pyffi/numpy)
+            (initialize)
+            (post-initialize)}}
+
+@subsection{Reference}
+
+
+@defproc[(initialize) void?]{
+Starts a Python interpreter using @tt{libpython}.
+
+The precise steps taken are:
+
+@itemlist[
+  @item{The locations of @tt{libpython} and the folder containing
+        the standard library is fetched from the preferences 
+        (keys @racket['pyffi:libdir] and @racket['pyffi:data]).}
+  @item{Calls @python-docs["Py_Initialize"]{Py_Initialize}
+        which starts an Python interpreter. Initializes the
+        table of of loaded modules and creates the modules @tt{builtins},
+        @tt{__main__} and @tt{sys}.}
+  @item{Imports @tt{__main__}, @tt{builtins}, @tt{operator}, @tt{traceback} and @tt{inspect}.}
+  @item{Creates instances of @tt{True}, @tt{False, and, @tt{None}.}}]
+}
+
+@defproc[(post-initialize) void?]{
+Run initialization thunks that needs a running Python instance.
+}
+
+@defproc[(add-initialization-thunk [thunk thunk?]) void?]{
+Add a thunk to be run by @racket[post-initialize].
+}
+
+@defproc[(diagnostics) void?]{
+Print important Python paths.
+}
+
+
+@section{Evaluation}
+
+@defproc[(run [string-to-evaluate string?]) obj?]{
+Evaluate the string @racket[string-to-evaluate] in the running Python interpreter.
+The string must contain a Python expression. 
+The expression is evaluated in the "main" module.
+
+The resulting Python object is converted to a Racket value via @racket[pr].
+
+If an exception is triggered on the Python side, a Racket exception is 
+raised containing the error message and the traceback.
+
+@examples[#:label #f #:eval pe
+          (run "[1+10, '2'+'20', (3,30), {4: 40}]")
+          (eval:error (run "x = 'this is not an expression'"))]
+}
+
+@defproc[(run* [string-to-evaluate string?]) void?]{
+Evaluate the string @racket[string-to-evaluate] in the running Python interpreter.
+The string must contain a Python statement.
+The statement is executed in the "main" module.
+
+If an exception is triggered on the Python side, a Racket exception is 
+raised containing the error message and the traceback.
+
+@examples[#:label #f #:eval pe
+          (run* "x = 1+10")
+          main.x]
+}
+
+
 
 
 @;;; ;{
