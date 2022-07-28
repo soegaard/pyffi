@@ -59,7 +59,7 @@
 
 
 (define (tuple->vector xs)
-  (define who tuple->vector)
+  (define who 'tuple->vector)
   (unless (tuple? xs)
     (raise-arguments-error who "expected a tuple" "xs" xs))
 
@@ -69,6 +69,22 @@
   (for ([i (in-range n)])    
     (vector-set! v i (pr (PyTuple_GetItem xs i))))
   v)
+
+(require (only-in racket/unsafe/ops unsafe-vector*->immutable-vector!))
+
+(define (tuple->immutable-vector xs)
+  (define who 'tuple->immutable-vector)
+  (unless (tuple? xs)
+    (raise-arguments-error who "expected a tuple" "xs" xs))
+  
+  (set! xs (obj-the-obj xs))
+  (define n (PyTuple_Size xs))
+  (define v (make-vector n))
+  (for ([i (in-range n)])    
+    (vector-set! v i (pr (PyTuple_GetItem xs i))))
+  (unsafe-vector*->immutable-vector! v)
+  v)
+
 
 (define (tuple-size x)
   (unless (tuple? x)

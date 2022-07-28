@@ -86,6 +86,18 @@
     (when (eqv? v #f) (PyErr_Clear))
     (and v (pr v))))
 
+(define (pylist->vector pylist)
+  (define who 'pylist->vector)
+  (unless (pylist? pylist)
+    (raise-arguments-error who "expected a pylist" "pylist" pylist))
+  
+  (define l (obj-the-obj pylist))
+  (define n (PyList_Size l))
+  (for/vector ([i (in-range n)])
+    (define v (PyList_GetItem l i))
+    (when (eqv? v #f) (PyErr_Clear))
+    (and v (pr v))))
+
 
 (define (pylist-get-slice pylist low-index high-index)
   ; returns new pylist

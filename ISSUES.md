@@ -59,14 +59,12 @@ Issue 13 - Hash and Dicts
  - [ ] implement hash->dict
  - [ ] implement dict->hash
 
-Issue 14 - Lists and Tuples
-=========================
- - [ ] implement pylist->vector
- - [ ] implement tuple->immutable-vector (use unsafe-vector*->immutable-vector!)
 
 Issue 15 - Sequence [Nice to have]
 ==================================
  - [ ] Attach `prop:sequence` to pylist, tuple, dict and pystring.
+
+
 
 Resolved
 ========
@@ -104,6 +102,10 @@ then
   > (numpy.shape A)
 will use `numpy.shape` and not `((getattr numpy "shape") A)`.
 
+Issue 14 - Lists and Tuples
+=========================
+ - [x] implement pylist->vector
+ - [x] implement tuple->immutable-vector (use unsafe-vector*->immutable-vector!)
 
 
  
