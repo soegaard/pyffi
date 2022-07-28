@@ -46,11 +46,11 @@ Issue 9 - Documentation
 Issue 10 - Python on the Package Server
 =======================================
 
-Issue 11 [Nice to have]
+Issue 11 - Equal? [Nice to have]
 =======================
  - [ ] make `obj` work with equal?
 
-Issue 12 [Nice to have]
+Issue 12 - Match Expanders [Nice to have]
 =======================
  - [ ] match expander for pystring, tuple, pylist and pydict
 
@@ -58,6 +58,15 @@ Issue 13 - Hash and Dicts
 =========================
  - [ ] implement hash->dict
  - [ ] implement dict->hash
+
+Issue 14 - Lists and Tuples
+=========================
+ - [ ] implement pylist->vector
+ - [ ] implement tuple->immutable-vector (use unsafe-vector*->immutable-vector!)
+
+Issue 15 - Sequence [Nice to have]
+==================================
+ - [ ] Attach `prop:sequence` to pylist, tuple, dict and pystring.
 
 Resolved
 ========
