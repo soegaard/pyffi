@@ -250,6 +250,7 @@ The new types @tt{pystring}, @tt{tuple} and @tt{pylist} can be used with @racket
 
 @subsection{Builtin functions and modules}
 
+@margin-note{Use @racket[run] for expressions and @racket[run*] for statements.}
 The previous sections showed how to evaluate expressions using the Python interpreter.
 Now we will look at statements.
 
@@ -318,7 +319,7 @@ a lot of system information. Let's use it to find the version of the Python inte
           (import sys)
           sys.version_info]
 
-There list of modules in
+The list of modules in
 @hyperlink["https://docs.python.org/3/library/index.html"]{The Python Standard Library}
 is long, so let's just try one more.
 
@@ -330,7 +331,7 @@ We want to print a text calendar for the current month.
           (calendar.TextCalendar)
           (displayln ((calendar.TextCalendar) .formatmonth 2022 7))]
 
-The expressions @tt{(calendar.TextCalendar)} instantiates a @tt{TextCalendar} object.
+The expression @tt{(calendar.TextCalendar)} instantiates a @tt{TextCalendar} object.
 The syntax @tt{(object .method arg ...)} is used to invoke the method @tt{formatmonth}
 with the arguments 2022 and 7 (for July).
 
@@ -340,7 +341,7 @@ The documentation for @tt{formatmonth} shows its signature:
 
 The two first arguments @tt{theyear} and @tt{themonth} are postional arguments
 and the two last arguments @tt{w} and @tt{l} are keyword arguments both has
-0 has default value.
+0 has as default value.
 
 The keyword argument @tt{w} specifies the width of the date columns.
 We can get full names of the week days with a width of 9.
