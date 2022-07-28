@@ -18,6 +18,12 @@
 (define (pystring? x)
   (and (obj? x) (equal? (obj-type-name x) "str")))
 
+(define (pystring . cs)
+  (unless (andmap char? cs)
+    (raise-arguments-error 'pystring "expected characters as input"
+                           "cs" cs))
+  (string->pystring (apply string cs)))
+
 (define (string->pystring x)
   (unless (string? x) (error 'string->pystring "got: ~a" x))
   (obj "str" (PyUnicode_FromString x)))

@@ -67,8 +67,7 @@
   (initialize-builtin-constants) ; uses `run`
   ; We can't run the initialization thunks here.
   ; The Python modules are loaded yet.
-  ; (run-initialization-thunks)
-  )
+  (run-initialization-thunks))
 
 (define (finish-initialization)
   (run-initialization-thunks))

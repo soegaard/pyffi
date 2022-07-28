@@ -184,6 +184,7 @@
 (define (module? x)
   (and (obj? x)
        (member (obj-type-name x) '("module" "_automodule"))
+       (not (obj-the-obj x)) ; #f = null
        #t))
 
 (define-syntax (.top stx)

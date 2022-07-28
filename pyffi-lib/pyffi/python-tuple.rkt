@@ -58,6 +58,18 @@
   (obj "tuple" t))
 
 
+(define (tuple->vector xs)
+  (define who tuple->vector)
+  (unless (tuple? xs)
+    (raise-arguments-error who "expected a tuple" "xs" xs))
+
+  (set! xs (obj-the-obj xs))
+  (define n (PyTuple_Size xs))
+  (define v (make-vector n))
+  (for ([i (in-range n)])    
+    (vector-set! v i (pr (PyTuple_GetItem xs i))))
+  v)
+
 (define (tuple-size x)
   (unless (tuple? x)
     (raise-arguments-error 'tuple-size "expected a tuple" "tuple" x))

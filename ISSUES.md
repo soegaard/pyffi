@@ -30,13 +30,34 @@ needs to be implemented.
 
 Issue 8 - Configuration
 =======================
+ - [done] Configuration tool via raco
+ - [ ]    Test on Linux and Windows
+ - [ ]    Detect whether version >= 3.10
+
 
 Issue 9 - Documentation
 =======================
+ - [x] Installation
+ - [/] Introduction
+ - [ ] Reference
+ - [ ] Tutorials
+ - [ ] Numpy
 
 Issue 10 - Python on the Package Server
 =======================================
 
+Issue 11 [Nice to have]
+=======================
+ - [ ] make `obj` work with equal?
+
+Issue 12 [Nice to have]
+=======================
+ - [ ] match expander for pystring, tuple, pylist and pydict
+
+Issue 13 - Hash and Dicts
+=========================
+ - [ ] implement hash->dict
+ - [ ] implement dict->hash
 
 Resolved
 ========
