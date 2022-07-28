@@ -82,8 +82,7 @@
   (define v (make-vector n))
   (for ([i (in-range n)])    
     (vector-set! v i (pr (PyTuple_GetItem xs i))))
-  (unsafe-vector*->immutable-vector! v)
-  v)
+  (unsafe-vector*->immutable-vector! v))
 
 
 (define (tuple-size x)
