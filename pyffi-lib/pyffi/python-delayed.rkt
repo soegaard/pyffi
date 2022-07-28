@@ -12,9 +12,11 @@
         (cons thunk initialization-thunks)))
 
 (define (run-initialization-thunks)
-  (for ([t (in-list (reverse initialization-thunks))])
+  (for ([t (in-list (reverse initialization-thunks))])    
     (t))
   (set! initialization-thunks '()))
+
+
 
 (require (for-syntax racket/base
                      racket/syntax

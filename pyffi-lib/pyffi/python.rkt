@@ -111,7 +111,7 @@
             (define full-msg
               (~a ; "src-loc" ": "
                qualified-name ": " "Python exception occurred" ";\n"
-               (string-append* (map (λ (m) (~a " " m)) msg)) 
+               (string-append* (map (λ (m) (~a " " (pystring->string m))) msg)) 
                (if tb (string-append* (map (λ (m) (~a " " m)) tb)) "")))
             (raise (exn full-msg (current-continuation-marks)))]))]))
 
