@@ -24,9 +24,9 @@
      (equal? (module-name pygments.formatters) "pygments.formatters"))
 
 
-(define pygments-hash            (module-dict-as-hash pygments))
-(define pygments.lexers-hash     (module-dict-as-hash pygments.lexers))
-(define pygments.formatters-hash (module-dict-as-hash pygments.formatters))
+(define pygments-hash            (module-pydict-as-hash pygments))
+(define pygments.lexers-hash     (module-pydict-as-hash pygments.lexers))
+(define pygments.formatters-hash (module-pydict-as-hash pygments.formatters))
 
 
 
@@ -38,7 +38,7 @@
 ;; (dict-new)
 ;; (dict-proxy-new (dict-new))
 
-(define d (module-dict pygments))
+(define d (module-pydict pygments))
 ; (dict-values d)
 
 (module-functions-with-signature pygments)

@@ -2,8 +2,8 @@
 
 (provide module?
          module-name
-         module-dict
-         module-dict-as-hash
+         module-pydict
+         module-pydict-as-hash
          module-hash-ref
          module-submodules
          module-functions
@@ -32,7 +32,7 @@
      => python->racket]
     [else #f]))
 
-(define (module-dict x)
+(define (module-pydict x)
   ; get the `dict` (namespace) of the module
   (cond
     [(and (module? x)
@@ -40,7 +40,7 @@
      => (λ (d) (obj "dict" d))]
     [else #f]))
 
-(define (module-dict-as-hash x)
+(define (module-pydict-as-hash x)
   ; get the `dict` (namespace) of the module
   (cond
     [(and (module? x)
@@ -56,27 +56,27 @@
   (hash-ref module-ht str failure-result))
 
 (define (module-functions x)
-  (define d  (module-dict x))
-  (define ks (dict-keys   d))
-  (define vs (dict-values d))
+  (define d  (module-pydict x))
+  (define ks (pydict-keys   d))
+  (define vs (pydict-values d))
   (for/list ([k (in-pylist ks)]
              [v (in-pylist vs)]
              #:when (is-function? v))
     v))
 
 (define (module-submodules x)
-  (define d  (module-dict x))
-  (define ks (dict-keys   d))
-  (define vs (dict-values d))
+  (define d  (module-pydict x))
+  (define ks (pydict-keys   d))
+  (define vs (pydict-values d))
   (for/list ([k (in-pylist ks)]
              [v (in-pylist vs)]
              #:when (is-module? v))
     v))
 
 (define (module-functions-with-signature x)
-  (define d  (module-dict x))
-  (define ks (dict-keys   d))
-  (define vs (dict-values d))
+  (define d  (module-pydict x))
+  (define ks (pydict-keys   d))
+  (define vs (pydict-values d))
   (for/list ([k (in-pylist ks)]
              [v (in-pylist vs)]
              #:when (and (is-function? v)

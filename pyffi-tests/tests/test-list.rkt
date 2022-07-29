@@ -53,5 +53,5 @@
   (pylist-sort! l)
   l)
 
-(pylist->tuple (pylist 1 2 3))
+(pylist->pytuple (pylist 1 2 3))
 
