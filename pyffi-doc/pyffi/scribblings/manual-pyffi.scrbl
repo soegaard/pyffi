@@ -212,27 +212,27 @@ Printing and displaying a Python object use the
 @python-docs["object.__repr__"]{__repr__} and @python-docs["object.__str__"]{__str__}
 methods of the object respectively.
 
-The idea is that Racket gains four new data types: @tt{pystring}, @tt{tuple}, 
-@tt{pylist} and @tt{dict}. @margin-note{Conversion between hash tables and dicts
+The idea is that Racket gains four new data types: @tt{pystring}, @tt{pytuple}, 
+@tt{pylist} and @tt{pydict}. @margin-note{Conversion between hash tables and pydicts
 needs to be implemented, before it can be used in the introduction}
                                                    
-To convert a compound value use @racket[pystring->string], @racket[tuple->vector]
+To convert a compound value use @racket[pystring->string], @racket[pytuple->vector]
 or @racket[pylist->list].
 
 @examples[#:label #f #:eval pe
           (pystring->string (run "'Hello World'"))
-          (tuple->vector (run "(1,2,3)"))
+          (pytuple->vector (run "(1,2,3)"))
           (pylist->list (run "[1,2,3]"))]
 
 Similarly, you can convert Racket values to Python ones.
 
 @examples[#:label #f #:eval pe
           (string->pystring "Hello World")
-          (vector->tuple #(1 2 3))
+          (vector->pytuple #(1 2 3))
           (list->pylist '(1 2 3))]
 
 It's important to note that creating Python values using
-@racket[string->pystring], @racket[vector->tuple] and @racket[list->pylist]
+@racket[string->pystring], @racket[vector->pytuple] and @racket[list->pylist]
 is much more efficient that using @racket[run]. The overhead of @racket[run]
 is due to the parsing and compiling of its its input string. In contrast
 @racket[string->pystring] and friends use the C API to create the
@@ -242,14 +242,14 @@ The data types have also have constructors:
 
 @examples[#:label #f #:eval pe
           (pystring #\H #\e #\l #\l #\o)
-          (tuple 1 2 3)
+          (pytuple 1 2 3)
           (pylist 1 2 3)]
 
-The new types @tt{pystring}, @tt{tuple} and @tt{pylist} can be used with @racket[for].
+The new types @tt{pystring}, @tt{pytuple} and @tt{pylist} can be used with @racket[for].
 
 @examples[#:label #f #:eval pe
           (for/list ([x (in-pystring (string->pystring "Hello"))]) x)
-          (for/list ([x (in-tuple (vector->tuple #(1 2 3)))]) x)
+          (for/list ([x (in-pytuple (vector->pytuple #(1 2 3)))]) x)
           (for/list ([x (in-pylist (list->pylist '(1 2 3)))]) x)]
 
 
@@ -462,6 +462,8 @@ raised containing the error message and the traceback.
           (run* "x = 1+10")
           main.x]
 }
+
+
 
 
 

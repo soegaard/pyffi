@@ -13,38 +13,38 @@
 ;;; Tuples
 ;;;
 
-(define (tuple? x)
+(define (pytuple? x)
   (and (obj? x)
        (equal? (obj-type-name x) "tuple")))
 
-(define (tuple-new len)
+(define (pytuple-new len)
   (unless (and (integer? len) (>= len 0))
-    (raise-arguments-error 'tuple-new "expected a non-negative integer" "length" len))
+    (raise-arguments-error 'pytuple-new "expected a non-negative integer" "length" len))
 
   (define t (PyTuple_New len)) ; new reference
   (obj "tuple" t))
 
-(define (list->tuple xs)
+(define (list->pytuple xs)
   (unless (list? xs)
-    (raise-arguments-error 'list->tuple "expected a list" "xs" xs))
+    (raise-arguments-error 'list->pytuple "expected a list" "xs" xs))
   (define n (length xs))
   (define t (PyTuple_New n))
   (for ([x (in-list xs)] [i (in-range n)])
     (define v (racket->python x))
     (case (PyTuple_SetItem t i v)
       [(0)  (void)] ; succes
-      [(-1) (error 'list->tuple "some error 1")] ; out of range
-      [else (error 'list->tuple "some error 2")]))
+      [(-1) (error 'list->pytuple "some error 1")] ; out of range
+      [else (error 'list->pytuple "some error 2")]))
   (obj "tuple" t))
 
-(define (tuple . xs)
-  (list->tuple xs))
+(define (pytuple . xs)
+  (list->pytuple xs))
 
-(define (iterable->tuple o)
+(define (iterable->pytuple o)
   (builtins.tuple o))
 
-(define (vector->tuple xs)
-  (define who 'vector->tuple)
+(define (vector->pytuple xs)
+  (define who 'vector->pytuple)
   (unless (vector? xs)
     (raise-arguments-error who "expected a vector" "xs" xs))
   (define n (vector-length xs))
@@ -58,10 +58,10 @@
   (obj "tuple" t))
 
 
-(define (tuple->vector xs)
-  (define who 'tuple->vector)
-  (unless (tuple? xs)
-    (raise-arguments-error who "expected a tuple" "xs" xs))
+(define (pytuple->vector xs)
+  (define who 'pytuple->vector)
+  (unless (pytuple? xs)
+    (raise-arguments-error who "expected a pytuple" "xs" xs))
 
   (set! xs (obj-the-obj xs))
   (define n (PyTuple_Size xs))
@@ -72,10 +72,10 @@
 
 (require (only-in racket/unsafe/ops unsafe-vector*->immutable-vector!))
 
-(define (tuple->immutable-vector xs)
-  (define who 'tuple->immutable-vector)
-  (unless (tuple? xs)
-    (raise-arguments-error who "expected a tuple" "xs" xs))
+(define (pytuple->immutable-vector xs)
+  (define who 'pytuple->immutable-vector)
+  (unless (pytuple? xs)
+    (raise-arguments-error who "expected a pytuple" "xs" xs))
   
   (set! xs (obj-the-obj xs))
   (define n (PyTuple_Size xs))
@@ -85,18 +85,19 @@
   (unsafe-vector*->immutable-vector! v))
 
 
-(define (tuple-size x)
-  (unless (tuple? x)
-    (raise-arguments-error 'tuple-size "expected a tuple" "tuple" x))
+(define (pytuple-size x)
+  (unless (pytuple? x)
+    (raise-arguments-error 'pytuple-size "expected a pytuple" "tuple" x))
   
   (define o (obj-the-obj x))
   (PyTuple_Size o))
 
-(define (tuple-get-item tuple index)
-  (unless (tuple? tuple)
-    (raise-arguments-error 'tuple-get-item "expected a tuple" "tuple" tuple "index" index))
+
+(define (pytuple-ref tuple index) ; Python: tuple.getitem(index)
+  (unless (pytuple? tuple)
+    (raise-arguments-error 'pytuple-ref "expected a pytuple" "tuple" tuple "index" index))
   (unless (and (integer? index) (>= index 0))
-    (raise-arguments-error 'tuple-get-item
+    (raise-arguments-error 'pytuple-ref
                            "expected a non-negative integer as index" "tuple" tuple "index" index))
 
   (define t (obj-the-obj tuple))
@@ -104,16 +105,16 @@
   (when (eqv? v #f) (PyErr_Clear))
   (and v (python->racket v)))
 
-(define (tuple-get-slice tuple low-index high-index)
+(define (pytuple-get-slice tuple low-index high-index)
   ; returns new tuple
-  (unless (tuple? tuple)
+  (unless (pytuple? tuple)
     (raise-arguments-error 'tuple-get-slice
-                           "expected a tuple" "tuple" tuple "low" low-index "high" high-index))
+                           "expected a pytuple" "tuple" tuple "low" low-index "high" high-index))
   (unless (and (integer? low-index) (>= low-index 0))
-    (raise-arguments-error 'tuple-get-slice "expected a non-negative integer as the low index"
+    (raise-arguments-error 'pytuple-get-slice "expected a non-negative integer as the low index"
                            "tuple" tuple "low" low-index "high" high-index))
   (unless (and (integer? high-index) (>= high-index 0))
-    (raise-arguments-error 'tuple-get-slice "expected a non-negative integer as the high index"
+    (raise-arguments-error 'pytuple-get-slice "expected a non-negative integer as the high index"
                            "tuple" tuple "low" low-index "high" high-index))
 
   (define t (obj-the-obj tuple))
@@ -121,12 +122,12 @@
   (when (eqv? v #f) (PyErr_Clear))
   (and v (obj "tuple"  v)))
 
-(define (tuple-set-item! tuple index value)
-  (unless (tuple? tuple)
-    (raise-arguments-error 'tuple-set-item! "expected a tuple"
+(define (pytuple-set-item! tuple index value)
+  (unless (pytuple? tuple)
+    (raise-arguments-error 'pytuple-set-item! "expected a tuple"
                            "tuple" tuple "index" index "value" value))
   (unless (and (integer? index) (>= index 0))
-    (raise-arguments-error 'tuple-set-item!
+    (raise-arguments-error 'pytuple-set-item!
                            "expected a non-negative integer as index"
                            "tuple" tuple "index" index "value" value))
 
@@ -135,20 +136,20 @@
 
   (case (PyTuple_SetItem t index v)
     [(0)  (void)] ; succes
-    [(-1) (raise-range-error 'tuple-set-item!
+    [(-1) (raise-range-error 'pytuple-set-item!
                              "tuple"
                              ""
                              index
                              tuple
                              0
-                             (max 0 (- (tuple-size tuple) 1)))]
-    [else (error 'tuple-set-item! "some error")]))
+                             (max 0 (- (pytuple-size tuple) 1)))]
+    [else (error 'pytuple-set-item! "some error")]))
 
 
-(define (in-tuple tuple)
-  (define n (tuple-size tuple))
+(define (in-pytuple tuple)
+  (define n (pytuple-size tuple))
   (make-do-sequence
-   (λ () (values (λ (pos) (tuple-get-item tuple pos))
+   (λ () (values (λ (pos) (pytuple-ref tuple pos))
                  #f
                  add1
                  0
