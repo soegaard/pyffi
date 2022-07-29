@@ -63,6 +63,7 @@
   (define o (obj-the-obj x))
   (PyList_Size o))
 
+
 (define (pylist-get-item pylist index)
   (unless (pylist? pylist)
     (raise-arguments-error 'pylist-get-item "expected a pylist" "pylist" pylist "index" index))
@@ -215,8 +216,8 @@
     [else (PyErr_Clear)
           (error 'pylist-sort! "an error occurred")]))
 
-(define (pylist->tuple pylist)
-  (define who 'pylist->tuple)
+(define (pylist->pytuple pylist)
+  (define who 'pylist->pytuple)
   (unless (pylist? pylist)
     (raise-arguments-error who "expected a pylist" "pylist" pylist))
   
@@ -238,3 +239,6 @@
                  (λ (pos) (< pos n))
                  #f
                  #f))))
+
+(define pylist-ref  pylist-get-item)
+(define pylist-set! pylist-set-item!)
