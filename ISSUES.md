@@ -38,8 +38,8 @@ Issue 8 - Configuration
 Issue 9 - Documentation
 =======================
  - [x] Installation
- - [/] Introduction
- - [ ] Reference
+ - [x] Introduction
+ - [/] Reference
  - [ ] Tutorials
  - [ ] Numpy
 
@@ -56,13 +56,14 @@ Issue 12 - Match Expanders [Nice to have]
 
 Issue 13 - Hash and Dicts
 =========================
- - [ ] implement hash->dict
- - [ ] implement dict->hash
+ - [ ] implement hash->pydict
+ - [ ] implement pydict->hash
 
 
 Issue 15 - Sequence [Nice to have]
 ==================================
- - [ ] Attach `prop:sequence` to pylist, tuple, dict and pystring.
+ - [ ] Attach `prop:sequence` to pylist, pytuple, pydict and pystring.
+
 
 
 
@@ -108,4 +109,7 @@ Issue 14 - Lists and Tuples
  - [x] implement tuple->immutable-vector (use unsafe-vector*->immutable-vector!)
 
 
+Issue 16 - Generators
+=====================
+ - [x] Use `prop:sequence` for generators.
  

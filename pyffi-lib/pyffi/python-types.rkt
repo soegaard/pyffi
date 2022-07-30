@@ -153,6 +153,66 @@
 (define (pr/false x)
   (if (eq? x #f) x (pr x)))
 
+
+(define py-format-exception      'uninitialized-py-format-exception)
+(define py-format-exception-only 'uninitialized-py-format-exception-only)
+(define py-format-traceback      'uninitialized-py-format-traceback)
+
+(add-initialization-thunk
+ (λ ()
+   (set! py-format-exception      (get 'traceback.format_exception))
+   (set! py-format-exception-only (get 'traceback.format_exception_only))
+   (set! py-format-traceback      (get 'traceback.format_tb))))
+
+(define-syntax (handle-python-exception stx)
+    ; When `run` and `run*`returns  NULL (represented as #f in Racket),
+    ; it means an exception occurred on the Python side.
+    ; We must fetch and normalize the exception, exception value and the traceback.
+    ; Fetching the exception clears the exception flags on the Python side.
+    ; Formatting the exception as a string is done useing the Python module `traceback`.
+    (syntax-parse stx
+      [(_handle-python-exception qualified-name result:id)
+       (syntax/loc stx
+         (let ()           
+           (define (pystring->string x) (PyUnicode_AsUTF8 (obj-the-obj x)))
+           (cond
+             ;  everything went fine
+             [result result]
+             ;  an exception was raised
+             [else
+              ; fetch exception (and clear flags), then normalize the exception value
+              (define-values (ptype pvalue ptraceback) (PyErr_Fetch))
+              (define-values (ntype nvalue ntraceback) (PyErr_NormalizeException ptype pvalue ptraceback))
+              ; format the exception so we can print it
+              #;(define msg (let ([args (flat-vector->py-tuple (vector ntype nvalue ntraceback))])
+                              (python->racket (PyObject_Call py-format-exception args #f))))
+              (define msg (let ([args (flat-vector->py-tuple (vector ntype nvalue))])
+                            (define x (PyObject_Call py-format-exception-only args #f))
+                            (py-list->list/pr x)))
+              (define tb  (and ntraceback
+                               (let ([args (flat-vector->py-tuple (vector ntraceback))])
+                                 (py-list->list/pr (PyObject_Call py-format-traceback args #f)))))
+              ;; Racket error message convention:
+              ;;   ‹srcloc›: ‹name›: ‹message›;
+              ;;     ‹continued-message› ...
+              ;;     ‹field›: ‹detail›
+
+              ;; Python uses an StopIteration exception to signal that an iterator
+              ;; has run out of values. Rather than raise an Racket exception,
+              ;; we will use a special value: 'StopIteration
+              (define first-msg (pystring->string (first msg)))
+              (cond
+                [(and (>= (string-length first-msg) 13)
+                      (equal? (substring first-msg 0 13) "StopIteration"))
+                 'StopIteration]
+                [else
+                 (define full-msg
+                   (~a ; "src-loc" ": "
+                    qualified-name ": " "Python exception occurred" ";\n"
+                    (string-append* (map (λ (m) (~a " " (pystring->string m))) msg)) 
+                    (if tb (string-append* (map (λ (m) (~a " " m)) tb)) "")))
+                 (raise (exn full-msg (current-continuation-marks)))])])))]))
+
 (define (pr x)
   ;; Convert a Python value to a Racket value.
   ;; The name `pr` stands for _P_ython to _R_acket.
@@ -203,9 +263,7 @@
                                             (define result (PyObject_Call x args kwargs))
                                             (if result
                                                 (pr result)
-                                                (let ()
-                                                  ; handle exception here
-                                                  #f)))
+                                                (handle-python-exception 'callable-object result)))
                                           (λ as
                                             (define args
                                               (let ()
@@ -221,9 +279,7 @@
                                             (define result (PyObject_Call x args kwargs))
                                             (if result
                                                 (pr result)
-                                                (let ()
-                                                  ; handle exception here
-                                                  #f)))))]
+                                                (handle-python-exception 'callable-object result)))))]
                        [(equal? name "method")
                         (method-obj name x (λ as
                                              (apply PyObject_CallMethodObjArgs

@@ -11,7 +11,14 @@
              x=x+1
              yield x})
 
+(run* @~a{def g():
+           yield 41
+           yield 42
+           yield 43
+           return 0})
+
 
 
 (for/list ([_ 5] [x (main.f)]) x)
+(for/list ([_ 5] [x (main.g)]) x)
 
