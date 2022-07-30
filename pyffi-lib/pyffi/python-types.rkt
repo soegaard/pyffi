@@ -169,60 +169,61 @@
        [has-name? (define name      (PyUnicode_AsUTF8 (PyObject_GetAttrString (PyObject_Type x) "__name__")))
                   ; (displayln name)
                   (case name
-                    [("int")      (py-int->number x)]
-                    [("bool")     (if (= (PyObject_IsTrue x) 1) #t #f)]
-                    [("float")    (py-float->number x)]
-                    [("complex")  (py-complex->number x)]
+                    [("int")       (py-int->number x)]
+                    [("bool")      (if (= (PyObject_IsTrue x) 1) #t #f)]
+                    [("float")     (py-float->number x)]
+                    [("complex")   (py-complex->number x)]
                     ; [("function") (obj "function" x)]
-                    [("int64")    (py-int->number x)]
-                    [("NoneType") (void)]
+                    [("int64")     (py-int->number x)]
+                    [("NoneType")  (void)]
+                    [("generator") (generator-obj name x)]
                     [else
                      (cond
                        [(= (PyCallable_Check x) 1)
                         (callable-obj name x
-                                      (make-keyword-procedure
-                                       (lambda (kws kw-args . as)
-                                         ; (displayln (list 'here kws kw-args as))
-                                         (define args
-                                           (let ()
-                                             (define n (length as))
-                                             (define t (PyTuple_New n))
-                                             (for ([a (in-list as)] [i (in-range n)])
-                                               (define v (rp a))
-                                               (case (PyTuple_SetItem t i v)
-                                                 [(0)  (void)] ; succes
-                                                 [else (error 'callable-obj "error in call to PyTuple_SetItem")]))
-                                             t))
-                                           
-                                           (define kwargs (PyDict_New))
-                                           (for ([kw    (in-list kws)]
-                                                 [kwarg (in-list kw-args)])
-                                             (PyDict_SetItemString kwargs (keyword->string kw) (rp kwarg)))
-                                           
-                                           (define result (PyObject_Call x args kwargs))
-                                           (if result
-                                               (pr result)
-                                               (let ()
-                                                 ; handle exception here
-                                                 #f)))
-                                       (λ as
-                                         (define args
-                                           (let ()
-                                             (define n (length as))
-                                             (define t (PyTuple_New n))
-                                             (for ([a (in-list as)] [i (in-range n)])
-                                               (define v (rp a))
-                                               (case (PyTuple_SetItem t i v)
-                                                 [(0)  (void)] ; succes
-                                                 [else (error 'callable-obj "error in call to PyTuple_SetItem")]))
-                                             t))
-                                         (define kwargs (PyDict_New))
-                                         (define result (PyObject_Call x args kwargs))
-                                         (if result
-                                             (pr result)
-                                             (let ()
-                                               ; handle exception here
-                                               #f)))))]                                               
+                                         (make-keyword-procedure
+                                          (lambda (kws kw-args . as)
+                                            ; (displayln (list 'here kws kw-args as))
+                                            (define args
+                                              (let ()
+                                                (define n (length as))
+                                                (define t (PyTuple_New n))
+                                                (for ([a (in-list as)] [i (in-range n)])
+                                                  (define v (rp a))
+                                                  (case (PyTuple_SetItem t i v)
+                                                    [(0)  (void)] ; succes
+                                                    [else (error 'callable-obj "error in call to PyTuple_SetItem")]))
+                                                t))
+                                            
+                                            (define kwargs (PyDict_New))
+                                            (for ([kw    (in-list kws)]
+                                                  [kwarg (in-list kw-args)])
+                                              (PyDict_SetItemString kwargs (keyword->string kw) (rp kwarg)))
+                                            
+                                            (define result (PyObject_Call x args kwargs))
+                                            (if result
+                                                (pr result)
+                                                (let ()
+                                                  ; handle exception here
+                                                  #f)))
+                                          (λ as
+                                            (define args
+                                              (let ()
+                                                (define n (length as))
+                                                (define t (PyTuple_New n))
+                                                (for ([a (in-list as)] [i (in-range n)])
+                                                  (define v (rp a))
+                                                  (case (PyTuple_SetItem t i v)
+                                                    [(0)  (void)] ; succes
+                                                    [else (error 'callable-obj "error in call to PyTuple_SetItem")]))
+                                                t))
+                                            (define kwargs (PyDict_New))
+                                            (define result (PyObject_Call x args kwargs))
+                                            (if result
+                                                (pr result)
+                                                (let ()
+                                                  ; handle exception here
+                                                  #f)))))]
                        [(equal? name "method")
                         (method-obj name x (λ as
                                              (apply PyObject_CallMethodObjArgs

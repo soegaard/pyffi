@@ -31,13 +31,14 @@
 ;;; Inspect
 ;;;
 
-(define-py inspect.signature  (~fun ~obj -> ~py))
-(define-py inspect.getmembers (~fun ~py -> ~obj))
+(define-py inspect.signature   (~fun ~obj -> ~py))
+(define-py inspect.getmembers  (~fun ~py -> ~obj))
 
-(define-py inspect.isfunction (~fun ~obj -> ~py))
-(define-py inspect.ismodule   (~fun ~obj -> ~py))
-(define-py inspect.isclass    (~fun ~obj -> ~py))
-(define-py inspect.ismethod   (~fun ~obj -> ~py))
+(define-py inspect.isfunction  (~fun ~obj -> ~py))
+(define-py inspect.ismodule    (~fun ~obj -> ~py))
+(define-py inspect.isclass     (~fun ~obj -> ~py))
+(define-py inspect.ismethod    (~fun ~obj -> ~py))
+(define-py inspect.isgenerator (~fun ~obj -> ~py))
 ; note: `getmembers` returns a cyclic data structure, so avoid using ~py
 
 (define (is-function? x)

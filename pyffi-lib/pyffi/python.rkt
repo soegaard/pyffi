@@ -8,6 +8,7 @@
          "python-environment.rkt"
          "python-evaluation.rkt"
          "python-functions.rkt"
+         "python-generator.rkt"
          "python-initialization.rkt"
          "python-import.rkt"
          "python-list.rkt"
@@ -30,6 +31,7 @@
            "python-environment.rkt"
            "python-evaluation.rkt"
            "python-functions.rkt"
+           "python-generator.rkt"
            "python-initialization.rkt"
            "python-import.rkt"
            "python-list.rkt"
@@ -123,7 +125,7 @@
 (define (prrun* x)
   (define result (run* x))  
   (handle-python-exception 'run* result)
-  (pr result))
+  (void result))
 
 (provide (rename-out [prrun  run]
                      [prrun* run*]))

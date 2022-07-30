@@ -8,11 +8,12 @@
 
          (struct-out obj)
          (struct-out callable-obj)
-         (struct-out method-obj))
+         (struct-out method-obj)
+         (struct-out generator-obj))
 
-(struct pytype      (type racket-to-python python-to-racket))
+(struct pytype(type racket-to-python python-to-racket))
 
-(struct obj         (type-name the-obj)
+(struct obj (type-name the-obj)
   #:transparent
   #:methods gen:custom-write
   [(define (write-proc obj port mode) (obj-print obj port mode))])
@@ -22,6 +23,11 @@
 
 (struct method-obj obj (app)
   #:property prop:procedure (struct-field-index app))
+
+(struct generator-obj obj ()
+  #:property prop:sequence (λ(gen) ((current-pygenerator-prop:sequence) gen)))
+
+; unsafe-struct*-ref(struct-field-index gen)
 
 (struct pyprocedure (input-types output-type keywords keyword-types optional-after) #:transparent)
 
@@ -50,8 +56,9 @@
   (define repr (current-repr))
   (define str  (current-str))
   (when mode (write-string "(obj " port))
-  (when (callable-obj? obj) (write-string "callable " port))
-  (when (method-obj?   obj) (write-string "method "   port))
+  (when (callable-obj?  obj) (write-string "callable "  port))
+  (when (method-obj?    obj) (write-string "method "    port))
+  (when (generator-obj? obj) (write-string "generator " port))
   (let ([tn (obj-type-name obj)]
         [o  (obj-the-obj obj)]
         [recur (case mode
