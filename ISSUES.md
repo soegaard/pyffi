@@ -25,8 +25,7 @@ Change the automatic conversion of function arguments to:
 
 Issue 5 - Callbacks
 -------------------
-Passing a Racket function to Python for use as a callback
-needs to be implemented.
+Passing a Racket function to Python for use as a callback needs to be implemented.
 
 Issue 8 - Configuration
 =======================
@@ -45,6 +44,9 @@ Issue 9 - Documentation
 
 Issue 10 - Python on the Package Server
 =======================================
+ - [ ] is python 3.10 avaiable on the package server?
+ - [ ] if not, make a python distribution?
+
 
 Issue 11 - Equal? [Nice to have]
 =======================

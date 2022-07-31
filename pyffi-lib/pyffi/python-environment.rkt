@@ -91,6 +91,8 @@
      ;(displayln (PyUnicode_AsUTF8 (PyObject_Str builtins)))
      ;(displayln (PyDict_GetItemString builtins "len"))
      (get* builtins names* names #f sym type)]
+    [(list* "main" names*)
+     (get* main names* names #f sym type)]
     [_
      (get* globals  names  names #f sym type)]))
 

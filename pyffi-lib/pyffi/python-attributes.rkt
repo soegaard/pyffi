@@ -9,6 +9,7 @@
 (require (only-in "python-environment.rkt" get))
 (require (only-in "python-types.rkt"       pr))
 (require "structs.rkt")
+(require racket/match)
 
 ;; getattr(object, name[, default])
 
@@ -187,6 +188,17 @@
        (not (obj-the-obj x)) ; #f = null
        #t))
 
+
+(define (smart-get v strs non-module/object-thunk)
+  (match strs
+    ['()              v]
+    [(list str)       (cond
+                        [(module? v) (getattr v str #f)]
+                        [(obj? v)    (getattr v str #f)]
+                        [else        (non-module/object-thunk)])]
+    [(list* str strs) (smart-get (smart-get v (list str) non-module/object-thunk)
+                                 strs non-module/object-thunk)]))
+
 (define-syntax (.top stx)
   ; like #%top, but dotted identifiers are python qualified references
   (syntax-parse stx
@@ -198,19 +210,15 @@
        [(identifier-contains? #'id ".")
         (when (identifier-contains? #'id "..")
           (raise-syntax-error '.top "two consecutive dots not allowed" #'id))
-        (with-syntax ([(str0 str1 ...) (identifier-split #'id ".")])
-          (with-syntax ([id0 (datum->syntax #'id (string->symbol (syntax-e #'str0)))])
-            (define (-> x) (datum->syntax stx x #'id))
-            (define strs        (string-split (identifier->string #'id) "."))
-            (define dotted-name (string-append* (add-between (rest strs) ".")))
-            
-            (with-syntax ([dotted-name dotted-name])
-              (syntax/loc stx
-                (let ()
-                  (define v id0)
-                  (cond [(module? v) (getattr v dotted-name #f)]
-                        [(obj? v)    (getattr v dotted-name #f)]
-                        [else        #'(#%top . id)]))))))]
+        ; (define (-> x) (datum->syntax stx x #'id))
+        (define strs (syntax->datum (identifier-split #'id ".")))
+        (define str0 (first strs))
+        (with-syntax ([id0        (datum->syntax #'id (string->symbol str0))]
+                      [(str1 ...) (rest strs)])
+          (syntax/loc stx
+            (let ([v id0])
+              (smart-get v (list str1 ...) (λ () '(#%top . id))))))]
+        
        [else
         ; (displayln #'id)
         #'(#%top . id)])]))
