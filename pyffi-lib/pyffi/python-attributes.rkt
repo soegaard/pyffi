@@ -92,6 +92,9 @@
     (pattern name:id
              #:when (identifier-begins-with? #'name #\.)))
 
+  (define-syntax-class non-method
+    (pattern (~not expr:method)))
+
   (define-syntax-class non-method-id ; an identifier that does not begin with a dot
     (pattern name:id
              #:when (not (identifier-begins-with? #'name #\.))))
@@ -170,15 +173,19 @@
          (let ([o (get-dotted id id0 id1 ...)])
            (o . args))))]
 
-    [(_.app e:expr method:method . args)
-     #;(displayln (list 'D stx))
+    [(_.app e:expr method:method arg:non-method ...)
      (syntax/loc stx
-       ((.app method e) . args))]
+       ((.app method e) arg ...))]
+
+    [(_.app e:expr method:method arg:non-method ... method2:method . more)
+     (syntax/loc stx
+       (let ([o ((.app method e) arg ...)])
+         (.app o method2 . more)))]
      
-    [(_.app e:expr  . args)
+    [(_.app e:expr arg:non-method ...)
      #;(displayln (list 'E stx))
      (syntax/loc stx
-       (e . args))]))
+       (e arg ...))]))
     
     
 
