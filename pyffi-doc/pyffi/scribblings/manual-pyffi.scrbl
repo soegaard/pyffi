@@ -498,14 +498,149 @@ If you stick to the high level functions in @racket[pyffi] you don't need
 to worry about reference counting. However it might be relevant if you
 need to use the low-level C-API.
 
-@;subsection{Python Lists - @tt{pylist}}
+@subsection{Python Lists - @tt{pylist}}
 
-@;; Despite the name a Python list is not a singly linked list, but an array.
+Despite the name a Python list is not a singly linked list, but an array.
+Objects with the type "list" will be called @racket[pylist] to tell
+them apart from standard Racket lists.
 
-@;; A Python list is compound data structure that contains 
+The operations @racket[pylist], @racket[list->pylist] and @racket[vector->pylist]
+can be used to construct pylists from Racket values.
 
-@;; A built-in Python sequence.
-@;; Despite its name it is more akin to an array in other languages than to a linked list since access to elements is O(1).
+
+@defproc[(pylist? [v any/c]) boolean?]{
+Returns @racket[#t] if @racket[v] is a pylist (an @racket[obj] with type @racket["list"]).
+                               
+@examples[#:label #f #:eval pe
+          (pylist 1 2 3)
+          (pylist? (pylist 1 2 3))
+          (pylist? (pylist))
+          (pylist? '(1 2 3))]
+}
+
+@defproc[(pylist [v any/c] ...) pylist?]{
+Returns a newly allocated pylist containing the @racket[v]s as its elements.
+                               
+@examples[#:label #f #:eval pe
+          (pylist 1 2 3 4)
+          (pylist)
+          (pylist (pylist 1 2 3 4) 5 (pylist 6 7))]
+}
+
+@defproc[(list->pylist [xs list?]) pylist?]{
+Returns a pylist with the same length and (possibly converted) elements as @racket[xs]. @linebreak[]
+The elements are converted with @racket[racket->python].
+                               
+@examples[#:label #f #:eval pe
+          (list->pylist '(1 2 3 4))
+          (list->pylist '(1 "foo" #(3 4)))
+          (list->pylist '(1 (2 3) #(4 (5 6))))]
+}
+
+@defproc[(vector->pylist [xs vector?]) pylist?]{
+Returns a pylist with the same length and (possibly converted) elements as @racket[xs]. @linebreak[]
+The elements are converted with @racket[racket->python].
+                               
+@examples[#:label #f #:eval pe
+          (vector->pylist '#(1 2 3 4))
+          (vector->pylist '#(1 "foo" #(3 4)))
+          (vector->pylist '#(1 (2 3) #(4 (5 6))))]
+}
+
+@defproc[(pylist-length [xs pylist?]) integer?]{
+Returns the length (size) of a pylist (i.e. the number of elements in the pylist).
+                               
+@examples[#:label #f #:eval pe
+          (pylist-length (pylist 1 2 3))]
+}
+
+@defproc[(pylist-ref [xs pylist?] [i exact-nonnegative-integer?])  any/c]{
+Returns the element with index @racket[i] in the pylist @racket[xs].
+The first element has index 0, and the last elements is one less than @racket[(pylist-length xs)].
+
+This function takes constant time.                               
+
+@examples[#:label #f #:eval pe
+          (pylist-ref (pylist "a" "b" "c" "d") 1)]
+}
+
+@defproc[(pylist-set! [xs pylist?] [i exact-nonnegative-integer?] [v any/c])  any/c]{
+Replace the element with index @racket[i] of the pylist @racket[xs] with the value @racket[v].
+
+This function takes constant time.
+
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 0 1 2 3 4))
+          (pylist-set! xs 1 #t)
+          xs]
+}
+
+
+@defproc[(pylist->list [xs pylist?]) list?]{
+Returns a list with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pylist->list (pylist 1 2 3 #t #f "a"))]
+}
+
+@defproc[(pylist->vector [xs pylist?]) vector?]{
+Returns a vector with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pylist->vector (pylist 1 2 3 #t #f "a"))]
+}
+
+@defproc[(pylist-insert! [xs pylist?] [i exact-nonnegative-integer?] [v any/c]) void?]{
+Inserts the value @racket[v] in the pylist @racket[xs] at index @racket[i].
+
+Worst case this function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 0 1 2 3))
+          (pylist-insert! xs 2 #t)
+          xs]
+}
+
+
+
+@defproc[(pylist-get-slice [xs pylist?]
+                           [low-index exact-nonnegative-integer?]
+                           [high-index exact-nonnegative-integer?])
+         pylist?]{
+Returns a new pylist with the elements of @racket[xs]
+from index @racket[low-index] inclusive
+to   index @racket[high-index] exclusive.
+
+In Python notation: @tt{list[low:high]}.
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 1 2 3 #t #f "a"))
+          (pylist-get-slice xs 1 3)]
+}
+
+
+
+
+
+
+@;(
+@;; @defproc[(pylist-new [k exact-nonnegative-integer?]) pylist?]{
+@;; Returns a newly constructed pylist of length #racket[k].
+@;; If @racket[k] is greater than zero, the elements of the pylist is set to @tt{NULL}.
+@;; Use @racket[pylist-set!] to set the elements of the list to non-@tt{NULL} before
+@;; using other pylist functions.
+                               
+@;; @examples[#:label #f #:eval pe
+@;;           (pylist-new 3)
+@;;           (pylist-new 0)]
+@;; })
+
+
 
 
 @;;; ;{
