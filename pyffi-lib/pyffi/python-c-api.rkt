@@ -93,6 +93,41 @@
 (define _PyObject*     _PyObject-pointer/null)
 (define _PyObject**    (_cpointer/null _PyObject*))
 
+;;;
+;;; Will xecutor for Reference Counting
+;;;
+
+;; Python uses reference counting.
+;; When objects are no longer reachable we decrease the reference
+;; count, so the Python VM can remove dead objects.
+
+(define an-executor (make-will-executor))
+
+(void
+ (thread
+  (λ ()
+    (let loop ()
+      ; blocks until a new will is ready to execute
+      (will-execute an-executor)
+      (loop)))))
+
+(define (register-object v)
+  (will-register an-executor v executor-proc)
+  v)
+
+(define (executor-proc v)
+  (printf "a-box is now garbage\n"))
+
+(define (handle-dead-reference v)
+  (Py_DecRef v))
+
+(define (new-reference v)
+  (will-register an-executor v handle-dead-reference)
+  ;(printf "register new reference ")
+  ;(print v)
+  ;(newline)
+  v)
+  
 
 ;;;
 ;;; Initialization, Finalization, and Threads
@@ -160,7 +195,7 @@
 ;;       directly. If PyFalse are Py_True returned from a function,
 ;;       their reference count needs to be incremented.
 
-(define-python PyBool_FromLong (_fun _long -> _PyObject*))
+(define-python PyBool_FromLong (_fun _long -> [o : _PyObject*] -> (new-reference o)))
 ; Return a new reference to Py_True or Py_False depending on the truth value of v.
 
 (define Py_False (PyBool_FromLong 0))
@@ -200,7 +235,7 @@
 ;;   > success and 0 for failure).
 
 ; Printing and Clearing
-(define-python PyErr_Clear    (_fun -> _void))      ; clear error indicator
+(define-python PyErr_Clear    (_fun      -> _void)) ; clear error indicator
 (define-python PyErr_PrintEx  (_fun _int -> _void)) ; print error and clear
 (define-python PyErr_Print    (_fun      -> _void)) ; alias
 (define-python PyErr_WriteUnraisable (_fun _PyObject* -> _void))
@@ -210,12 +245,13 @@
 ; Querying the error indicator
 (define-python PyErr_Occurred (_fun -> _PyObject*)) ; caller must hold GIL, borrowed reference
 
-(define-python PyException_GetTraceback (_fun _PyObject* -> _PyObject*))
-(define-python PyException_GetContext   (_fun _PyObject* -> _PyObject*))
-(define-python PyException_GetCause     (_fun _PyObject* -> _PyObject*))
+
+(define-python PyException_GetTraceback (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyException_GetContext   (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyException_GetCause     (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 
 ; void PyErr_Fetch(PyObject **ptype, PyObject **pvalue, PyObject **ptraceback)¶
-(define-python PyErr_Fetch     (_fun (ptype      : (_ptr o _PyObject*))
+(define-python PyErr_Fetch     (_fun (ptype      : (_ptr o _PyObject*)) ; todo: ref count
                                      (pvalue     : (_ptr o _PyObject*))
                                      (ptraceback : (_ptr o _PyObject*))
                                      -> _void
@@ -237,13 +273,13 @@
 ; However Numpy has many, more preceise number types.
 ;   https://numpy.org/doc/stable/reference/arrays.scalars.html
 
-(define-python PyNumber_Add            (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_Subtract       (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_Multiply       (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_MatrixMultiply (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_FloorDivide    (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_TrueDivide     (_fun _PyObject*  _PyObject* -> _PyObject*))
-(define-python PyNumber_Remainder      (_fun _PyObject*  _PyObject* -> _PyObject*))
+(define-python PyNumber_Add            (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_Subtract       (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_Multiply       (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_MatrixMultiply (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_FloorDivide    (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_TrueDivide     (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyNumber_Remainder      (_fun _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 ;; (define-python PyNumber_Divmod         (_fun _PyObject*  _PyObject* -> _PyObject*))
 ;; (define-python PyNumber_Power          (_fun _PyObject*  _PyObject* -> _PyObject*))
 ;; (define-python PyNumber_Multiply       (_fun _PyObject*  _PyObject* -> _PyObject*))
@@ -264,21 +300,21 @@
 ; When views from C we will use _PyComplex to represent a C structure
 ; holding the real and imaginary parts as floats.
 
-(define-python PyComplex_AsCComplex   (_fun _PyObject*  -> _Py_complex))    ; Py -> C
-(define-python PyComplex_FromCComplex (_fun _Py_complex -> _PyObject*))     ; C  -> Py
-(define-python PyComplex_FromDoubles  (_fun _double _double -> _PyObject*)) ; make-rectangular
-(define-python PyComplex_RealAsDouble (_fun _PyObject* -> _double))         ; get real part
-(define-python PyComplex_ImagAsDouble (_fun _PyObject* -> _double))         ; get imaginary part
+(define-python PyComplex_AsCComplex   (_fun _PyObject*  -> _Py_complex))                               ; Py -> C
+(define-python PyComplex_FromCComplex (_fun _Py_complex -> [o : _PyObject*] -> (new-reference o)))     ; C  -> Py
+(define-python PyComplex_FromDoubles  (_fun _double _double -> [o : _PyObject*] -> (new-reference o))) ; make-rectangular
+(define-python PyComplex_RealAsDouble (_fun _PyObject* -> _double))                                    ; get real part
+(define-python PyComplex_ImagAsDouble (_fun _PyObject* -> _double))                                    ; get imaginary part
   
 
 ;;;
 ;;; Floating Point Objects
 ;;;
 
-(define-python PyFloat_FromString  (_fun _PyObject* -> _PyObject*)) ; 
-(define-python PyFloat_FromDouble  (_fun _double    -> _PyObject*))
+(define-python PyFloat_FromString  (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o))) ; 
+(define-python PyFloat_FromDouble  (_fun _double    -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyFloat_AsDouble    (_fun _PyObject* -> _double))
-(define-python PyFloat_GetInfo     (_fun            -> _PyObject*)) ; structseq instance
+(define-python PyFloat_GetInfo     (_fun            -> [o : _PyObject*] -> (new-reference o))) ; structseq instance
 (define-python PyFloat_GetMax      (_fun            -> _double))
 (define-python PyFloat_GetMin      (_fun            -> _double))
 
@@ -300,25 +336,25 @@
 ; (define-python PyLong_CheckExact (_fun _PyObject* -> ))
 ; Note: This was documented as a function, but was in fact a C macro.
 
-(define-python PyLong_FromLong (_fun _long -> _PyObject*))
+(define-python PyLong_FromLong (_fun _long -> [o : _PyObject*] -> (new-reference o)))
 ; Return a new PyLongObject object from v, or NULL on failure.
 ;    The current implementation keeps an array of integer objects for all
 ;    integers between -5 and 256. When you create an int in that range you
 ;    actually just get back a reference to the existing object.
 
-(define-python PyLong_FromUnsignedLong     (_fun _ulong  -> _PyObject*))
-(define-python PyLong_FromLongLong         (_fun _llong  -> _PyObject*))
-(define-python PyLong_FromUnsignedLongLong (_fun _ullong -> _PyObject*))
-(define-python PyLong_FromDouble           (_fun _double -> _PyObject*))
+(define-python PyLong_FromUnsignedLong     (_fun _ulong  -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyLong_FromLongLong         (_fun _llong  -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyLong_FromUnsignedLongLong (_fun _ullong -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyLong_FromDouble           (_fun _double -> [o : _PyObject*] -> (new-reference o)))
 
 ; PyObject *PyLong_FromString(const char *str, char **pend, int base)
-(define-python PyLong_FromString        (_fun _string _pointer _int -> _PyObject*))
-(define-python PyLong_FromUnicodeObject (_fun _PyObject* _int -> _PyObject*))
+(define-python PyLong_FromString        (_fun _string _pointer _int -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyLong_FromUnicodeObject (_fun _PyObject* _int       -> [o : _PyObject*] -> (new-reference o)))
 ; PyObject *PyLong_FromVoidPtr(void *p)
-(define-python PyLong_FromVoidPtr (_fun _pointer -> _PyObject*))
+(define-python PyLong_FromVoidPtr (_fun _pointer -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyLong_AsLong (_fun _PyObject* -> _long)) ; -1 is error (i.e. out of range)
 ; long PyLong_AsLongAndOverflow(PyObject *obj, int *overflow)
-(define-python PyLong_AsLongAndOverflow (_fun (long_onj : _PyObject*)
+(define-python PyLong_AsLongAndOverflow (_fun (long_onj : _PyObject*)  ; todo ref counting
                                               (out : (_ptr o _int))
                                               -> (long : _long)
                                               -> (values long out)))
@@ -347,15 +383,15 @@
 ;;;
 
 (define-python PyUnicode_AsUTF8     (_fun _PyObject* -> _string))
-(define-python PyUnicode_FromString (_fun _string    -> _PyObject*)) ; utf8
+(define-python PyUnicode_FromString (_fun _string    -> [o : _PyObject*] -> (new-reference o))) ; utf8
 
-(define-python PyUnicode_Substring  (_fun _PyObject* _size _size -> _PyObject*))
+(define-python PyUnicode_Substring  (_fun _PyObject* _size _size -> [o : _PyObject*] -> (new-reference o)))
 
 ;;;
 ;;; Building Value
 ;;;
 
-(define-python Py_BuildValue0 (_fun #:varargs-after 1 _string -> _PyObject*)
+(define-python Py_BuildValue0 (_fun #:varargs-after 1 _string -> [o : _PyObject*] -> (new-reference o))
   #:c-id Py_BuildValue)
 
 (define the-None (Py_BuildValue0 ""))
@@ -367,26 +403,26 @@
 ;;; List Objects
 ;;;
 
-(define-python PyList_New     (_fun _size -> _PyObject*))
+(define-python PyList_New     (_fun _size -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyList_Size    (_fun _PyObject* -> _size))
-(define-python PyList_GetItem (_fun _PyObject* _size -> _PyObject*))
+(define-python PyList_GetItem (_fun _PyObject* _size -> _PyObject*))                       ; borrowed
 (define-python PyList_SetItem (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 (define-python PyList_Insert  (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 ; Analogous to list.insert(index, item).
 (define-python PyList_Append  (_fun _PyObject* _PyObject* -> _int))       ; 0 on success
 ; Append item. Analogous to list.append(item).
 
-(define-python PyList_GetSlice (_fun _PyObject* _size _size -> _PyObject*))
-(define-python PyList_SetSlice (_fun _PyObject* _size _size _PyObject* -> _PyObject*))
+(define-python PyList_GetSlice (_fun _PyObject* _size _size -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyList_SetSlice (_fun _PyObject* _size _size _PyObject* -> _int))
 (define-python PyList_Sort     (_fun _PyObject* -> _int))
 (define-python PyList_Reverse  (_fun _PyObject* -> _int))
-(define-python PyList_AsTuple  (_fun _PyObject* -> _PyObject*))
+(define-python PyList_AsTuple  (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 
 ;;;
 ;;; Slice Objects
 ;;;
 
-(define-python PySlice_New        (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*))
+(define-python PySlice_New        (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 (define-python PySlice_GetIndices (_fun _PyObject* _size
                                         (start      : (_ptr o _size))
                                         (stop       : (_ptr o _size))
@@ -406,7 +442,7 @@
 ;;; Tuple Objects
 ;;;
 
-(define-python PyTuple_New (_fun _size -> _PyObject*))
+(define-python PyTuple_New (_fun _size -> [o : _PyObject*] -> (new-reference o)))
 ; PyObject *PyTuple_Pack(Py_ssize_t n, ...)
 
 ; TODO: #:varargs-after available in Racket 7.9 and later
@@ -414,30 +450,30 @@
 ;;                                   _size _PyObject* -> _PyObject*))
 
 (define-python PyTuple_Size     (_fun _PyObject*             -> _size))
-(define-python PyTuple_GetItem  (_fun _PyObject* _size       -> _PyObject*))
-(define-python PyTuple_GetSlice (_fun _PyObject* _size _size -> _PyObject*))
+(define-python PyTuple_GetItem  (_fun _PyObject* _size       -> _PyObject*)) ; borrowed
+(define-python PyTuple_GetSlice (_fun _PyObject* _size _size -> [o : _PyObject*] -> (new-reference o))) 
 (define-python PyTuple_SetItem  (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 
 ;;;
 ;;; Dictionary Objects
 ;;;
 
-(define-python PyDict_New              (_fun                                  -> _PyObject*))
-(define-python PyDictProxy_New         (_fun _PyObject*                       -> _PyObject*))
+(define-python PyDict_New              (_fun                                  -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyDictProxy_New         (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyDict_Clear            (_fun _PyObject*                       -> _void))
 (define-python PyDict_Contains         (_fun _PyObject* _PyObject*            -> _int))
-(define-python PyDict_Copy             (_fun _PyObject*                       -> _PyObject*))
+(define-python PyDict_Copy             (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyDict_SetItem          (_fun _PyObject* _PyObject* _PyObject* -> _int)) ; 0 on success
 (define-python PyDict_SetItemString    (_fun _PyObject* _string    _PyObject* -> _int)) ; 0 on success
 (define-python PyDict_DelItem          (_fun _PyObject* _PyObject*            -> _int)) ; 0 on success
 (define-python PyDict_DelItemString    (_fun _PyObject* _string               -> _int)) ; 0 on success
-(define-python PyDict_GetItem          (_fun _PyObject* _PyObject*            -> _PyObject*))
-(define-python PyDict_GetItemWithError (_fun _PyObject* _PyObject*            -> _PyObject*))
-(define-python PyDict_GetItemString    (_fun _PyObject* _string               -> _PyObject*))
-(define-python PyDict_SetDefault       (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*))
-(define-python PyDict_Items            (_fun _PyObject*                       -> _PyObject*)) ; PyListObject
-(define-python PyDict_Keys             (_fun _PyObject*                       -> _PyObject*)) ; PyListObject
-(define-python PyDict_Values           (_fun _PyObject*                       -> _PyObject*)) ; PyListObject
+(define-python PyDict_GetItem          (_fun _PyObject* _PyObject*            -> _PyObject*)) ; borrowed
+(define-python PyDict_GetItemWithError (_fun _PyObject* _PyObject*            -> _PyObject*)) ; borrowed
+(define-python PyDict_GetItemString    (_fun _PyObject* _string               -> _PyObject*)) ; borrowed
+(define-python PyDict_SetDefault       (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*)) ; borrowed
+(define-python PyDict_Items            (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
+(define-python PyDict_Keys             (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
+(define-python PyDict_Values           (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
 (define-python PyDict_Size             (_fun _PyObject*                       -> _size))
 (define-python PyDict_Next             (_fun _PyObject* _size _PyObject** _PyObject** -> _int))
 (define-python PyDict_Merge            (_fun _PyObject* _PyObject* _int       -> _int))
@@ -455,20 +491,20 @@
 ;;; Module Objects
 ;;;
 
-(define-python PyModule_NewObject         (_fun _PyObject* -> _PyObject*))    ; name -> module
-(define-python PyModule_New               (_fun _PyObject* -> _string))       ; name -> module
+(define-python PyModule_NewObject         (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))    ; name -> module
+(define-python PyModule_New               (_fun _string    -> [o : _PyObject*] -> (new-reference o)))       ; name -> module
 
-(define-python PyModule_GetDict           (_fun _PyObject* -> _PyObject*))    ; module -> dict
-(define-python PyModule_GetNameObject     (_fun _PyObject* -> _PyObject*))    ; module -> __name__
+(define-python PyModule_GetDict           (_fun _PyObject* -> _PyObject*))    ; module -> dict           borrowed
+(define-python PyModule_GetNameObject     (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))    ; module -> __name__
 (define-python PyModule_GetName           (_fun _PyObject* -> _string))       ; module -> name
 (define-python PyModule_GetState          (_fun _PyObject* -> _pointer))      ; module -> ...
 (define-python PyModule_GetDef            (_fun _PyObject* -> _PyModuleDef*)) ; module -> module-definition
-(define-python PyModule_GetFilenameObject (_fun _PyObject* -> _PyObject*))    ; module -> filename
+(define-python PyModule_GetFilenameObject (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))    ; module -> filename
 (define-python PyModule_GetFilename       (_fun _PyObject* -> _string))       ; module -> filename as string
 
-(define-python PyImport_ImportModule      (_fun _string -> _PyObject*))
+(define-python PyImport_ImportModule      (_fun _string -> [o : _PyObject*] -> (new-reference o)))
 ; (define-python PyImport_ImportModuleEx    (_fun _string _PyObject* _PyObject* _PyObject* -> _PyObject*))
-(define-python PyImport_ImportModuleLevel  (_fun _string _PyObject* _PyObject* _PyObject* _int -> _PyObject*))
+(define-python PyImport_ImportModuleLevel  (_fun _string _PyObject* _PyObject* _PyObject* _int -> [o : _PyObject*] -> (new-reference o)))
 (define (PyImport_ImportModuleEx n g l f) (PyImport_ImportModuleLevel n g l f 0))
 
 
@@ -479,9 +515,9 @@
 ;;; Operating System Utilities
 ;;;
 
-(define-python PyOS_FSPath                (_fun _PyObject* -> _PyObject*))    ; str or bytes -> ...
+(define-python PyOS_FSPath                (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))  ; str or bytes -> ...
 (define-python Py_FdIsInteractive         (_fun _FILE* _string -> _int))
-(define-python PySys_GetObject            (_fun _string -> _PyObject*))
+(define-python PySys_GetObject            (_fun _string -> _PyObject*))  ; borrowed
 
 (define-python Py_EncodeLocale            (_fun _wchar* _size* -> _string))
 (define-python Py_DecodeLocale            (_fun _string _size* -> _wchar*))
@@ -492,8 +528,8 @@
 ;;; Importing Modules
 ;;;
 
-(define-python PyImport_Import    (_fun _string -> _PyObject*))
-(define-python PyImport_AddModule (_fun _string -> _PyObject*))
+(define-python PyImport_Import    (_fun _string -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyImport_AddModule (_fun _string -> _PyObject*)) ; borrowed
 
 ;(define-python PyModule_GetName   (_fun _PyObject* -> _string))
 
@@ -509,29 +545,29 @@
 
 (define-python PyCallable_Check (_fun _PyObject* -> _int)) ; 1 means callable, 0 otherwise
 
-(define-python PyObject_Call       (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*))
-(define-python PyObject_CallNoArgs (_fun _PyObject*                       -> _PyObject*))
+(define-python PyObject_Call       (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyObject_CallNoArgs (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o)))
 ; (define-python PyObject_CallOneArg (_fun _PyObject* _PyObject*            -> _PyObject*))
 ; PyObject_CallOneArg was a static inline function, and not exported in the shared library
 
 ; PyObject *PyObject_CallMethodObjArgs(PyObject *obj, PyObject *name, ...)
 (define-python PyObject_CallMethodObjArgs0
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (define-python PyObject_CallMethodObjArgs1
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (define-python PyObject_CallMethodObjArgs2
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (define-python PyObject_CallMethodObjArgs3
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (define-python PyObject_CallMethodObjArgs4
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (define-python PyObject_CallMethodObjArgs5
-  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* -> _PyObject*)
+  (_fun #:varargs-after 2 _PyObject*  _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))
   #:c-id PyObject_CallMethodObjArgs)
 (provide PyObject_CallMethodObjArgs)
 (define PyObject_CallMethodObjArgs
@@ -551,18 +587,18 @@
 ;;; Object Protocol
 ;;;
 
-(define-python PyObject_Repr (_fun _PyObject* -> _PyObject*))
+(define-python PyObject_Repr (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 
 (define-python PyEval_GetGlobals (_fun -> _PyObject*)) ; -> dictionary
 
-(define-python PyObject_GetAttrString (_fun _PyObject* _string            -> _PyObject*))
+(define-python PyObject_GetAttrString (_fun _PyObject* _string            -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyObject_HasAttrString (_fun _PyObject* _string            -> _int))
-(define-python PyObject_Type          (_fun _PyObject*                    -> _PyObject*))
+(define-python PyObject_Type          (_fun _PyObject*                    -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyObject_IsTrue        (_fun _PyObject*                    -> _int))
-(define-python PyObject_Str           (_fun _PyObject*                    -> _PyObject*))
-(define-python PyObject_SetAttrString (_fun _PyObject* _string _PyObject* -> _PyObject*))
+(define-python PyObject_Str           (_fun _PyObject*                    -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyObject_SetAttrString (_fun _PyObject* _string _PyObject* -> _int))
 
-(define-python PyObject_GetItem       (_fun _PyObject* _PyObject*         -> _PyObject*))
+(define-python PyObject_GetItem       (_fun _PyObject* _PyObject*         -> [o : _PyObject*] -> (new-reference o)))
 
 (define-python PyObject_Length        (_fun _PyObject*                    -> _int))
 
@@ -574,7 +610,7 @@
 
 ;; Bytes objects are immutable sequences of single bytes. 
 
-(define-python PyBytes_FromString (_fun _string    -> _PyObject*))
+(define-python PyBytes_FromString (_fun _string    -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyBytes_AsString   (_fun _PyObject* -> _string))
 
 ;;;
@@ -584,16 +620,16 @@
 ; int PyRun_SimpleString(const char *command)
 (define-python PyRun_SimpleString (_fun _string -> _int))
 
-(define-python PyRun_String (_fun _string _int _PyObject* _PyObject* -> _PyObject*))
+(define-python PyRun_String (_fun _string _int _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 
 ;; PyObject *PyRun_String(const char *str, int start, PyObject *globals, PyObject *locals)
 ;; Return value: New reference.
 
 
 ; PyObject *Py_CompileString(const char *str, const char *filename, int start)
-(define-python Py_CompileString (_fun _string _string _int -> _PyObject*)) ; new reference
+(define-python Py_CompileString (_fun _string _string _int -> [o : _PyObject*] -> (new-reference o)))
 
 ; PyObject *PyEval_EvalCode(PyObject *co, PyObject *globals, PyObject *locals)
-(define-python PyEval_EvalCode (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*)) ; new reference
+(define-python PyEval_EvalCode (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))) 
 
 
