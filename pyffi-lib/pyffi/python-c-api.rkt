@@ -406,7 +406,7 @@
 (define-python PyList_New     (_fun _size -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyList_Size    (_fun _PyObject* -> _size))
 (define-python PyList_GetItem (_fun _PyObject* _size -> _PyObject*))                       ; borrowed
-(define-python PyList_SetItem (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
+(define-python PyList_SetItem (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success   ; steals reference 
 (define-python PyList_Insert  (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 ; Analogous to list.insert(index, item).
 (define-python PyList_Append  (_fun _PyObject* _PyObject* -> _int))       ; 0 on success
@@ -463,7 +463,7 @@
 (define-python PyDict_Clear            (_fun _PyObject*                       -> _void))
 (define-python PyDict_Contains         (_fun _PyObject* _PyObject*            -> _int))
 (define-python PyDict_Copy             (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o)))
-(define-python PyDict_SetItem          (_fun _PyObject* _PyObject* _PyObject* -> _int)) ; 0 on success
+(define-python PyDict_SetItem          (_fun _PyObject* _PyObject* _PyObject* -> _int)) ; 0 on success, does NOT steal reference
 (define-python PyDict_SetItemString    (_fun _PyObject* _string    _PyObject* -> _int)) ; 0 on success
 (define-python PyDict_DelItem          (_fun _PyObject* _PyObject*            -> _int)) ; 0 on success
 (define-python PyDict_DelItemString    (_fun _PyObject* _string               -> _int)) ; 0 on success

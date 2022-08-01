@@ -69,7 +69,9 @@
   (define n (vector-length x))
   (define t (PyTuple_New n))
   (for ([i (in-range n)])
-    (PyTuple_SetItem t i (racket->python (vector-ref x i))))
+    (define v (racket->python (vector-ref x i)))
+    (Py_IncRef v) ; since Tuple_SetItem steals reference
+    (PyTuple_SetItem t i v))
   t)
 
 (define (flat-vector->py-tuple x)
@@ -78,7 +80,9 @@
   (define n (vector-length x))
   (define t (PyTuple_New n))
   (for ([i (in-range n)])
-    (PyTuple_SetItem t i (vector-ref x i)))
+    (define v (vector-ref x i))
+    (Py_IncRef v) ; since Tuple_SetItem steals reference
+    (PyTuple_SetItem t i v))
   t)
 
 (define (py-tuple->vector x)
@@ -103,7 +107,9 @@
   (define n (length xs))
   (define ys (PyList_New n))
   (for ([i (in-range n)] [x (in-list xs)])
-    (PyList_SetItem ys i (racket->python x)))
+    (define v (racket->python x))
+    (Py_IncRef v) ; since PyList_SetItem steals reference
+    (PyList_SetItem ys i v))
   ys)
 
 
@@ -250,6 +256,7 @@
                                                 (define t (PyTuple_New n))
                                                 (for ([a (in-list as)] [i (in-range n)])
                                                   (define v (rp a))
+                                                  (Py_IncRef v) ; since PyTuple_SetItem steals reference
                                                   (case (PyTuple_SetItem t i v)
                                                     [(0)  (void)] ; succes
                                                     [else (error 'callable-obj "error in call to PyTuple_SetItem")]))
@@ -271,6 +278,7 @@
                                                 (define t (PyTuple_New n))
                                                 (for ([a (in-list as)] [i (in-range n)])
                                                   (define v (rp a))
+                                                  (Py_IncRef v) ; since PyTuple_SetItem steals reference
                                                   (case (PyTuple_SetItem t i v)
                                                     [(0)  (void)] ; succes
                                                     [else (error 'callable-obj "error in call to PyTuple_SetItem")]))

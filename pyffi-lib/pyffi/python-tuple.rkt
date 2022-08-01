@@ -31,6 +31,7 @@
   (define t (PyTuple_New n))
   (for ([x (in-list xs)] [i (in-range n)])
     (define v (racket->python x))
+    (Py_IncRef v) ; since Tuple_SetItem steals reference
     (case (PyTuple_SetItem t i v)
       [(0)  (void)] ; succes
       [(-1) (error 'list->pytuple "some error 1")] ; out of range
@@ -51,6 +52,7 @@
   (define t (PyTuple_New n))
   (for ([x (in-vector xs)] [i (in-range n)])
     (define v (racket->python x))
+    (Py_IncRef v) ; since Tuple_SetItem steals reference
     (case (PyTuple_SetItem t i v)
       [(0)  (void)] ; succes
       [(-1) (error who "some error 1")] ; out of range
@@ -133,7 +135,7 @@
 
   (define t (obj-the-obj tuple))
   (define v (racket->python value))
-
+  (Py_IncRef v) ; since Tuple_SetItem steals reference
   (case (PyTuple_SetItem t index v)
     [(0)  (void)] ; succes
     [(-1) (raise-range-error 'pytuple-set-item!

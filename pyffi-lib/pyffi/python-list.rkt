@@ -35,6 +35,7 @@
   (define l (PyList_New n))
   (for ([x (in-list xs)] [i (in-range n)])
     (define v (racket->python x))
+    (Py_IncRef v) ; since PyList_SetItem steals reference
     (case (PyList_SetItem l i v)
       [(0)  (void)] ; succes
       [(-1) (error 'list->pylist "some error 1")] ; out of range
@@ -49,6 +50,7 @@
   (define l (PyList_New n))
   (for ([x (in-vector xs)] [i (in-range n)])
     (define v (racket->python x))
+    (Py_IncRef v) ; since PyList_SetItem steals reference
     (case (PyList_SetItem l i v)
       [(0)  (void)] ; succes
       [(-1) (error who "some error 1")] ; out of range
@@ -150,7 +152,7 @@
 
   (define l (obj-the-obj pylist))
   (define v (racket->python value))
-
+  (Py_IncRef v) ; since PyList_SetItem steals reference
   (case (PyList_SetItem l index v)
     [(0)  (void)] ; succes
     [(-1) (raise-range-error 'pylist-set-item!
