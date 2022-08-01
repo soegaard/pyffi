@@ -464,8 +464,48 @@ raised containing the error message and the traceback.
 }
 
 
+@section{Datatypes}
 
+In Python all values are stored as objects. An object has an identity, a type and a value.
 
+The identity of an object is given by the object's address in memory.
+The @tt{is} operator in Python corresponds to @racket[eq?] in Racket.
+
+Objects whose value can change are @emph{mutable}.
+If the value of an object can't change the object is called @emph{immutable}.
+Note: In Racket an immutable vector can contain (mutable) boxes.
+Even though the vector is immutable the contents of the boxes can change.
+What doesn't change is the identity of the boxes in the vector.
+In the same way an immutable Python container might contain mutable objects.
+
+In Python numbers, strings and tuples are immutable.
+Python dictionaries and lists are mutable.
+
+Python objects aren't explicitly destroyed. When an object becomes unreachable,
+the memory of an object is reclaimed by the garbage collector. The current
+Python interpreter uses @emph{reference counting} to keep track of an
+objects reachability.
+
+When a Python object is returned from Python to Racket as a @emph{new reference},
+the Python system won't deallocate the object until Racket says it's okay to do so.
+Since we don't want manually to keep track of the lifetime of Python objects,
+the low-level C-bindings register all new references will a will executor.
+When the Racket garbage collector detects a value is unreachable, the garbage
+collector will execute any wills associated with the value. The will executor
+we are using, simply decrements the reference count of the Python object.
+
+If you stick to the high level functions in @racket[pyffi] you don't need
+to worry about reference counting. However it might be relevant if you
+need to use the low-level C-API.
+
+@;subsection{Python Lists - @tt{pylist}}
+
+@;; Despite the name a Python list is not a singly linked list, but an array.
+
+@;; A Python list is compound data structure that contains 
+
+@;; A built-in Python sequence.
+@;; Despite its name it is more akin to an array in other languages than to a linked list since access to elements is O(1).
 
 
 @;;; ;{
