@@ -58,25 +58,30 @@
   (obj "list" l))
 
 
-(define (pylist-size x)
+(define (pylist-length x)
   (unless (pylist? x)
     (raise-arguments-error 'pylist-size "expected a pylist" "pylist" x))
   
   (define o (obj-the-obj x))
   (PyList_Size o))
 
+(define pylist-size pylist-length)
 
-(define (pylist-get-item pylist index)
+
+(define (pylist-ref pylist index)
+  (define who 'pylist-ref)
   (unless (pylist? pylist)
-    (raise-arguments-error 'pylist-get-item "expected a pylist" "pylist" pylist "index" index))
+    (raise-arguments-error who "expected a pylist" "pylist" pylist "index" index))
   (unless (and (integer? index) (>= index 0))
-    (raise-arguments-error 'pylist-get-item
-                           "expected a non-negative integer as index" "pylist" pylist "index" index))
+    (raise-arguments-error who
+        "expected a non-negative integer as index" "pylist" pylist "index" index))
 
   (define l (obj-the-obj pylist))
   (define v (PyList_GetItem l index))
   (when (eqv? v #f) (PyErr_Clear))
   (and v (python->racket v)))
+
+(define pylist-get-item pylist-ref)
 
 (define (pylist->list pylist)
   (unless (pylist? pylist)
@@ -242,5 +247,4 @@
                  #f
                  #f))))
 
-(define pylist-ref  pylist-get-item)
 (define pylist-set! pylist-set-item!)

@@ -72,6 +72,35 @@
     (vector-set! v i (pr (PyTuple_GetItem xs i))))
   v)
 
+(define (pytuple->list xs)
+  (define who 'pytuple->list)
+  (unless (pytuple? xs)
+    (raise-arguments-error who "expected a pytuple" "xs" xs))
+
+  (set! xs (obj-the-obj xs))
+  (define n (PyTuple_Size xs))
+  (for/list ([i (in-range n)])    
+    (pr (PyTuple_GetItem xs i))))
+
+(define (pytuple->pylist xs)
+  (define who 'pytuple->pylist)
+  (unless (pytuple? xs)
+    (raise-arguments-error who "expected a pytuple" "xs" xs))
+
+  (set! xs (obj-the-obj xs))
+  (define n (PyTuple_Size xs))
+  (define l (PyList_New n))
+  (for ([i (in-range n)] )
+    (define x (PyTuple_GetItem xs i))
+    (Py_IncRef x) ; since PyList_SetItem steals reference
+    (case (PyList_SetItem l i x)
+      [(0)  (void)] ; succes
+      [(-1) (error who "some error 1")] ; out of range
+      [else (error who "some error 2")]))
+  (obj "list" l))
+
+
+
 (require (only-in racket/unsafe/ops unsafe-vector*->immutable-vector!))
 
 (define (pytuple->immutable-vector xs)
@@ -87,13 +116,14 @@
   (unsafe-vector*->immutable-vector! v))
 
 
-(define (pytuple-size x)
+(define (pytuple-length x)
   (unless (pytuple? x)
-    (raise-arguments-error 'pytuple-size "expected a pytuple" "tuple" x))
+    (raise-arguments-error 'pytuple-length "expected a pytuple" "tuple" x))
   
   (define o (obj-the-obj x))
   (PyTuple_Size o))
 
+(define pytuple-size pytuple-length)
 
 (define (pytuple-ref tuple index) ; Python: tuple.getitem(index)
   (unless (pytuple? tuple)

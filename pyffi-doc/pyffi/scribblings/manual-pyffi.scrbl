@@ -53,7 +53,7 @@ This library @tt{pyffi} allows you to use Python from Racket.
 
 @author[@author+email["Jens Axel Søgaard" "jensaxel@soegaard.net"]]
 
-@;local-table-of-contents[]
+@local-table-of-contents[]
 
 
 @section[#:tag "introduction"]{Introduction}
@@ -498,6 +498,10 @@ If you stick to the high level functions in @racket[pyffi] you don't need
 to worry about reference counting. However it might be relevant if you
 need to use the low-level C-API.
 
+@;;;
+@;;; PYTHON LISTS
+@;;; 
+
 @subsection{Python Lists - @tt{pylist}}
 
 Despite the name a Python list is not a singly linked list, but an array.
@@ -506,6 +510,8 @@ them apart from standard Racket lists.
 
 The operations @racket[pylist], @racket[list->pylist] and @racket[vector->pylist]
 can be used to construct pylists from Racket values.
+
+In in @racket[for]-loops, use @racket[in-pylist] to iterate through the elements. 
 
 
 @defproc[(pylist? [v any/c]) boolean?]{
@@ -525,6 +531,28 @@ Returns a newly allocated pylist containing the @racket[v]s as its elements.
           (pylist 1 2 3 4)
           (pylist)
           (pylist (pylist 1 2 3 4) 5 (pylist 6 7))]
+}
+
+@defproc[(pylist-ref [xs pylist?] [i exact-nonnegative-integer?])  any/c]{
+Returns the element with index @racket[i] in the pylist @racket[xs].
+The first element has index 0, and the last elements is one less than @racket[(pylist-length xs)].
+
+This function takes constant time.                               
+
+@examples[#:label #f #:eval pe
+          (pylist-ref (pylist "a" "b" "c" "d") 1)]
+}
+
+@defproc[(pylist-set! [xs pylist?] [i exact-nonnegative-integer?] [v any/c])  any/c]{
+Replace the element with index @racket[i] of the pylist @racket[xs] with the value @racket[v].
+
+This function takes constant time.
+
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 0 1 2 3 4))
+          (pylist-set! xs 1 #t)
+          xs]
 }
 
 @defproc[(list->pylist [xs list?]) pylist?]{
@@ -554,27 +582,6 @@ Returns the length (size) of a pylist (i.e. the number of elements in the pylist
           (pylist-length (pylist 1 2 3))]
 }
 
-@defproc[(pylist-ref [xs pylist?] [i exact-nonnegative-integer?])  any/c]{
-Returns the element with index @racket[i] in the pylist @racket[xs].
-The first element has index 0, and the last elements is one less than @racket[(pylist-length xs)].
-
-This function takes constant time.                               
-
-@examples[#:label #f #:eval pe
-          (pylist-ref (pylist "a" "b" "c" "d") 1)]
-}
-
-@defproc[(pylist-set! [xs pylist?] [i exact-nonnegative-integer?] [v any/c])  any/c]{
-Replace the element with index @racket[i] of the pylist @racket[xs] with the value @racket[v].
-
-This function takes constant time.
-
-
-@examples[#:label #f #:eval pe
-          (define xs (pylist 0 1 2 3 4))
-          (pylist-set! xs 1 #t)
-          xs]
-}
 
 
 @defproc[(pylist->list [xs pylist?]) list?]{
@@ -595,6 +602,29 @@ This function takes time proportional to the size of @racket[xs].
           (pylist->vector (pylist 1 2 3 #t #f "a"))]
 }
 
+@defproc[(pylist->pytuple [xs pylist?])  pytuple?]{
+Returns a @racket[pytuple] with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pylist->pytuple (pylist 1 2 3 #t #f "a"))]
+}
+
+
+@defproc[(in-pylist [xs pylist?]) stream?]{
+Returns a sequence (that is also a stream) that is equivalent to using 
+@racket[xs] directly as a sequence.
+                                            
+@examples[#:label #f #:eval pe
+          (define xs (pylist 0 1 2 3))
+          (for/list ([x (in-pylist xs)])
+            x)]
+}
+
+
+
+
 @defproc[(pylist-insert! [xs pylist?] [i exact-nonnegative-integer?] [v any/c]) void?]{
 Inserts the value @racket[v] in the pylist @racket[xs] at index @racket[i].
 
@@ -604,6 +634,42 @@ Worst case this function takes time proportional to the size of @racket[xs].
           (define xs (pylist 0 1 2 3))
           (pylist-insert! xs 2 #t)
           xs]
+}
+
+@defproc[(pylist-append-item! [xs pylist?] [v any/c]) void?]{
+Add the element @racket[v] to the end of the pylist @racket[xs].
+The length of the pylist becomes 1 greater.
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 10 11 12 13))
+          (pylist-length xs)
+          (pylist-append-item! xs 14)
+          xs
+          (pylist-length xs)]
+}
+
+
+@defproc[(pylist-reverse! [xs pylist?]) void?]{
+Reverse the order in which the elements in the pylist @racket[xs] occur.
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 1 2 3 4))
+          (pylist-reverse! xs)
+          xs]
+}
+
+@defproc[(pylist-sort! [xs pylist?]) void?]{
+Rearrange the order in which the elements in the pylist @racket[xs] occur.
+After calling @racket[pylist-sort!] the elements will be in order with respect
+to the Python comparison operator @tt{<}.
+
+@examples[#:label #f #:eval pe
+          (define xs (pylist 3 2 4 1))
+          (pylist-sort! xs)
+          xs
+          (define ys (pylist 3 #t 2 4 #f #f 1))
+          (pylist-sort! ys)
+          ys]
 }
 
 
@@ -624,10 +690,6 @@ In Python notation: @tt{list[low:high]}.
 }
 
 
-
-
-
-
 @;(
 @;; @defproc[(pylist-new [k exact-nonnegative-integer?]) pylist?]{
 @;; Returns a newly constructed pylist of length #racket[k].
@@ -640,6 +702,249 @@ In Python notation: @tt{list[low:high]}.
 @;;           (pylist-new 0)]
 @;; })
 
+
+
+@;;;
+@;;; PYTHON TUPLES
+@;;; 
+
+@subsection{Python Tuples - @tt{pytuple}}
+
+Python tuples correspond to immutable Racket vectors.
+
+Even though there is no datastructure in Racket called "tuple", 
+Python tuples will have the name "putuple" to match the names of
+@racket[pylist] and @racket[pydict].
+
+The operations @racket[pytuple], @racket[list->pytuple] and @racket[vector->pytuple]
+can be used to construct pytuples from Racket values.
+
+In in @racket[for]-loops, use @racket[in-pytuple] to iterate through the elements. 
+
+@defproc[(pytuple? [v any/c]) boolean?]{
+Returns @racket[#t] if @racket[v] is a pytuple (an @racket[obj] with type @racket["tuple"]).
+                               
+@examples[#:label #f #:eval pe
+          (pytuple 1 2 3)
+          (pytuple? (pytuple 1 2 3))
+          (pytuple? (pytuple))
+          (pytuple? '(1 2 3))]
+}
+
+@defproc[(pytuple [v any/c] ...) pytuple?]{
+Returns a newly allocated pytuple containing the @racket[v]s as its elements.
+                               
+@examples[#:label #f #:eval pe
+          (pytuple 1 2 3 4)
+          (pytuple)
+          (pytuple (pytuple 1 2 3 4) 5 (pytuple 6 7))]
+}
+
+@defproc[(pytuple-ref [xs pytuple?] [i exact-nonnegative-integer?])  any/c]{
+Returns the element with index @racket[i] in the pytuple @racket[xs].
+The first element has index 0, and the last elements is one less than @racket[(pytuple-length xs)].
+
+This function takes constant time.                               
+
+@examples[#:label #f #:eval pe
+          (pytuple-ref (pytuple "a" "b" "c" "d") 1)]
+}
+
+
+@defproc[(list->pytuple [xs list?]) pytuple?]{
+Returns a pytuple with the same length and (possibly converted) elements as @racket[xs]. @linebreak[]
+The elements are converted with @racket[racket->python].
+                               
+@examples[#:label #f #:eval pe
+          (list->pytuple '(1 2 3 4))
+          (list->pytuple '(1 "foo" #(3 4)))
+          (list->pytuple '(1 (2 3) #(4 (5 6))))]
+}
+
+@defproc[(vector->pytuple [xs vector?]) pytuple?]{
+Returns a pytuple with the same length and (possibly converted) elements as @racket[xs]. @linebreak[]
+The elements are converted with @racket[racket->python].
+                               
+@examples[#:label #f #:eval pe
+          (vector->pytuple '#(1 2 3 4))
+          (vector->pytuple '#(1 "foo" #(3 4)))
+          (vector->pytuple '#(1 (2 3) #(4 (5 6))))]
+}
+
+@defproc[(pytuple-length [xs pytuple?]) integer?]{
+Returns the length (size) of a pytuple (i.e. the number of elements in the pytuple).
+                               
+@examples[#:label #f #:eval pe
+          (pytuple-length (pytuple 1 2 3))]
+}
+
+
+@defproc[(pytuple->list [xs pytuple?]) list?]{
+Returns a list with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pytuple->list (pytuple 1 2 3 #t #f "a"))]
+}
+
+@defproc[(pytuple->vector [xs pytuple?]) vector?]{
+Returns a vector with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pytuple->vector (pytuple 1 2 3 #t #f "a"))]
+}
+
+@defproc[(pytuple->immutable-vector [xs pytuple?]) vector?]{
+Returns an immutable vector with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (define xs (pytuple->immutable-vector (pytuple 1 2 3 #t #f "a")))
+          xs
+          (immutable? xs)]
+}
+
+@defproc[(pytuple->pylist [xs pytuple?])  pylist?]{
+Returns a @racket[pylist] with the same length and elements as @racket[xs].
+
+This function takes time proportional to the size of @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pytuple->pylist (pytuple 1 2 3 #t #f "a"))]
+}
+
+
+@defproc[(in-pytuple [xs pylist?]) stream?]{
+Returns a sequence (that is also a stream) that is equivalent to using 
+@racket[xs] directly as a sequence.
+                                            
+@examples[#:label #f #:eval pe
+          (define xs (pytuple 0 1 2 3))
+          (for/list ([x (in-pytuple xs)])
+            x)]
+}
+
+
+@defproc[(pytuple-get-slice [xs pytuple?]
+                            [low-index exact-nonnegative-integer?]
+                            [high-index exact-nonnegative-integer?])
+         pytuple?]{
+Returns a new pytuple with the elements of @racket[xs]
+from index @racket[low-index] inclusive
+to   index @racket[high-index] exclusive.
+
+In Python notation: @tt{list[low:high]}.
+
+@examples[#:label #f #:eval pe
+          (define xs (pytuple 1 2 3 #t #f "a"))
+          (pytuple-get-slice xs 1 3)]
+}
+
+@;;;
+@;;; PYTHON DICTIONARIES
+@;;; 
+
+@subsection{Python Dictionaries - @tt{pydict}}
+
+Dictionaries in Python are associative arrays indexed by @emph{keys}.
+Given a key one can lookup a value. Think of dictionaries as
+sets of key/value pairs. 
+
+Any immutable value can be used as a key, so strings, numbers and tuples
+can always be used as keys. 
+
+The corresponding data structure in Racket is the hash table.
+
+
+Use the operations @racket[pydict->hash] and @racket[hash->pydict]
+to convert back and froth between pydicts and hash tables.
+
+@defproc[(pydict? [v any/c]) boolean?]{
+Returns @racket[#t] if @racket[v] is a pydict (an @racket[obj] with type @racket["dict"]).
+                               
+@examples[#:label #f #:eval pe
+          (pydict? (hash->pydict (hash "a" 1  "b" 2)))]
+}
+
+
+
+@defproc[(hash->pydict [x hash?] [#:convert convert procedure? rp]) pydict?]{
+Returns a newly allocated pydict with the same key/value-pairs as the hash table @racket[x].
+The function @racket[convert] is used to convert Racket values to Python ones.
+The default value for the keyword argument @racket[convert] is @racket[rp].
+                               
+@examples[#:label #f #:eval pe
+          (hash->pydict (hash "a" 1  "b" 2))
+          (hash->pydict (hash 1 "x"  2 "y"))
+          (hash->pydict (hash #(1 2) "tuple used as key"))]                        
+}
+
+@defproc[(pydict->hash [x pydict?]
+                       [#:convert-key   convert-key   procedure? pr/key]
+                       [#:convert-value convert-value procedure? pr])
+         hash?]{
+Returns a newly allocated hash table with the same key/value-pairs as the pydict @racket[x].
+
+The function @racket[convert-key]   is used to convert the keys from Python values to Racket ones.@linebreak[]
+The function @racket[convert-value] is used to convert the values.
+
+The default value for the key conversion is @racket[pr/key].@linebreak[]
+The default value for the value conversion is @racket[pr].
+
+                               
+@examples[#:label #f #:eval pe          
+          (pydict->hash (hash->pydict (hash "a" 1  "b" 2)))
+          (pydict->hash (hash->pydict (hash 1 "x"  2 "y")))
+          (pydict->hash (hash->pydict (hash #(1 2) "tuple used as key")))]
+}
+
+
+@defproc[(pydict [#:convert convert procedure? rp] 
+                 [key any/c] [val any/c] ... ...) pydict?]{
+Creates a pydict with each given key mapped to the following val;
+each key must have a val, so the total number of arguments to hash must be even.
+
+The key to val mappings are added to the table in the order that they
+appear in the argument list, so later mappings can hide earlier
+mappings if the keys are equal.
+
+
+The default value for the key and value conversion is @racket[rp].
+
+                               
+@examples[#:label #f #:eval pe          
+          (pydict "a" 1  "b" 2)
+          (pydict 1 "x"  2 "y")
+          (pydict #(1 2) "tuple used as key")]
+}
+
+
+
+@defproc[(pydict-ref [d pydict?] [key any/c]
+                     [failure-result failure-result/c 	
+                                     (lambda ()
+                                       (raise (make-exn:fail:contract ....)))])
+         any/c]{
+
+Returns the value for key in hash. If no value is found for key, then
+failure-result determines the result:
+
+If failure-result is a procedure, it is called (through a tail call)
+with no arguments to produce the result.
+
+Otherwise, failure-result is returned as the result.
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2))
+          d
+          (pydict-ref d "a")
+          (pydict-ref d "b")
+          (eval:error (pydict-ref d "c"))]
+}
 
 
 

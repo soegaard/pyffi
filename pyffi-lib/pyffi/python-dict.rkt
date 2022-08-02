@@ -5,6 +5,7 @@
          "python-c-api.rkt"
          "python-environment.rkt"
          "python-types.rkt")
+(require racket/match racket/format)
 
 (require (for-syntax racket/base syntax/parse racket/syntax))
 
@@ -100,7 +101,18 @@
        [(0) (void)] ; succes
        [else (error 'pydict-delete! "some error 2")])]))
 
-(define (pydict-ref dict key) ; dict.getitem()
+(define (~w x)
+  (let ([o (open-output-string)])
+    (write x o)
+    (get-output-string o)))
+
+
+(define (pydict-ref dict key
+                    [failure-result
+                     (λ ()
+                       (raise (make-exn:fail:contract
+                               (~a "pydict-ref: no value found for key\n  key: " (~w key))
+                               (current-continuation-marks))))])
   (unless (pydict? dict)
     (raise-arguments-error 'pydict-ref "expected a dict" "dict" dict))
 
@@ -108,11 +120,79 @@
   (cond
     [(string? key) ; fast path
      (define v (PyDict_GetItemString d key)) ; never raises exceptions
-     (and v (python->racket v))]     
+     (cond
+       [v                           (pr v)]
+       [(procedure? failure-result) (failure-result)]
+       [else                        failure-result])]
     [else
      (define k (racket->python key))
      (define v (PyDict_GetItem d k))
-     (and v (python->racket v))]))
+     (cond
+       [v                           (pr v)]
+       [(procedure? failure-result) (failure-result)]
+       [else                        failure-result])]))
+
+(define (pydict->hash x
+                      #:convert-key   [convert-key   pr/key]
+                      #:convert-value [convert-value pr])
+  (define o  (obj-the-obj x))
+  (define vs (PyDict_Keys o)) ; pylist
+  (define n  (PyList_Size vs))
+  (for/hash ([i (in-range n)])
+    (define k (PyList_GetItem vs i))
+    (when (eqv? k #f) (PyErr_Clear))
+    (define key (and k (convert-key k)))
+    
+    (define v (and k (PyDict_GetItem o k)))
+    (when (and k (eqv? v #f)) (PyErr_Clear))
+    (define val (and k v (convert-value v)))
+    
+    (values key val)))
+
+(define (hash->pydict x #:convert [convert rp])
+  (define who 'hash->pydict)
+  (unless (hash? x)
+    (raise-arguments-error who "expected a hash table" "hash" x))
+  
+  (define d (PyDict_New))
+  (for ([(k v) (in-hash x)])
+    (cond
+      [(string? k) ; fast path
+       (case (PyDict_SetItemString d k (convert v))
+         [(0) (void)] ; succes
+         [else (error who "error during call to PyDict_SetItemString")])]
+      [else
+     (case (PyDict_SetItem d (convert k) (convert v))
+       [(0) (void)] ; succes
+       [else (error who "error during call to PyDict_SetItem")])]))
+  (obj "dict" d))
+
+(define (pydict #:convert [convert rp] . args)
+  (define who 'pydict)
+  (define n (length args))
+  (unless (even? n)
+    (raise-arguments-error who "expected an even number of arguments" "keys and values" args))
+
+  (define d (PyDict_New)) ; new reference
+  
+  (let loop ([as args])
+    (match as
+      ['() (void)]
+      [(list* k v as)
+       (define val (convert v))
+       (cond
+         [(string? k) ; fast path
+          (case (PyDict_SetItemString d k val)
+            [(0) (void)] ; succes
+            [else (error who "error during call to PyDict_SetItemString")])]
+         [else
+          (define key (convert k))
+          (case (PyDict_SetItem d key val)
+            [(0) (void)] ; succes
+            [else (error who "error during call to PyDict_SetItem")])])
+       (loop as)]))
+  (obj "dict" d))
+
 
 (define (pydict-keys x)
   (unless (pydict? x)

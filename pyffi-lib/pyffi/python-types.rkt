@@ -219,6 +219,22 @@
                     (if tb (string-append* (map (λ (m) (~a " " m)) tb)) "")))
                  (raise (exn full-msg (current-continuation-marks)))])])))]))
 
+(define (pr/string x)
+  (define has-name? (PyObject_HasAttrString (PyObject_Type x) "__name__"))
+  (define name (and has-name? (PyUnicode_AsUTF8 (PyObject_GetAttrString (PyObject_Type x) "__name__"))))
+  (case name
+    [("str") (py-string->string x)]
+    [else    (pr x)]))
+
+(define (pr/key x)
+  (define has-name? (PyObject_HasAttrString (PyObject_Type x) "__name__"))
+  (define name (and has-name? (PyUnicode_AsUTF8 (PyObject_GetAttrString (PyObject_Type x) "__name__"))))
+  (case name
+    [("str")   (py-string->string x)]
+    [("tuple") (py-tuple->vector x)]    
+    [else      (pr x)]))
+
+
 (define (pr x)
   ;; Convert a Python value to a Racket value.
   ;; The name `pr` stands for _P_ython to _R_acket.
