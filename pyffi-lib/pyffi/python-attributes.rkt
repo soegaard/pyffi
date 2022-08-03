@@ -8,6 +8,9 @@
 (require (only-in "python-builtins.rkt"    getattr))
 (require (only-in "python-environment.rkt" get))
 (require (only-in "python-types.rkt"       pr))
+(require (only-in "python-delayed.rkt"     add-initialization-thunk))
+(require (only-in "python-list.rkt"        pylist))
+(require (only-in "python-object.rkt"      fast-obj-eq?))
 (require "structs.rkt")
 (require racket/match racket/format)
 
@@ -195,6 +198,10 @@
        (not (obj-the-obj x)) ; #f = null
        #t))
 
+(define missing #f)
+(add-initialization-thunk
+ (λ () (set! missing (pylist "missing"))))
+
 
 (define (smart-get v id strs non-module/object-thunk)
   (define (error-no-attribute str)
@@ -206,13 +213,14 @@
     ['()              v]
     [(list str)       (cond
                         [(module? v) (getattr v str #f)]
-                        [(obj? v)    (define res (getattr v str "missing"))
-                                     (when (equal? res "missing")
+                        [(obj? v)    (define res (getattr v str missing))
+                                     (when (and (obj? res) (fast-obj-eq? res missing))
                                        (error-no-attribute str))
                                      res]
                         [else        (non-module/object-thunk)])]
     [(list* str strs) (smart-get (smart-get v id (list str) non-module/object-thunk)
                                  id strs non-module/object-thunk)]))
+
 
 (define-syntax (.top stx)
   ; like #%top, but dotted identifiers are python qualified references
