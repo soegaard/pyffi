@@ -1,28 +1,6 @@
 Open
 ====
 
-Issue 1 - Keywords in function calls 
-------------------------------------
-- Calling a function `foo` with a keyword not handled by the function 
-  results in an exception on the Python side.
-  Check the keywords on the Racket side.
-
-This is partially resolved, since Racket now catches the Python exception.
-
-
-Issue 3 - Reference Counting
-----------------------------
-Register a will for `obj` values that hold Python objects.
-The will executor must decrease the reference counter, so
-the Python side can reclaim the value.
-
-
-Issue 4 - Conversion between Racket and Python values
------------------------------------------------------
-Change the automatic conversion of function arguments to:
-  - [done] only convert non-compound result values
-  - [    ] handle reference counting for arguments converted from Racket values
-
 Issue 5 - Callbacks
 -------------------
 Passing a Racket function to Python for use as a callback needs to be implemented.
@@ -30,8 +8,8 @@ Passing a Racket function to Python for use as a callback needs to be implemente
 Issue 8 - Configuration
 =======================
  - [done] Configuration tool via raco
- - [ ]    Test on Linux and Windows
  - [ ]    Detect whether version >= 3.10
+ - [ ]    Test on Linux and Windows
 
 
 Issue 9 - Documentation
@@ -68,6 +46,17 @@ Issue 15 - Sequence [Nice to have]
 
 
 
+Nice to have
+============
+
+Issue 1 - Keywords in function calls 
+------------------------------------
+- [done] Calling a function `foo` with a keyword not handled by the function 
+	     results in an exception on the Python side.
+         Check the keywords on the Racket side.
+
+This is partially resolved, since Racket now catches the Python exception.
+
 
 Resolved
 ========
@@ -75,6 +64,18 @@ Resolved
 Issue 2 - Exceptions on the Python side
 ---------------------------------------
 Handle exceptions raised on the Python side.
+
+Issue 3 - Reference Counting
+----------------------------
+Register a will for `obj` values that hold Python objects.
+The will executor must decrease the reference counter, so
+the Python side can reclaim the value.
+
+Issue 4 - Conversion between Racket and Python values
+-----------------------------------------------------
+Change the automatic conversion of function arguments to:
+  - [done] only convert non-compound result values
+  - [done] handle reference counting for arguments converted from Racket values
 
 
 Issue 6 - Source location information lost for `run`
@@ -114,4 +115,5 @@ Issue 14 - Lists and Tuples
 Issue 16 - Generators
 =====================
  - [x] Use `prop:sequence` for generators.
- 
+
+
