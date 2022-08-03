@@ -125,7 +125,7 @@
        [(procedure? failure-result) (failure-result)]
        [else                        failure-result])]
     [else
-     (define k (racket->python key))
+     (define k (rp key))
      (define v (PyDict_GetItem d k))
      (cond
        [v                           (pr v)]
