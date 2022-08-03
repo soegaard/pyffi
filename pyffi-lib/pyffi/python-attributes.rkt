@@ -9,7 +9,7 @@
 (require (only-in "python-environment.rkt" get))
 (require (only-in "python-types.rkt"       pr))
 (require "structs.rkt")
-(require racket/match)
+(require racket/match racket/format)
 
 ;; getattr(object, name[, default])
 
@@ -196,15 +196,23 @@
        #t))
 
 
-(define (smart-get v strs non-module/object-thunk)
+(define (smart-get v id strs non-module/object-thunk)
+  (define (error-no-attribute str)
+    (raise-syntax-error (syntax-e id)
+                        (~a "object has no such attribute: " str)
+                        id))
+  
   (match strs
     ['()              v]
     [(list str)       (cond
                         [(module? v) (getattr v str #f)]
-                        [(obj? v)    (getattr v str #f)]
+                        [(obj? v)    (define res (getattr v str "missing"))
+                                     (when (equal? res "missing")
+                                       (error-no-attribute str))
+                                     res]
                         [else        (non-module/object-thunk)])]
-    [(list* str strs) (smart-get (smart-get v (list str) non-module/object-thunk)
-                                 strs non-module/object-thunk)]))
+    [(list* str strs) (smart-get (smart-get v id (list str) non-module/object-thunk)
+                                 id strs non-module/object-thunk)]))
 
 (define-syntax (.top stx)
   ; like #%top, but dotted identifiers are python qualified references
@@ -214,6 +222,7 @@
      (cond
        [(identifier-begins-with? #'id #\.)
         #'(#%top . id)]
+       
        [(identifier-contains? #'id ".")
         (when (identifier-contains? #'id "..")
           (raise-syntax-error '.top "two consecutive dots not allowed" #'id))
@@ -224,7 +233,7 @@
                       [(str1 ...) (rest strs)])
           (syntax/loc stx
             (let ([v id0])
-              (smart-get v (list str1 ...) (λ () '(#%top . id))))))]
+              (smart-get v #'id (list str1 ...) (λ () '(#%top . id))))))]
         
        [else
         ; (displayln #'id)
