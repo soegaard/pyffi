@@ -5,6 +5,7 @@
          "python-c-api.rkt"
          "python-environment.rkt"
          "python-types.rkt")
+
 (require racket/match racket/format)
 
 (require (for-syntax racket/base syntax/parse racket/syntax))
@@ -21,7 +22,7 @@
          (equal? ok 1))))
 
 ;;;
-;;; Dict
+;;; Dictionaries (pydict)
 ;;;
 
 (define (pydict? x)
@@ -47,7 +48,7 @@
     (raise-arguments-error 'dict-clear! "expected a dict" "dict" d))
   
   (define o (obj-the-obj d))
-  (void (PyDict_Clear d)))
+  (void (PyDict_Clear o)))
 
 (define (pydict-contains? dict key) ; equivalent to  "key in dict"
   (unless (pydict? dict)
@@ -68,8 +69,9 @@
   (obj "dict" (PyDict_Copy o)))
 
 (define (pydict-set! dict key val)
+  (define who 'pydict-set!)
   (unless (pydict? dict)
-    (raise-arguments-error 'pydict-set! "expected a dict" "dict" dict))
+    (raise-arguments-error who "expected a dict" "dict" dict))
 
   (define d (obj-the-obj dict))
   (define v (racket->python val))
@@ -77,29 +79,32 @@
   (cond
     [(string? key) ; fast path
      (case (PyDict_SetItemString d key v)
-       [(0) (void)] ; succes
-       [else (error 'pydict-set! "some error 1")])]
+       [(0) (void)] ; success
+       [else (error who "error in call to PyDict_SetItemString")])]
     [else
      (define k (racket->python key))
      (case (PyDict_SetItem d k v)
-       [(0) (void)] ; succes
-       [else (error 'pydict-set! "some error 2")])]))  ; todo
+       [(0) (void)] ; success
+       [else (error who "error in call to PyDict_SetItem")])]))
 
-(define (pydict-delete! dict key) ; delitem
+(define (pydict-remove! dict key) ; delitem
+  (define who 'pydict-remove!)
   (unless (pydict? dict)
-    (raise-arguments-error 'pydict-delete! "expected a dict" "dict" dict))
+    (raise-arguments-error who "expected a dict" "dict" dict))
 
   (define d (obj-the-obj dict))
   (cond
     [(string? key) ; fast path
      (case (PyDict_DelItemString d key)
        [(0) (void)] ; succes
-       [else (error 'pydict-delete! "some error 1")])]
+       [else (PyErr_Clear) ; KeyError is thrown if item is not in the dict
+             (void)])]
     [else
      (define k (racket->python key))
      (case (PyDict_DelItem d k)
        [(0) (void)] ; succes
-       [else (error 'pydict-delete! "some error 2")])]))
+       [else (PyErr_Clear) ; KeyError is thrown if item is not in the dict
+             (void)])]))
 
 (define (~w x)
   (let ([o (open-output-string)])
@@ -210,25 +215,27 @@
   (define vs (PyDict_Values o)) ; new reference
   (obj "list" vs))
 
-(define (pydict-size x)
+(define (pydict-count x)
+  (define who 'pydict-count)
   (unless (pydict? x)
-    (raise-arguments-error 'pydict-size "expected a dict" "dict" x))
+    (raise-arguments-error who "expected a dict" "dict" x))
   
   (define o (obj-the-obj x))
   (define s (PyDict_Size o)) ; new reference
   s)
 
 (define (pydict-merge! a b [override #t])
+  (define who 'pydict-merge!)
   (unless (pydict? a)
-    (raise-arguments-error 'pydict-merge! "expected a pydict as first argument" "a" a "b" b))
+    (raise-arguments-error who "expected a pydict as first argument" "a" a "b" b))
   (unless (mapping? b)
-    (raise-arguments-error 'pydict-merge! "expected a pydict as second argument" "a" a "b" b))
+    (raise-arguments-error who "expected a pydict as second argument" "a" a "b" b))
   
   (define oa (obj-the-obj a))
   (define ob (obj-the-obj b))
   (case (PyDict_Merge oa ob (or (and override 1) 0))
     [(0) (void)]
-    [else (error 'pydict-merge! "an error occurred")])) ; todo
+    [else (error who "an error occurred")])) ; todo
 
 (define (pydict-update! a b)
   (unless (pydict? a)

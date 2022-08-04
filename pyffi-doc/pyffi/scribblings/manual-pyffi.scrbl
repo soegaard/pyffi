@@ -947,6 +947,219 @@ Otherwise, failure-result is returned as the result.
 }
 
 
+@defproc[(pydict-set! [d pydict?] [key any/c] [val any/c]) void?]{
+Maps @racket[key] to @racket[val] in @racket[d], overwriting any existing mapping for key.
+                                                                  
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1))
+          (pydict-set! d "a" 11)
+          (pydict-set! d "b" 22)
+          d]
+}
+
+
+@defproc[(pydict-remove! [d pydict?] [key any/c]) void?]{
+Removes any existing mapping for @racket[key] in the pydict @racket[d].
+                                                                  
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1 "b" 2))
+          (pydict-remove! d "b")
+          (pydict-remove! d "c")
+          d]
+}
+
+
+@defproc[(pydict-clear! [d pydict?]) void?]{
+Remove all key/value pairs from the dictionary.
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2))
+          d
+          (pydict-clear! d)
+          d]
+}
+
+
+@defproc[(pydict-contains? [d pydict?] [key any/c]) void?]{
+Returns @racket[#t] if the pydict @racket[x] contains the key @racket[key].
+
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2))
+          (pydict-contains? d "a")
+          (pydict-contains? d "x")]
+          
+}
+
+
+@defproc[(pydict-copy [d pydict?]) pydict?]{
+Return a new dict with the same key/vaue pairings as the pydict @racket[d].
+
+                               
+@examples[#:label #f #:eval pe
+          (define d1 (pydict "a" 1  "b" 2))
+          (define d2 (pydict-copy d1))
+          (list d1 d2)
+          (pydict-set! d1 "a" 11)
+          (list d1 d2)]
+}
+
+
+@defproc[(pydict-keys [d pydict?]) pylist?]{
+Return a pylist with all keys in the pydict @racket[d].
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2))
+          (pydict-keys d)]
+}
+
+@defproc[(pydict-values [d pydict?]) pylist?]{
+Return a pylist with all values in the pydict @racket[d].
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2 "c" 1))
+          (pydict-values d)]
+}
+
+
+@defproc[(pydict-count [d pydict?]) integer?]{
+Returns the number of keys mapped by the pict @racket[hash].
+                               
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1  "b" 2 "c" 1))
+          (pydict-count d)]
+}
+
+
+
+@defproc[(pydict-merge! [d1 pydict?] [d2 pydict?] [override? boolean? #t]) void?]{
+Computes the union of @racket[d1] with the @racket[d2] by mutable update,
+adding each element of @racket[d2] to @racket[d1] in turn. 
+
+If a key @racket[k] is present in both pydicts and is mapped to
+values @racket[v1] and @racket[v2] in @racket[d1] and @racket[d2] respectively,
+then @racket[k] is mapped to @racket[v2] if @racket[override?] is true,
+and mapped to @racket[v1] otherwise.
+                               
+@examples[#:label #f #:eval pe
+          (define d1 (pydict "a" 1  "b" 2 ))
+          (define d2 (pydict "b" 22 "c" 33))
+          (pydict-merge! d1 d2)
+          d1]
+
+@examples[#:label #f #:eval pe
+          (define d1 (pydict "a" 1  "b" 2 ))
+          (define d2 (pydict "b" 22 "c" 33))
+          (pydict-merge! d1 d2 #f)
+          d1]
+}
+
+
+@;;;
+@;;; PYTHON STRINGS (UNICODE OBJECTS)
+@;;; 
+
+@subsection{Python Strings - @tt{pystring}}
+
+Strings in Python are represented as objects with type @tt{str}.
+Python strings are immutable sequences of Unicode code points.
+
+There is no character type in Python, so various Python libraries
+use strings of length 1 to represent characters.
+
+
+@defproc[(pystring? [v any/c]) boolean?]{
+Returns @racket[#t] if @racket[v] is a pystring (an @racket[obj] with type @racket["str"]).
+                               
+@examples[#:label #f #:eval pe
+          (string->pystring "foo")
+          (pystring? (string->pystring "foo"))]
+}
+
+@defproc[(pystring [char char?] ...) pystring?]{ 
+Returns a new pystring whose length is the number of provided
+@racket[char]s, and whose positions are initialized with the given
+@racket[char]s.
+
+
+@examples[#:label #f #:eval pe
+          (pystring #\f #\o #\o)]
+}
+
+
+@defproc[(string->pystring [x string?]) pystring?]{ 
+Return a newly allocated pystring with the same characters as the string @racket[x].
+
+@examples[#:label #f #:eval pe
+          (string->pystring "foo")]
+}
+
+
+@defproc[(pystring->string [x pystring?]) string?]{ 
+Return a newly allocated string with the same characters as the pystring @racket[x].
+
+@examples[#:label #f #:eval pe
+          (pystring->string (pystring #\f #\o #\o))]
+}
+
+
+@defproc[(pystring-length [x pystring?]) integer?]{ 
+Returns the length of @racket[x] (i.e. the number of characters in string).
+
+@examples[#:label #f #:eval pe
+          (pystring-length (pystring #\f #\o #\o))]
+}
+
+
+@defproc[(pystring-ref [x pystring?] [k exact-nonnegative-integer?]) char?]{ 
+Returns the character at position @racket[k] in the pystring @racket[x].
+The first position in the string corresponds to @racket[0], so the
+position @racket[k] must be less than the length of the string,
+otherwise the exception @racket[exn:fail:contract] is raised.
+
+@examples[#:label #f #:eval pe
+          (define foo (pystring #\f #\o #\o))
+          (pystring-ref foo 0)
+          (eval:error (pystring-ref foo 10))]          
+}
+
+
+@defproc[(subpystring [x pystring?]
+                      [start exact-nonnegative-integer?]
+                      [end exact-nonnegative-integer? (pystring-length x)])
+         pystring?]{ 
+
+Returns a pystring that is @racket[(- end start)] characters
+long, and that contains the same characters as @racket[x] from
+@racket[start] inclusive to @racket[end] exclusive.
+
+The first position in a string corresponds to @racket[0], so the @racket[start]
+and @racket[end] arguments must be less than or equal to the length of
+@racket[str], and @racket[end] must be greater than or equal to
+@racket[start], otherwise the exception @racket[exn:fail:contract] is raised.
+                    
+@examples[#:label #f #:eval pe
+          (subpystring (string->pystring "foobarbaz") 3 6)]
+}
+
+@defproc[(in-pystring [x pystring]) stream?]{
+Returns a sequence (that is also a stream) that is equivalent to using 
+@racket[x] directly as a sequence.
+                                            
+@examples[#:label #f #:eval pe
+          (define x (string->pystring "foo"))
+          (for/list ([c (in-pystring x)])
+            c)]
+}
+
+@;;;
+@;;; PYTHON OBJECTS
+@;;;
+
+
+
 
 @;;; ;{
 @;; @subsection{Under the hood}

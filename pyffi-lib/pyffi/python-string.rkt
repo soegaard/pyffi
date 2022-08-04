@@ -9,6 +9,8 @@
          "python-slice.rkt"
          "python-types.rkt")
 
+(require racket/format)
+
 (require (for-syntax racket/base syntax/parse racket/syntax))
 
 ;;;
@@ -38,10 +40,12 @@
   (PyObject_Length (obj-the-obj x)))
 
 (define (pystring-ref x i)
+  (define who 'pystring-ref)
   (unless (pystring? x)
-    (error 'pystring-length "got: ~a" x))
+    (error who "got: ~a" x))
   (unless (<= 0 i (pystring-length x))
-    (error 'pystring-length "index ~a out of range for the string '~a: " i x))
+    (raise (exn:fail:contract (~a who ": index " i " out of range for the string \"" x "\"")
+                              (current-continuation-marks))))
 
   ; Todo: should this return a Racket character instead?
   (string-ref (PyUnicode_AsUTF8 (PyObject_GetItem (obj-the-obj x) (PyLong_FromLong i))) 0))
