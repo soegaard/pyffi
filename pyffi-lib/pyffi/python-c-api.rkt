@@ -127,6 +127,14 @@
   ;(print v)
   ;(newline)
   v)
+
+(define (borrowed-reference v)
+  (Py_IncRef v)
+  (will-register an-executor v handle-dead-reference)
+  ;(printf "register new reference ")
+  ;(print v)
+  ;(newline)
+  v)
   
 
 ;;;
@@ -243,7 +251,7 @@
 (define-python PyErr_SetString (_fun _PyObject* _string -> _void)) ; set error indicator
 ; ...
 ; Querying the error indicator
-(define-python PyErr_Occurred (_fun -> _PyObject*)) ; caller must hold GIL, borrowed reference
+(define-python PyErr_Occurred (_fun -> [o : _PyObject*] -> (borrowed-reference o))) ; caller must hold GIL, borrowed reference
 
 
 (define-python PyException_GetTraceback (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
@@ -405,7 +413,7 @@
 
 (define-python PyList_New     (_fun _size -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyList_Size    (_fun _PyObject* -> _size))
-(define-python PyList_GetItem (_fun _PyObject* _size -> _PyObject*))                       ; borrowed
+(define-python PyList_GetItem (_fun _PyObject* _size -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
 (define-python PyList_SetItem (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success   ; steals reference 
 (define-python PyList_Insert  (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 ; Analogous to list.insert(index, item).
@@ -450,7 +458,7 @@
 ;;                                   _size _PyObject* -> _PyObject*))
 
 (define-python PyTuple_Size     (_fun _PyObject*             -> _size))
-(define-python PyTuple_GetItem  (_fun _PyObject* _size       -> _PyObject*)) ; borrowed
+(define-python PyTuple_GetItem  (_fun _PyObject* _size       -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
 (define-python PyTuple_GetSlice (_fun _PyObject* _size _size -> [o : _PyObject*] -> (new-reference o))) 
 (define-python PyTuple_SetItem  (_fun _PyObject* _size _PyObject* -> _int)) ; 0 on success
 
@@ -467,10 +475,10 @@
 (define-python PyDict_SetItemString    (_fun _PyObject* _string    _PyObject* -> _int)) ; 0 on success
 (define-python PyDict_DelItem          (_fun _PyObject* _PyObject*            -> _int)) ; 0 on success
 (define-python PyDict_DelItemString    (_fun _PyObject* _string               -> _int)) ; 0 on success
-(define-python PyDict_GetItem          (_fun _PyObject* _PyObject*            -> _PyObject*)) ; borrowed
-(define-python PyDict_GetItemWithError (_fun _PyObject* _PyObject*            -> _PyObject*)) ; borrowed
-(define-python PyDict_GetItemString    (_fun _PyObject* _string               -> _PyObject*)) ; borrowed
-(define-python PyDict_SetDefault       (_fun _PyObject* _PyObject* _PyObject* -> _PyObject*)) ; borrowed
+(define-python PyDict_GetItem          (_fun _PyObject* _PyObject*            -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
+(define-python PyDict_GetItemWithError (_fun _PyObject* _PyObject*            -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
+(define-python PyDict_GetItemString    (_fun _PyObject* _string               -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
+(define-python PyDict_SetDefault       (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
 (define-python PyDict_Items            (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
 (define-python PyDict_Keys             (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
 (define-python PyDict_Values           (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
@@ -494,7 +502,7 @@
 (define-python PyModule_NewObject         (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))    ; name -> module
 (define-python PyModule_New               (_fun _string    -> [o : _PyObject*] -> (new-reference o)))       ; name -> module
 
-(define-python PyModule_GetDict           (_fun _PyObject* -> _PyObject*))    ; module -> dict           borrowed
+(define-python PyModule_GetDict           (_fun _PyObject* -> [o : _PyObject*] -> (borrowed-reference o)))    ; module -> dict           borrowed
 (define-python PyModule_GetNameObject     (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))    ; module -> __name__
 (define-python PyModule_GetName           (_fun _PyObject* -> _string))       ; module -> name
 (define-python PyModule_GetState          (_fun _PyObject* -> _pointer))      ; module -> ...
@@ -517,7 +525,7 @@
 
 (define-python PyOS_FSPath                (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))  ; str or bytes -> ...
 (define-python Py_FdIsInteractive         (_fun _FILE* _string -> _int))
-(define-python PySys_GetObject            (_fun _string -> _PyObject*))  ; borrowed
+(define-python PySys_GetObject            (_fun _string -> [o : _PyObject*] -> (borrowed-reference o)))  ; borrowed
 
 (define-python Py_EncodeLocale            (_fun _wchar* _size* -> _string))
 (define-python Py_DecodeLocale            (_fun _string _size* -> _wchar*))
@@ -529,7 +537,7 @@
 ;;;
 
 (define-python PyImport_Import    (_fun _string -> [o : _PyObject*] -> (new-reference o)))
-(define-python PyImport_AddModule (_fun _string -> _PyObject*)) ; borrowed
+(define-python PyImport_AddModule (_fun _string -> [o : _PyObject*] -> (borrowed-reference o))) ; borrowed
 
 ;(define-python PyModule_GetName   (_fun _PyObject* -> _string))
 
@@ -589,7 +597,7 @@
 
 (define-python PyObject_Repr (_fun _PyObject* -> [o : _PyObject*] -> (new-reference o)))
 
-(define-python PyEval_GetGlobals (_fun -> _PyObject*)) ; -> dictionary
+(define-python PyEval_GetGlobals (_fun -> [o : _PyObject*] -> (borrowed-reference o))) ; -> dictionary
 
 (define-python PyObject_GetAttrString (_fun _PyObject* _string            -> [o : _PyObject*] -> (new-reference o)))
 (define-python PyObject_HasAttrString (_fun _PyObject* _string            -> _int))
