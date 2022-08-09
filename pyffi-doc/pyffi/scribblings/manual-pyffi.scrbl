@@ -1137,7 +1137,7 @@ long, and that contains the same characters as @racket[x] from
 
 The first position in a string corresponds to @racket[0], so the @racket[start]
 and @racket[end] arguments must be less than or equal to the length of
-@racket[str], and @racket[end] must be greater than or equal to
+@racket[x], and @racket[end] must be greater than or equal to
 @racket[start], otherwise the exception @racket[exn:fail:contract] is raised.
                     
 @examples[#:label #f #:eval pe
