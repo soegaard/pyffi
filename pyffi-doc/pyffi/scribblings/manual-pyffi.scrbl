@@ -169,7 +169,7 @@ be used to evaluate expressions and statements in the Python process.
 
 Here Racket starts an embed Python process.
 The Python "1+2" is parsed, compiled and evaluated by Python.
-The resulting Python value 3 is then converted examples into the Racket value 3.
+The resulting Python value 3 is then converted to the Racket value 3.
 
 @subsection{Atomic values: numbers, booleans and @tt{None}}
 
@@ -190,7 +190,7 @@ to their corresponding Racket values.
 @subsection{Compound Values: strings, tuples, lists, and, dictionaries}
 
 Compound (non-atomic) Python values such as strings, tuples, lists and dicts are not converted
-to Racket values. Instead they are wrapped in a struct named #racket[obj].
+to Racket values. Instead they are wrapped in a struct named @racket[obj].
 Due to a custom printer handler these wrapped values print nicely.
 
 @examples[#:label #f #:eval pe
@@ -213,29 +213,30 @@ Printing and displaying a Python object use the
 methods of the object respectively.
 
 The idea is that Racket gains four new data types: @tt{pystring}, @tt{pytuple}, 
-@tt{pylist} and @tt{pydict}. @margin-note{Conversion between hash tables and pydicts
-needs to be implemented, before it can be used in the introduction}
+@tt{pylist} and @tt{pydict}. 
                                                    
-To convert a compound value use @racket[pystring->string], @racket[pytuple->vector]
-or @racket[pylist->list].
+To convert a compound value use @racket[pystring->string], @racket[pytuple->vector],
+@racket[pylist->list] or @racket[pydict->hash].
 
 @examples[#:label #f #:eval pe
           (pystring->string (run "'Hello World'"))
           (pytuple->vector (run "(1,2,3)"))
-          (pylist->list (run "[1,2,3]"))]
+          (pylist->list (run "[1,2,3]"))
+          (pydict->hash (run "{'a': 1, 'b': 2}"))]
 
 Similarly, you can convert Racket values to Python ones.
 
 @examples[#:label #f #:eval pe
           (string->pystring "Hello World")
           (vector->pytuple #(1 2 3))
-          (list->pylist '(1 2 3))]
+          (list->pylist '(1 2 3))
+          (hash->pydict (hash "a" 1 "b" 2))]
 
 It's important to note that creating Python values using
-@racket[string->pystring], @racket[vector->pytuple] and @racket[list->pylist]
-is much more efficient that using @racket[run]. The overhead of @racket[run]
-is due to the parsing and compiling of its its input string. In contrast
-@racket[string->pystring] and friends use the C API to create the
+@racket[string->pystring], @racket[vector->pytuple], @racket[list->pylist]
+and @racket[hash->pydict] is much more efficient that using @racket[run].
+The overhead of @racket[run] is due to the parsing and compiling of its input string.
+In contrast @racket[string->pystring] and friends use the C API to create the
 Python values directly.
 
 The data types have also have constructors:
@@ -243,14 +244,16 @@ The data types have also have constructors:
 @examples[#:label #f #:eval pe
           (pystring #\H #\e #\l #\l #\o)
           (pytuple 1 2 3)
-          (pylist 1 2 3)]
+          (pylist 1 2 3)
+          (pydict "a" 1 "b" 2)]
 
-The new types @tt{pystring}, @tt{pytuple} and @tt{pylist} can be used with @racket[for].
+The new types @tt{pystring}, @tt{pytuple}, @tt{pylist} and @tt{pydict} can be used with @racket[for].
 
 @examples[#:label #f #:eval pe
           (for/list ([x (in-pystring (string->pystring "Hello"))]) x)
           (for/list ([x (in-pytuple (vector->pytuple #(1 2 3)))]) x)
-          (for/list ([x (in-pylist (list->pylist '(1 2 3)))]) x)]
+          (for/list ([x (in-pylist (list->pylist '(1 2 3)))]) x)
+          (for/list ([(k v) (in-pydict (hash->pydict (hash "a" 1 "b" 2)))]) (list k v))]
 
 
 @subsection{Builtin functions and modules}
@@ -385,7 +388,7 @@ If the main module looks like this:
             (initialize)}}
 
 Then @racket[pyffi/numpy] is instantiated before the interpreter is started.
-This means @racket[pyffi/numpy] can't use inspect the Python module @tt{numpy}
+This means @racket[pyffi/numpy] can't inspect the Python module @tt{numpy}
 to get the function signatures it needs.
 
 To solve this problem @racket[pyffi/numpy] registers a number of initialization
@@ -861,7 +864,7 @@ The corresponding data structure in Racket is the hash table.
 
 
 Use the operations @racket[pydict->hash] and @racket[hash->pydict]
-to convert back and froth between pydicts and hash tables.
+to convert back and forth between pydicts and hash tables.
 
 @defproc[(pydict? [v any/c]) boolean?]{
 Returns @racket[#t] if @racket[v] is a pydict (an @racket[obj] with type @racket["dict"]).
@@ -1054,6 +1057,16 @@ and mapped to @racket[v1] otherwise.
           (define d2 (pydict "b" 22 "c" 33))
           (pydict-merge! d1 d2 #f)
           d1]
+}
+
+@defproc[(in-pydict [d pydict?]) stream?]{
+Returns a sequence (that is also a stream) equivalent to  
+@racket[d] directly as a sequence.
+                                            
+@examples[#:label #f #:eval pe
+          (define d (pydict "a" 1 "b" 2))
+          (for/list ([(key value) (in-pydict d)])
+            (list key value))]
 }
 
 
