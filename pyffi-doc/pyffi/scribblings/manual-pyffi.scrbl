@@ -358,6 +358,99 @@ We can get full names of the week days with a width of 9.
           (displayln ((calendar.TextCalendar) .formatmonth 2022 7 #:w 9))]
 
 
+@subsection{Objects, Callable objects, Functions, Methods and Properties}
+
+All values in Python are represented as @emph{objects}. This differs from Racket,
+where most data types (e.g. numbers and strings) aren't objects.
+
+In the data model used by Python, all objects have an identity, a type and a value.
+In practice the identity of a Python object is represented by its address in memory
+[the CPython implementation never moves objects].
+
+To represent a Python object in Racket it is wrapped in an @racket[obj] struct.
+The structure contains the type name as a string and a pointer to the object.
+The wrapper set the struct property @racket[gen:custom-write] to
+display, write and print the wrapped objects nicely.
+
+The result of @tt{repr()} is used to write an object. @linebreak[]
+The result of @tt{str()} us used to display an object.
+
+@examples[#:label #f #:eval pe
+          (define s (string->pystring "foo"))
+          (repr s)
+          (writeln s)
+          (str s)
+          (displayln s)]
+
+Functions and in general @emph{callable objects} support the well-known
+syntax @tt{f(a,b,c)}. Such callable objects are wrapped in an @racket[callable-obj]
+struct, which has @racket[obj] as a super type. The @racket[callable-obj]
+use the struct property @racket[prop:procedure] to make the wrapper applicable.
+
+@examples[#:label #f #:eval pe
+          (run* "def f(x): return x+1")
+          (define f main.f)
+          f
+          (f 41)]
+
+Function calls with keywords work as expected.
+
+@examples[#:label #f #:eval pe
+          (run* "def hello(name, title='Mr'): return 'Hello ' + title + ' ' + name")
+          (displayln (main.hello "Foo"))
+          (displayln (main.hello #:title "Mrs" "Bar"))]
+
+In order to illustrate methods, let's look at the @tt{Calendar} class in
+the @tt{calendar} module.
+
+@examples[#:label #f #:eval pe
+          (import calendar)
+          calendar.Calendar]
+
+Calling the class gives us an instance object. We pass 0 to make monday the first
+week day.
+
+@examples[#:label #f #:eval pe
+          (calendar.Calendar #:firstweekday 0)]
+
+One of the methods of a calendar object is @tt{monthdatescalendar}.
+
+@examples[#:label #f #:eval pe
+          (define cal (calendar.Calendar #:firstweekday 0))
+          cal.monthdatescalendar]
+
+The syntax @tt{obj.method} gives us a @emph{bound method},
+which we can call. Bound methods are wrapped in @racket[method-obj]
+to make them applicable.
+
+@margin-note{The use of @racket[pyfirst] is to reduce the amount of output.}
+@examples[#:label #f #:eval pe
+          (define year  2022)
+          (define month    9)
+          (pyfirst (pyfirst (cal.monthdatescalendar year month)))]
+
+However, we can also invoke the @tt{monthdatescalendar} method directly
+with the help of the syntax @tt{(obj .method argument ...)}.
+
+@examples[#:label #f #:eval pe
+          (pyfirst (pyfirst (cal .monthdatescalendar year month)))]
+
+Method invocations can be chained. That is, if a method call returns
+an object, we can invoke a method on it. The fist element
+of a list can be retrieced by the @tt{pop} method, so we can replace
+the two calls to @racket[pyfirst] with two invocations of @tt{.pop}.
+
+@examples[#:label #f #:eval pe
+          (cal .monthdatescalendar year month  .pop 0 .pop 0)]
+
+Besides methods an object can have properties (atributes).
+The syntax is @tt{obj.attribute}. Most Python objects
+carry a little documentation in the oddly named @tt{__doc__} attribute.
+
+@examples[#:label #f #:eval pe
+          (displayln cal.__doc__)]
+
+
 @subsection{Exceptions}
 
 An exception on the Python side is converted to an exception on the Racket side.
@@ -545,6 +638,21 @@ This function takes constant time.
 @examples[#:label #f #:eval pe
           (pylist-ref (pylist "a" "b" "c" "d") 1)]
 }
+
+@defproc[(pyfirst [xs pylist?])  any/c]{
+Returns the first element of the pylist @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pyfirst (pylist "a" "b" "c" "d"))]
+}
+
+@defproc[(pysecond [xs pylist?])  any/c]{
+Returns the second element of the pylist @racket[xs].
+
+@examples[#:label #f #:eval pe
+          (pysecond (pylist "a" "b" "c" "d"))]
+}
+
 
 @defproc[(pylist-set! [xs pylist?] [i exact-nonnegative-integer?] [v any/c])  any/c]{
 Replace the element with index @racket[i] of the pylist @racket[xs] with the value @racket[v].
@@ -1168,10 +1276,54 @@ Returns a sequence (that is also a stream) that is equivalent to using
 }
 
 @;;;
-@;;; PYTHON OBJECTS
+@;;; PYTHON GENERATORS
 @;;;
 
+@subsection{Python Generators}
 
+Python generator correspond to Racket generators from @racket[racket/generator].
+Think of a generator as a function that can produce a series of values.
+
+If the body of Python function contains a @tt{yield} statement, calling the
+function returns a generator object. Use @tt{next} repeatedly on the generator
+to generate the series of values.
+
+The @tt{yield expr} statement both "pauses" the computation of the generator and returns
+the result of evaluating the expression. The computation is resumed by @tt{next}.
+
+This example shows a generator that produces the natural numbers.
+
+@verbatim{ (run*  @~a|{@~a{def f():
+                             x=0
+                             while 1:
+                               x=x+1
+                             yield x}
+           (let ([g (main.f)])
+             (list (next g) (next g) (next g))) }|)}
+
+This produces the list @racket[(list 1 2 3)].
+
+Usually the most convenient way of using such a generator
+is to use @racket[in-pygenerator].
+
+@defproc[(in-pygenerator [pygen pygenerator?]) stream?]{
+Returns a sequence (that is also a stream) that produces 
+the elements from @tt{pygen}.
+
+@verbatim{ (run* @~a|{@~a{def f():
+                            x=0
+                            while 1:
+                              x=x+1
+                              yield x}}|)
+           (let ([g (main.f)])
+             (for ([_ 3] 
+                   [x (in-pygenerator g)])
+               x))}
+}
+
+@;;;
+@;;; PYTHON OBJECTS
+@;;;
 
 
 @;;; ;{
@@ -1183,5 +1335,3 @@ Returns a sequence (that is also a stream) that is equivalent to using
 @;; }
 
 @index-section[]
-
-

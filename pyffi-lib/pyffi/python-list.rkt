@@ -81,6 +81,9 @@
   (when (eqv? v #f) (PyErr_Clear))
   (and v (python->racket v)))
 
+(define (pyfirst  pylist) (pylist-ref pylist 0))
+(define (pysecond pylist) (pylist-ref pylist 1))
+
 (define pylist-get-item pylist-ref)
 
 (define (pylist->list pylist)
