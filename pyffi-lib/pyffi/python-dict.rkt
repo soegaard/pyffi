@@ -249,3 +249,42 @@
     [(0) (void)]
     [else (error 'pydict-update! "an error occurred")]))
 
+(require (only-in ffi/unsafe malloc memset free))
+
+; The position is a pointer to an size_t integer initialized to zero.
+
+(define (pydict->key/values x)
+  (define who 'pydict->key/values)
+  (unless (pydict? x)
+    (raise-arguments-error who "expected a pydict as argument" "d" x))
+
+  (define o (obj-the-obj x))
+  ; Allocate new position
+  (define pos (malloc 'raw 16))
+  ; Initialize position to zero.
+  (memset pos 0 16)
+  ; loop until pos is zero again
+  (let loop ([kvs '()])
+    (define flag/key/value (PyDict_Next o pos #f #f))
+    (case (car flag/key/value)
+      [(0) (free pos)
+           (reverse kvs)]
+      [else (define kv  (list (pr (cadr  flag/key/value))       
+                              (pr (caddr flag/key/value))))
+            (loop (cons kv kvs))])))
+
+(define (in-pydict pydict)
+  (define o (obj-the-obj pydict))
+  (make-do-sequence
+   (λ () (values (λ (pos) (values (pr (caddr pos)) (pr (cadddr pos))))      ; pos->elm
+                 #f                                                         ; update (identity)
+                 (λ (pos) (cons (car pos) (PyDict_Next o (car pos) #f #f))) ; next
+                 (let ([pos (malloc 'raw 16)])                              ; initial-pos 
+                   (memset pos 0 16)
+                   (cons pos (PyDict_Next o pos #f #f)))
+                 (λ (pos)                                                   ; continue with pos?
+                   (define cont? (not (= (cadr pos) 0)))
+                   (unless cont? (free (car pos)))
+                   cont?)                                        
+                 #f
+                 #f))))
