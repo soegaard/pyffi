@@ -79,7 +79,7 @@ Bindings for @tt{Numpy}, the popular package for numerical calculations, are pro
 This is the first release of the library, so be prepared to deal with
 some rough edges here and there.
 
-Report bugs to the @tt{pyffi} Github repository: @|pyffi-github|.
+Report bugs to the @tt{pyffi} GitHub repository: @|pyffi-github|.
 
 If you run into any questions, use the forum
 @hyperlink["https://racket.discourse.group/"]{Racket Discourse}.
@@ -171,9 +171,9 @@ Here Racket starts an embed Python process.
 The Python "1+2" is parsed, compiled and evaluated by Python.
 The resulting Python value 3 is then converted to the Racket value 3.
 
-@subsection{Atomic values: numbers, booleans and @tt{None}}
+@subsection{Atomic values: numbers, Booleans and @tt{None}}
 
-Atomic Python values (numbers, booleans and None) are automatically converted
+Atomic Python values (numbers, Booleans and None) are automatically converted
 to their corresponding Racket values.
 
 @examples[#:label #f #:eval pe
@@ -373,7 +373,7 @@ The wrapper set the struct property @racket[gen:custom-write] to
 display, write and print the wrapped objects nicely.
 
 The result of @tt{repr()} is used to write an object. @linebreak[]
-The result of @tt{str()} us used to display an object.
+The result of @tt{str()} is used to display an object.
 
 @examples[#:label #f #:eval pe
           (define s (string->pystring "foo"))
@@ -407,7 +407,7 @@ the @tt{calendar} module.
           (import calendar)
           calendar.Calendar]
 
-Calling the class gives us an instance object. We pass 0 to make monday the first
+Calling the class gives us an instance object. We pass 0 to make Monday the first
 week day.
 
 @examples[#:label #f #:eval pe
@@ -437,7 +437,7 @@ with the help of the syntax @tt{(obj .method argument ...)}.
 
 Method invocations can be chained. That is, if a method call returns
 an object, we can invoke a method on it. The fist element
-of a list can be retrieced by the @tt{pop} method, so we can replace
+of a list can be retrieved by the @tt{pop} method, so we can replace
 the two calls to @racket[pyfirst] with two invocations of @tt{.pop}.
 
 @examples[#:label #f #:eval pe
@@ -1303,23 +1303,31 @@ This example shows a generator that produces the natural numbers.
 
 This produces the list @racket[(list 1 2 3)].
 
-Usually the most convenient way of using such a generator
-is to use @racket[in-pygenerator].
+
+Usually the most convenient way of using such a generator is to use @racket[in-pygenerator].
 
 @defproc[(in-pygenerator [pygen pygenerator?]) stream?]{
 Returns a sequence (that is also a stream) that produces 
 the elements from @tt{pygen}.
 
-@verbatim{ (run* @~a|{@~a{def f():
-                            x=0
-                            while 1:
-                              x=x+1
-                              yield x}}|)
-           (let ([g (main.f)])
+@verbatim{ (let ([g (main.f)])
              (for ([_ 3] 
                    [x (in-pygenerator g)])
+               x))}}
+
+Generators are automatically wrapped in an @racket[generator-obj] struct,
+which has @racket[obj] as super type. The wrapping allows us to make the
+@racket[in-generator] implicit in @racket[for] loops.
+
+@verbatim{ (let ([g (main.f)])
+             (for ([_ 3] [x g])
                x))}
-}
+
+
+
+
+
+
 
 @;;;
 @;;; PYTHON OBJECTS
