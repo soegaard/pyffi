@@ -49,7 +49,9 @@ jobs:
         run: raco pkg install --scope installation pyffi-lib
       # Configure Pyffi
       - name: Configure Pyffi
-        run: raco pyffi configure
+        run: |
+             raco pyffi configure
+             raco pyffi show
       # Package Installation (pyffi-doc)
       - name: Package Installation (pyffi-doc)
         run: raco pkg install --scope installation pyffi-doc
