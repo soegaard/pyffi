@@ -33,6 +33,9 @@ jobs:
       # Python Diagnostics
       - name: Python Diagnostics
         run: python3 -m sysconfig
+      # Python Diagnostics - Traceback
+      - name: Python Diagnostics (traceback)
+        run: python3 -c "import traceback"        
       # Install Racket
       - name: Install Racket
         uses: Bogdanp/setup-racket@v1.8.1
