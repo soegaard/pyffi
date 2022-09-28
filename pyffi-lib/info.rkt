@@ -2,7 +2,7 @@
 
 (define collection 'multi)
 
-(define deps '("base"
+(define deps '("base" "at-exp-lib"
                ;; If we want to distribute Python as a package, we will need:
                ;; ("python-i386-macosx"          #:platform "i386-macosx")
                ;; ("python-x86_64-macosx"        #:platform "x86_64-macosx")
@@ -14,7 +14,8 @@
                ;; ("python-x86_64-linux-natipkg" #:platform "x86_64-linux-natipkg")
                ))
 
-(define build-deps '())
+(define build-deps (list "base" "at-exp-lib"))
+
 
 (define pkg-desc "Use Python from Racket - Implementation part without documentation")
 
