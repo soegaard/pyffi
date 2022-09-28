@@ -36,8 +36,11 @@ jobs:
       # Python Diagnostics - Traceback
       - name: Python Diagnostics (traceback)
         run: |
-              python3 -c "import traceback"        
+              python3 -c "import traceback"
+              echo "data"        
               ls /opt/hostedtoolcache/Python/3.10.7/x64
+              echo "libs"
+              ls /opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10
       # Install Racket
       - name: Install Racket
         uses: Bogdanp/setup-racket@v1.8.1
