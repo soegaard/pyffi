@@ -41,7 +41,9 @@
   (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
               #:when (file-exists? (build-full-path name)))
     (build-full-path name)))
-    
+
+(displayln (list 'libpython-path libpython-path))
+
 ; Note: If the Python interpreter loads a shared library dynamically,
 ;       it needs access to the Python C-API. To make the symbols
 ;       exported by a shared library visible to other shared libaries,
