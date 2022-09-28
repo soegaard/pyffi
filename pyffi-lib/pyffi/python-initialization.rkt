@@ -21,7 +21,7 @@
 
 (define home (get-preference 'pyffi:data (λ () #f)))
 (unless home
-  (parameterize ([current-output-port current-error-port])
+  (parameterize ([current-output-port (current-error-port)])
     (displayln "There is no preference for 'pyffi:data' set.")
     (displayln "You must set the 'pyffi:libdir' preference to the home folder of python.")
     (displayln "The most convenient way to do this, is to run `raco pyffi configure`.")
@@ -62,6 +62,7 @@
 
 
 (define (initialize)
+  (diagnostics)
   (set-environment-variables)
   (Py_Initialize)
   (initialize-main-and-builtins)
