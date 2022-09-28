@@ -53,7 +53,6 @@
   (displayln (list 'Path            (encode (Py_GetPath))))
   (displayln (list 'PythonHome      (encode (Py_GetPythonHome)))))
 
-(diagnostics)
 ;;;
 ;;; Setup Initial Environment
 ;;;
