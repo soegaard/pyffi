@@ -22,3 +22,28 @@
 (for/list ([_ 5] [x (main.f)]) x)
 (for/list ([_ 5] [x (main.g)]) x)
 
+(let ([g (main.f)])
+  (list (next g)
+        (next g)
+        (next g)
+        (next g)
+        (next g)))
+
+(run* @~a{def f():
+            x=0
+            while 1:
+              x=x+1
+              yield x})
+
+(let ([g (main.f)])
+  (for ([_ 5] [x (in-pygenerator g)])
+    x))
+
+(let ([g (main.f)])
+  (for ([_ 5] [x g])
+    x))
+
+
+
+
+

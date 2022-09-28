@@ -10,8 +10,8 @@
 ;; Example from https://pygments.org/docs/quickstart/
 
 
-;; from pygments import highlight
-;; from pygments.lexers import PythonLexer
+;; from pygments            import highlight
+;; from pygments.lexers     import PythonLexer
 ;; from pygments.formatters import HtmlFormatter
 
 ;; code = 'print "Hello World"'
@@ -20,7 +20,7 @@
 
 ;; Setup Python
 (initialize)                
-(finish-initialization)
+(post-initialize)
 
 ;; Import Pygments
 (import-from pygments            highlight)

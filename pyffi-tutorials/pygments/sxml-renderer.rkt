@@ -2,12 +2,19 @@
 ;; Original by Danny Yoo
 ;;   https://github.com/shriram/scribble-embedding/blob/master/sxml-render.rkt
 
+;; Added html->element.
+
 (require racket/match
          scribble/html-properties
-         scribble/core)
+         scribble/core
+         html-parsing)
 
 
-(provide sxml->element)
+(provide html->element sxml->element)
+
+(define (html->element x)
+   (define top (cdr (html->xexp (open-input-string x))))
+   (map sxml->element top))
 
 
 ;; sxml->element: sxml -> element

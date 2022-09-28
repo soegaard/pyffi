@@ -12,14 +12,14 @@
 
 (define width  320)
 (define height 240)
-(define size   (tuple width height))
+(define size   (pytuple width height))
 
 (define speed (pylist 2 2))
-(define black (tuple 0 0 0))
+(define black (pytuple 0 0 0))
 
 ;(define screen (pygame.display.set_mode size)) ; todo
 (define screen   (pygame.display .set_mode size)) 
-(define ball     (pygame.image .load "intro_ball.gif"))
+(define ball     (pygame.image .load "pygame-intro-ball.gif"))
 (define ballrect (ball .get_rect))
 
 (define (flip-sign i)
@@ -27,6 +27,7 @@
 
 (let loop ()
   (for ([event (in-pylist (pygame.event .get))])
+    (display "." (current-error-port))
     (when (= event.type pygame.QUIT)
       (exit))
 
