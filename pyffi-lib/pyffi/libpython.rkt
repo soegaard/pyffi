@@ -46,7 +46,7 @@
 
 
 
-(displayln (list 'libpython-path libpython-path))
+; (displayln (list 'libpython-path libpython-path))
 
 ; Note: If the Python interpreter loads a shared library dynamically,
 ;       it needs access to the Python C-API. To make the symbols
