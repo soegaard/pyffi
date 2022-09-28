@@ -44,10 +44,15 @@ jobs:
           dest: '"${HOME}/racketdist"'
           local_catalogs: $GITHUB_WORKSPACE
           sudo: never
-      # Package Installation
+      # Package Installation (pyffi-lib)
       - name: Package Installation - Local Packages
-        run: |
-          raco pkg install --scope installation pyffi-lib pyffi-doc
+        run: raco pkg install --scope installation pyffi-lib
+      # Configure Pyffi
+      - name: Configure Pyffi
+        run: raco pyffi configure
+      # Package Installation (pyffi-doc)
+      - name: Package Installation (pyffi-doc)
+        run: raco pkg install --scope installation pyffi-doc
       # Setup Local Packages
       - name: Setup Collections
         run: raco setup -v --check-pkg-deps pyffi
