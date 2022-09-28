@@ -25,6 +25,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      # Install Python 3.10
+      - name: Install Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
       # Install Racket
       - name: Install Racket
         uses: Bogdanp/setup-racket@v1.8.1
