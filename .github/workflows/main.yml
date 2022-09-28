@@ -39,8 +39,8 @@ jobs:
       # Package Installation
       - name: Package Installation - Local Packages
         run: |
-          raco pkg install -i --auto --no-setup --skip-installed  pyffi pyffi-lib pyffi-doc 
-          raco pkg update     --auto --no-setup                   pyffi pyffi-lib pyffi-doc 
+          raco pkg install -i --auto --no-setup --skip-installed  pyffi-lib
+          raco pkg update     --auto --no-setup                   pyffi-lib
       # Setup Local Packages
       - name: Setup Collections
         run: raco setup --check-pkg-deps pyffi
