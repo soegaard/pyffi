@@ -483,10 +483,13 @@
 (define-python PyDict_Keys             (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
 (define-python PyDict_Values           (_fun _PyObject*                       -> [o : _PyObject*] -> (new-reference o))) ; PyListObject
 (define-python PyDict_Size             (_fun _PyObject*                       -> _size))
-(define-python PyDict_Next             (_fun _PyObject* _size _PyObject** _PyObject** -> _int))
+(define-python PyDict_Next             (_fun _PyObject* _pointer (key : (_ptr io _PyObject*)) (val : (_ptr io _PyObject*)) 
+                                             -> (flag : _int) -> (list flag (borrowed-reference key) (borrowed-reference val))))
 (define-python PyDict_Merge            (_fun _PyObject* _PyObject* _int       -> _int))
 (define-python PyDict_Update           (_fun _PyObject* _PyObject*            -> _int))
 (define-python PyDict_MergeFromSeq2    (_fun _PyObject* _PyObject* _int       -> _int))
+
+
 
 ;;;
 ;;; Mappping Protocol

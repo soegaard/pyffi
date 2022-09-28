@@ -49,6 +49,7 @@
                      racket/syntax))
 
 (define (get-obj qualified-name)
+  #;(displayln (list 'import-get-obj 'qualified-name qualified-name))
   (pr (get qualified-name)))
 
 (define-syntax (as stx) (raise-syntax-error 'as "used outside import/import-from form" stx))

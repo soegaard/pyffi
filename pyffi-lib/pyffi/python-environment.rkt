@@ -99,7 +99,7 @@
 
           
 (define (get* obj names all-names prefix orig-sym type)
-  #; (begin (write (list 'get* obj names all-names orig-sym type)) (newline))
+  ; (begin (write (list 'get* obj names all-names orig-sym type)) (newline))
   #;(displayln (PyUnicode_AsUTF8 (PyObject_Str obj)))
   ; obj is a either a module or a dict
   (match names
