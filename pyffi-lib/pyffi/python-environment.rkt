@@ -48,8 +48,8 @@
   (void (PyModule_AddObjectRef main "operator" mod:operator))
 
   ; Removed temporatily
-  #;(import-into-python 'traceback)
-  #;(import-into-python 'inspect)
+  (import-into-python 'traceback)
+  (import-into-python 'inspect)
 
   (void))
 
