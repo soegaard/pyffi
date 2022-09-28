@@ -47,7 +47,6 @@
         (PyImport_ImportModuleEx "operator" globals globals empty-from-list))
   (void (PyModule_AddObjectRef main "operator" mod:operator))
 
-  ; Removed temporatily
   (import-into-python 'traceback)
   (import-into-python 'inspect)
 
