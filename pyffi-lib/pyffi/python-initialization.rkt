@@ -53,6 +53,7 @@
   (displayln (list 'Path            (encode (Py_GetPath))))
   (displayln (list 'PythonHome      (encode (Py_GetPythonHome)))))
 
+(diagnostics)
 ;;;
 ;;; Setup Initial Environment
 ;;;
@@ -62,7 +63,6 @@
 
 
 (define (initialize)
-  (diagnostics)
   (set-environment-variables)
   (Py_Initialize)
   (initialize-main-and-builtins)
