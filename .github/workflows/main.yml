@@ -49,4 +49,4 @@ jobs:
           raco pkg update     --auto --no-setup                   pyffi-lib
       # Setup Local Packages
       - name: Setup Collections
-        run: raco setup --check-pkg-deps pyffi
+        run: raco setup -v --check-pkg-deps pyffi
