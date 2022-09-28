@@ -38,9 +38,13 @@
       (string->path (string-append name "." extension))))
 
 (define libpython-path
-  (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
-              #:when (file-exists? (build-full-path name)))
-    (build-full-path name)))
+  (or (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
+                  #:when (file-exists? (build-full-path name)))
+        (build-full-path name))
+      ;; Github Action (Ubuntu)
+      "libpython3.10"))
+
+
 
 (displayln (list 'libpython-path libpython-path))
 
