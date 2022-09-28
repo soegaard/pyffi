@@ -32,8 +32,10 @@
     [else      (error 'internal-error:extension "File a bug report on Github.")]))
 
 (define (build-full-path name)
-  (build-path libpython-folder
-              (string->path (string-append name "." extension))))
+  (if libpython-folder
+      (build-path libpython-folder
+                  (string->path (string-append name "." extension)))
+      (string->path (string-append name "." extension))))
 
 (define libpython-path
   (for/first ([name '("libpython3.10" "libpython310" "libpython3")]
