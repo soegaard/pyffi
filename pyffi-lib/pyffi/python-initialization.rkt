@@ -37,7 +37,7 @@
 
 (define (set-environment-variables)
   (define (decode s) (Py_DecodeLocale s #f))
-  (Py_SetProgramName (decode program-full-path))
+  (Py_SetProgramName (decode (build-path home program-full-path)))
   ; (Py_SetPath (Py_DecodeLocale (get-preference 'pyffi:data (λ () #f)) #f))
   (Py_SetPythonHome  (decode home)))
 
