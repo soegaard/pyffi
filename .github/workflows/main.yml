@@ -15,7 +15,8 @@ on:
 
 # Environment variables
 env:
-  PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10"
+  PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/"
+  # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
