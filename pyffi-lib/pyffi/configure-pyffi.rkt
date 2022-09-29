@@ -254,10 +254,25 @@
             configure 'pyffi' using  <path-to-python>
 
         raco pyffi show
-            show the current 'pyffi' configuration})
+            show the current 'pyffi' configuration
+
+        raco pyffi diagnostics
+            show the Python paths and variables})
 
 (define (display-usage)
   (displayln usage))
+
+(define (diagnostics)
+  (define path-to-python #f)
+  (get-configuration path-to-python)
+
+  (displayln "Python Paths")
+  (displayln "------------")
+  (pretty-print (python-paths))
+  
+  (displayln "Python Variables")
+  (displayln "----------------")
+  (pretty-print (python-variables)))
 
 (define (run)
   (command-line
@@ -277,6 +292,7 @@
      [(list "configure")                (configure)]
      [(list "configure" path-to-python) (configure path-to-python)]
      [(list "show")                     (show)]
+     [(list "diagnostics")              (diagnostics)]
      [else                              (display-usage)
                                         (exit 1)])))
   
