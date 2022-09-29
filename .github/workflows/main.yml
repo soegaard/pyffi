@@ -48,7 +48,7 @@ jobs:
           architecture: 'x64'
           distribution: 'full'
           variant: 'CS'
-          version: '8.5'
+          version: '8.4'
           dest: '"${HOME}/racketdist"'
           local_catalogs: $GITHUB_WORKSPACE
           sudo: never
