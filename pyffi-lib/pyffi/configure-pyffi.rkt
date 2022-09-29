@@ -86,7 +86,7 @@
     (display   "    ")
     (displayln command)
     (displayln "Configuration of `pyffi` failed.")
-    (exit 1))
+    (exit 2))
 
   ; (displayln system-configuration-string)
 
@@ -294,6 +294,6 @@
      [(list "show")                     (show)]
      [(list "diagnostics")              (diagnostics)]
      [else                              (display-usage)
-                                        (exit 1)])))
+                                        (exit 3)])))
   
 (run)
