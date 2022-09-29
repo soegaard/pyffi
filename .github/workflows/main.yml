@@ -36,6 +36,9 @@ jobs:
       # Python Diagnostics - Sysconfig
       - name: Python Diagnostics - Is libpython to be found?
         run: python3 -c 'from distutils.sysconfig import get_config_var; print(get_config_var("LDLIBRARY"))'
+      # Python Diagnostics - Names of modules in standard library
+      - name: Python Diagnostics - Names of modules in standard library
+        run: python3.10 -c "import sys ; print(sorted(sys.stdlib_module_names))"
       # Python Diagnostics - Traceback
       - name: Python Diagnostics (traceback)
         run: |
