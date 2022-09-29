@@ -46,7 +46,7 @@
 
 (define (set-environment-variables)
   (define (decode s) (Py_DecodeLocale s #f))
-  (Py_SetProgramName (decode "pyffi"))
+  (Py_SetProgramName (decode "python3.10"))
   ; (Py_SetProgramName (decode (build-path libdir)))
   ; (Py_SetPath (Py_DecodeLocale (get-preference 'pyffi:data (λ () #f)) #f))
   (Py_SetPythonHome  (decode home)))
