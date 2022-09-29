@@ -55,6 +55,11 @@ jobs:
               ls /opt/hostedtoolcache/Python/3.10.7/x64          # ubuntu
               echo "LIBS"
               ls /opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10
+              PYTHONPATH
+      # Python Diagnostics - PYTHONPATH
+      - name: Python Diagnostics (PYTHONPATH)
+        run: ls $PYTHONHOME
+
       # Install Racket
       - name: Install Racket
         uses: Bogdanp/setup-racket@v1.8.1
