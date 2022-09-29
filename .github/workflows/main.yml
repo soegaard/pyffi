@@ -60,7 +60,7 @@ jobs:
         run: |
              raco pyffi configure
              raco pyffi show
-             raco pyffi diagnotics
+             raco pyffi diagnostics
       # Package Installation (pyffi-doc)
       - name: Package Installation (pyffi-doc)
         run: raco pkg install --scope installation pyffi-doc
