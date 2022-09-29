@@ -34,10 +34,12 @@
 
 ; (define home "/usr/local/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10")
 
+
 (define (set-environment-variables)
   (define (decode s) (Py_DecodeLocale s #f))
   (Py_SetProgramName (decode program-full-path))
-  (Py_SetPythonHome  (decode home)))
+  ; (Py_SetPath (Py_DecodeLocale (get-preference 'pyffi:data (λ () #f)) #f))
+  #;(Py_SetPythonHome  (decode home)))
 
 ;;;
 ;;; Diagnostics
