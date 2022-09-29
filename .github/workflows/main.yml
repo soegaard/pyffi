@@ -39,6 +39,9 @@ jobs:
       # Python Diagnostics - Names of modules in standard library
       - name: Python Diagnostics - Names of modules in standard library
         run: python3.10 -c "import sys ; print(sorted(sys.stdlib_module_names))"
+      # Python Diagnostics - Names of builtin modules
+      - name: Python Diagnostics - Names of builtin modules
+        run: python3.10 -c "import sys ; print(sorted(sys.builtin_module_names))"
       # Python Diagnostics - Traceback
       - name: Python Diagnostics (traceback)
         run: |
