@@ -42,7 +42,7 @@
                   #:when (file-exists? (build-full-path name)))
         (build-full-path name))
       ;; Github Action (Ubuntu)
-      (build-full-path "libpython3.10")))
+      "libpython3.10")) 
 
 
 
