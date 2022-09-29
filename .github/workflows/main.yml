@@ -57,7 +57,7 @@ jobs:
               ls /opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10
       # Python Diagnostics - PYTHONPATH
       - name: Python Diagnostics (PYTHONPATH)
-        run: ls $PYTHONHOME
+        run: ls $PYTHONPATH
 
       # Install Racket
       - name: Install Racket
