@@ -393,7 +393,9 @@ use the struct property @racket[prop:procedure] to make the wrapper applicable.
           f
           (f 41)]
 
-Function calls with keywords work as expected.
+Function calls with keywords work as expected. A Python keyword
+is simply prefixed with @tt{#:} to turn it into a Racket keyword,
+as this example shows:
 
 @examples[#:label #f #:eval pe
           (run* "def hello(name, title='Mr'): return 'Hello ' + title + ' ' + name")
