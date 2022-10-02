@@ -86,7 +86,7 @@
     ; it means an exception occurred on the Python side.
     ; We must fetch and normalize the exception, exception value and the traceback.
     ; Fetching the exception clears the exception flags on the Python side.
-    ; Formatting the exception as a string is done useing the Python module `traceback`.
+    ; Formatting the exception as a string is done using the Python module `traceback`.
     (syntax-parse stx
       [(_handle-python-exception qualified-name result:id)
        (syntax/loc stx
