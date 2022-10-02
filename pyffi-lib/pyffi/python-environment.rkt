@@ -60,7 +60,9 @@
   ; (displayln (list 'import-into-python (or (and as (~a as)) module-str)))
   (cond
     [mod  (void (PyModule_AddObjectRef main (or (and as (~a as)) module-str) mod))]
-    [else (error 'import (~a "No Python module named '" module-sym "'"))]))
+    [else
+     (PyErr_Print)
+     (error 'import (~a "No Python module named '" module-sym "'"))]))
 
 (define (import-numpy)
   (define empty-from-list (PyList_New 0))
