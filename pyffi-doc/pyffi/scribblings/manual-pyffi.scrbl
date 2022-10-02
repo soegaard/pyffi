@@ -234,7 +234,7 @@ Similarly, you can convert Racket values to Python ones.
 
 It's important to note that creating Python values using
 @racket[string->pystring], @racket[vector->pytuple], @racket[list->pylist]
-and @racket[hash->pydict] is much more efficient that using @racket[run].
+and @racket[hash->pydict] is much more efficient than using @racket[run].
 The overhead of @racket[run] is due to the parsing and compiling of its input string.
 In contrast @racket[string->pystring] and friends use the C API to create the
 Python values directly.
