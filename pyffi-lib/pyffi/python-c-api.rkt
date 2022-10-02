@@ -644,3 +644,146 @@
 (define-python PyEval_EvalCode (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))) 
 
 
+;;;
+;;; PyConfig
+;;;
+
+(define-cstruct _PyConfig
+  ([_config_init _int]   ;   /* _PyConfigInitEnum value */
+
+   [isolated                _int]
+   [use_environment         _int]
+   [dev_mode                _int]
+   [install_signal_handlers _int]
+   [use_hash_seed           _int]
+   [hash_seed               _ulong]
+   [faulthandler            _int]
+   [tracemalloc             _int]
+   [perf_profiling          _int]
+   [import_time             _int]
+   [code_debug_ranges       _int]
+   [show_ref_count          _int]
+   [dump_refs               _int]
+   [dump_refs_file          _wchar*]
+   [malloc_stats            _int]
+   [filesystem_encoding     _wchar*]
+   [filesystem_errors       _wchar*]
+   [pycache_prefix          _wchar*]
+   [parse_argv              _int]
+   [orig_argv               _PyWideStringList]
+   [argv                    _PyWideStringList]
+   [xoptions                _PyWideStringList]
+   [warnoptions             _PyWideStringList]
+   [site_import _int]
+   [bytes_warning _int]
+   [warn_default_encoding _int]
+   [inspect _int]
+   [interactive _int]
+   [optimization_level _int]
+   [parser_debug _int]
+   [write_bytecode _int]
+   [verbose _int]
+   [quiet _int]
+   [user_site_directory _int]
+   [configure_c_stdio _int]
+   [buffered_stdio _int]
+   [stdio_encoding _wchar*]
+   [stdio_errors _wchar*]   
+   ;; #ifdef MS_WINDOWS
+   ;;     int legacy_windows_stdio;
+   ;; #endif
+   [check_hash_pycs_mode _wchar*]
+   [use_frozen_modules _int]
+   [safe_path _int]
+   ;; /* --- Path configuration inputs ------------ */
+   [pathconfig_warnings _int]
+   [program_name _wchar*]
+   [pythonpath_env _wchar*]
+   [home _wchar*]
+   [platlibdir _wchar*]
+
+   ;; /* --- Path configuration outputs ----------- */
+   [module_search_paths_set _int]
+   [module_search_paths _PyWideStringList]
+   [stdlib_dir _wchar*]
+   [executable _wchar*]
+   [base_executable _wchar*]
+   [prefix _wchar*]
+   [base_prefix _wchar*]
+   [exec_prefix _wchar*]
+   [base_exec_prefix _wchar*]
+
+   ;; /* --- Parameter only used by Py_Main() ---------- */
+   [skip_source_first_line _int]
+   [run_command  _wchar*]
+   [run_module   _wchar*]
+   [run_filename _wchar*]
+   ;; /* --- Private fields ---------------------------- */
+   ;; // Install importlib? If equals to 0, importlib is not initialized at all.
+   ;; // Needed by freeze_importlib.
+   [_install_importlib _int];
+   ;; // If equal to 0, stop Python initialization before the "main" phase.
+   [_init_main _int ]
+   ;; // If non-zero, disallow threads, subprocesses, and fork.
+   ;; // Default: 0.
+   [_isolated_interpreter _int]
+   ;; // If non-zero, we believe we're running from a source tree.
+   [_is_python_build _int]))
+(define _PyConfig* _PyConfig-pointer)
+
+;; typedef struct {
+;;     /* If length is greater than zero, items must be non-NULL
+;;        and all items strings must be non-NULL */
+;;     Py_ssize_t length;
+;;     wchar_t **items;
+;;     } PyWideStringList;
+
+
+
+(define-cstruct _PyWideStringList
+  ([length _ssize]   ;   /* _PyConfigInitEnum value */
+   [items  _wchar**]))
+
+(define _PyWideStringList* (_cpointer/null _PyWideStringList))
+
+
+;; typedef struct {
+;;     enum {
+;;         _PyStatus_TYPE_OK=0,
+;;         _PyStatus_TYPE_ERROR=1,
+;;         _PyStatus_TYPE_EXIT=2
+;;     } _type;
+;;     const char *func;
+;;     const char *err_msg;
+;;     int exitcode;
+;;     } PyStatus;
+
+(define _char* (_cpointer/null _int8))  ; assume _char is a byte
+
+(define-cstruct _PyStatus
+  ([_type (_enum '(_PyStatus_TYPE_OK    = 0
+                   _PyStatus_TYPE_ERROR = 1
+                   _PyStatus_TYPE_EXIT  = 2))]
+   [func     _char*]
+   [err_msg  _char*]
+   [exitcode _int]))
+
+(define-python PyConfig_InitPythonConfig   (_fun _PyConfig* -> _void))
+(define-python PyConfig_InitIsolatedConfig (_fun _PyConfig* -> _void))
+
+(define-python PyConfig_SetString          (_fun _PyConfig* _wchar* _wchar*  -> _PyStatus))
+(define-python PyConfig_SetBytesString     (_fun _PyConfig* _wchar*  _char*  -> _PyStatus))
+
+(define-python PyConfig_SetArgv            (_fun _PyConfig* _int _wchar*  -> _PyStatus))
+(define-python PyConfig_SetBytesArgv       (_fun _PyConfig* _int  _char*  -> _PyStatus))
+
+
+(define-python PyConfig_SetWideStringList  (_fun _PyConfig* _int _PyWideStringList*  _ssize _wchar** -> _PyStatus))
+
+(define-python PyConfig_Read               (_fun _PyConfig*  -> _PyStatus))
+(define-python PyConfig_Clear              (_fun _PyConfig*  -> _void))
+
+
+
+
+
