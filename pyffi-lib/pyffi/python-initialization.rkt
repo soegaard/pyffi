@@ -103,8 +103,6 @@
   (PyPreConfig_InitPythonConfig preconfig)
   #;(displayln "PyPreConfig_InitPythonConfig\n")
 
-  (set-PyPreConfig-isolated! preconfig 1)
-
   
   #;(displayln "Before Py_PreInitialize")
   (let ([status (Py_PreInitialize preconfig)])
@@ -121,6 +119,10 @@
   #;(displayln "Before InitPythonConfig")
   (PyConfig_InitPythonConfig config)
   #;(displayln "After InitPythonConfig\n")
+
+  (define (decode s) (Py_DecodeLocale s #f))
+  (set-PyConfig-home! config (decode home))
+
   
   #;(displayln "Before InitializeFromConfig")
   (let ([status (Py_InitializeFromConfig config)])
