@@ -92,7 +92,7 @@ jobs:
         run: raco setup -v --check-pkg-deps pyffi
       - name: Build documentation with raco scribble
         run: |
-             cd /home/runner/work/pyffi/pyffi-doc
+             cd /home/runner/work/pyffi/
              pwd
              ls -r *        
              xvfb-run -a raco scribble +m --redirect-main http://pkg-build.racket-lang.org/doc/ --htmls --dest ./htmls pyffi-doc/pyffi/scribblings/manual-pyffi.scrbl
