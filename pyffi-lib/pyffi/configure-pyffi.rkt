@@ -274,9 +274,6 @@
   (displayln "----------------")
   (pretty-print (python-variables)))
 
-(require "python-initialization.rkt")
-(define (test)
-  (initialize))
 
 (define (run)
   (command-line
@@ -297,7 +294,6 @@
      [(list "configure" path-to-python) (configure path-to-python)]
      [(list "show")                     (show)]
      [(list "diagnostics")              (diagnostics)]
-     [(list "test")                     (test)]
      [else                              (display-usage)
                                         (exit 3)])))
   
