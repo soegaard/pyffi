@@ -96,3 +96,8 @@ jobs:
              pwd
              ls -F -G -R *        
              xvfb-run -a raco scribble +m --redirect-main http://pkg-build.racket-lang.org/doc/ --htmls --dest ./htmls pyffi/pyffi-doc/pyffi/scribblings/manual-pyffi.scrbl
+      - name: Push to Github Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          folder: htmls/manual-pyffi
+          branch: gh-pages
