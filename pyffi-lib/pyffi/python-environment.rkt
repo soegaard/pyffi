@@ -31,7 +31,7 @@
   ; AddModule doesn't load or impor the module, it just returns it.
   (set! main          (PyImport_AddModule "__main__"))     ; top-level environment
   (set! builtins      (PyImport_AddModule "builtins"))
-  (PyImport_AddModule "operator")
+  ; (PyImport_AddModule "operator")  ; this leads to an error on Ubuntu
   ; (PyImport_AddModule "traceback")
 
   (set! globals  (PyModule_GetDict main))             ; globally defined variables
