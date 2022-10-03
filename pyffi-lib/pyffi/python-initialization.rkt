@@ -104,7 +104,7 @@
   #;(displayln "PyPreConfig_InitPythonConfig\n")
 
 
-  ; (set-PyPreConfig-utf8_mode! preconfig 1)
+  (set-PyPreConfig-utf8_mode! preconfig 1)
   (define (decode s) (Py_DecodeLocale s #f))
   ; (define (decode s) s)
 
