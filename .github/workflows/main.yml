@@ -82,8 +82,8 @@ jobs:
              raco pyffi show
              raco pyffi diagnostics
       # Test Program
-      - name: Test Program
-        run: raco pyffi test
+      # - name: Test Program
+      #  run: raco pyffi test
       # Package Installation (pyffi-doc)
       - name: Package Installation (pyffi-doc)
         run: raco pkg install --scope installation pyffi-doc
