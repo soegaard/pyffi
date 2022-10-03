@@ -73,7 +73,7 @@
 ;;;
 
 
-(define (initialize)
+#;(define (initialize)
   (set-environment-variables)
   (Py_Initialize)
   (initialize-main-and-builtins)
@@ -81,6 +81,57 @@
   ; We can't run the initialization thunks here.
   ; The Python modules are loaded yet.
   #;(run-initialization-thunks))
+
+
+(require ffi/unsafe
+         #;(only-in ffi/unsafe malloc cast _cpointer ptr-ref cpointer-tag cpointer-push-tag!))
+
+
+(define (initialize)
+  ; (set-environment-variables)
+  ; (displayln PyConfig-tag) ; 'PyConfig
+  ; (define config (cast (ptr-add (malloc _PyConfig) 0) _pointer _PyConfig-pointer))
+
+  ;; Pre Initialization
+
+  (define preconfig (cast (malloc (ctype-sizeof _PyPreConfig))
+                            _pointer _PyPreConfig*))
+
+  ; (define preconfig (make-PyPreConfig 0 0 0 0 0 0 0 0 0 0))
+  
+  #;(displayln "Before PyPreConfig_InitPythonConfig")
+  (PyPreConfig_InitPythonConfig preconfig)
+  #;(displayln "PyPreConfig_InitPythonConfig\n")
+
+  #;(displayln "Before Py_PreInitialize")
+  (let ([status (Py_PreInitialize preconfig)])
+    (unless (zero? (PyStatus_Exception status))
+      (Py_ExitStatusException status)))
+  #;(displayln "After Py_PreInitialize\n")
+
+  ;; Initialization
+
+  (define config (cast (malloc (ctype-sizeof _PyConfig))
+                       _pointer _PyConfig-pointer))
+  
+  #;(displayln "Before InitPythonConfig")
+  (PyConfig_InitPythonConfig config)
+  #;(displayln "After InitPythonConfig\n")
+  
+  #;(displayln "Before InitializeFromConfig")
+  (let ([status (Py_InitializeFromConfig config)])
+    #;(displayln "Before exception check")
+    (unless (zero? (PyStatus_Exception status))
+      (Py_ExitStatusException status))
+    #;(displayln "After InitializeFromConfig"))
+
+  (initialize-main-and-builtins)
+  (initialize-builtin-constants) ; uses `run`
+
+  ; We can't run the initialization thunks here.
+  ; The Python modules are loaded yet.
+  #;(run-initialization-thunks))
+
 
 (define (post-initialize)
   (run-initialization-thunks))
