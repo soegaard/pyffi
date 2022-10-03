@@ -95,4 +95,4 @@ jobs:
              cd ..
              pwd
              ls -r *        
-             xvfb-run -a raco scribble +m --redirect-main http://pkg-build.racket-lang.org/doc/ --htmls --dest ./htmls pyffi-doc/pyffi/manual-pyffi.scrbl
+             xvfb-run -a raco scribble +m --redirect-main http://pkg-build.racket-lang.org/doc/ --htmls --dest ./htmls pyffi-doc/pyffi/scribblings/manual-pyffi.scrbl
