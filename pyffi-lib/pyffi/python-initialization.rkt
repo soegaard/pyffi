@@ -118,10 +118,14 @@
 
   (define config (cast (malloc (ctype-sizeof _PyConfig))
                        _pointer _PyConfig-pointer))
+
+  (displayln "A")
   
   #;(displayln "Before InitPythonConfig")
   (PyConfig_InitPythonConfig config)
   #;(displayln "After InitPythonConfig\n")
+
+  (displayln "B")
 
   (define (decode s) (Py_DecodeLocale s #f))
 
@@ -131,6 +135,8 @@
   (let ([pythonpath (getenv "PYTHONPATH")])
     (when pythonpath
       (set-PyConfig-pythonpath_env! config (decode pythonpath))))
+
+  (displayln "C")
 
   ; Leads to error: "invalid memory reference.  Some debugging context lost" on GA
   #;(let ([status (PyConfig_Read config)])
@@ -145,9 +151,17 @@
       (Py_ExitStatusException status))
     #;(displayln "After InitializeFromConfig"))
 
+  (displayln "D")
+
   (initialize-main-and-builtins)
+
+  (displayln "E")
+  
   (initialize-builtin-constants) ; uses `run`
 
+  (displayln "F")
+
+  
   ; We can't run the initialization thunks here.
   ; The Python modules are loaded yet.
   #;(run-initialization-thunks))
