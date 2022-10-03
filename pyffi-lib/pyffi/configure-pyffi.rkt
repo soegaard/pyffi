@@ -274,6 +274,10 @@
   (displayln "----------------")
   (pretty-print (python-variables)))
 
+(require "python-initialization.rkt")
+(define (test)
+  (initialize))
+
 (define (run)
   (command-line
    #:program    (short-program+command-name)
@@ -286,13 +290,17 @@
            configure 'pyffi' using  <path-to-python>
 
        raco pyffi show
-           show the current 'pyffi' configuration})"
+           show the current 'pyffi' configuration
+
+       raco pyffi test
+           run the current test program"
    #:args args
    (match args
      [(list "configure")                (configure)]
      [(list "configure" path-to-python) (configure path-to-python)]
      [(list "show")                     (show)]
      [(list "diagnostics")              (diagnostics)]
+     [(list "test")                     (test)]
      [else                              (display-usage)
                                         (exit 3)])))
   
