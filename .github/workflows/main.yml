@@ -90,3 +90,8 @@ jobs:
       # Setup Local Packages
       - name: Setup Collections
         run: raco setup -v --check-pkg-deps pyffi
+      - name: Build documentation with raco scribble
+        run: |
+             pwd
+             ls -r *        
+             xvfb-run -a raco scribble +m --redirect-main http://pkg-build.racket-lang.org/doc/ --htmls --dest ./htmls pyffi-doc/pyffi-doc/manual-pyffi.scrbl
