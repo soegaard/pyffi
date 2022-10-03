@@ -103,6 +103,11 @@
   (PyPreConfig_InitPythonConfig preconfig)
   #;(displayln "PyPreConfig_InitPythonConfig\n")
 
+
+  ; (set-PyPreConfig-utf8_mode! preconfig 1)
+  (define (decode s) (Py_DecodeLocale s #f))
+  ; (define (decode s) s)
+
   
   #;(displayln "Before Py_PreInitialize")
   (let ([status (Py_PreInitialize preconfig)])
@@ -120,7 +125,7 @@
   (PyConfig_InitPythonConfig config)
   #;(displayln "After InitPythonConfig\n")
 
-  (define (decode s) (Py_DecodeLocale s #f))
+
   (set-PyConfig-home!         config (decode home))
   ; (set-PyConfig-program_name! config (decode "python3.10"))
   (set-PyConfig-platlibdir! config   (decode (string-append home "/" "lib/python3.10/site-packages")))
