@@ -643,6 +643,71 @@
 ; PyObject *PyEval_EvalCode(PyObject *co, PyObject *globals, PyObject *locals)
 (define-python PyEval_EvalCode (_fun _PyObject* _PyObject* _PyObject* -> [o : _PyObject*] -> (new-reference o))) 
 
+;;;
+;;; PyWideStringList
+;;;
+
+;; typedef struct {
+;;     /* If length is greater than zero, items must be non-NULL
+;;        and all items strings must be non-NULL */
+;;     Py_ssize_t length;
+;;     wchar_t **items;
+;;     } PyWideStringList;
+
+(define-cstruct _PyWideStringList
+  ([length _ssize]   ;   /* _PyConfigInitEnum value */
+   [items  _wchar**]))
+
+(define _PyWideStringList* _PyWideStringList-pointer/null)
+
+;;;
+;;; PyStatus
+;;;
+
+(define _char* (_cpointer/null _int8))  ; assume _char is a byte
+
+(define-cstruct _PyStatus
+  ([_type (_enum '(_PyStatus_TYPE_OK    = 0
+                   _PyStatus_TYPE_ERROR = 1
+                   _PyStatus_TYPE_EXIT  = 2))]
+   [func     _char*]
+   [err_msg  _char*]
+   [exitcode _int]))
+
+(define-python PyStatus_Exception     (_fun _PyStatus -> _int))
+(define-python Py_ExitStatusException (_fun _PyStatus -> _void))
+
+;;;
+;;; PyPreConfig
+;;;
+
+(define-cstruct _PyPreConfig
+  ([_config_init _int] 
+   [parse_argv _int]
+   [isolated _int]
+   [use_environment _int]
+   [configure_locale _int]
+   [coerce_c_locale _int]
+   [coerce_c_locale_warn _int]
+   ;; #ifdef MS_WINDOWS
+   ;;     /* If greater than 1, use the "mbcs" encoding instead of the UTF-8
+   ;;        encoding for the filesystem encoding.
+   ;;        Set to 1 if the PYTHONLEGACYWINDOWSFSENCODING environment variable is
+   ;;        set to a non-empty string. If set to -1 (default), inherit
+   ;;        Py_LegacyWindowsFSEncodingFlag value.
+   ;;        See PEP 529 for more details. */
+   ;;     int legacy_windows_fs_encoding;
+   ;; #endif
+   [utf8_mode _int]
+   [dev_mode _int]
+   [allocator _int]))
+(define _PyPreConfig* _PyPreConfig-pointer/null)
+
+(define-python PyPreConfig_InitPythonConfig   (_fun _PyPreConfig* -> _void))
+(define-python PyPreConfig_InitIsolatedConfig (_fun _PyPreConfig* -> _void))
+
+(define-python Py_PreInitialize (_fun _PyPreConfig* -> _PyStatus))
+
 
 ;;;
 ;;; PyConfig
@@ -731,20 +796,6 @@
    [_is_python_build _int]))
 (define _PyConfig* _PyConfig-pointer)
 
-;; typedef struct {
-;;     /* If length is greater than zero, items must be non-NULL
-;;        and all items strings must be non-NULL */
-;;     Py_ssize_t length;
-;;     wchar_t **items;
-;;     } PyWideStringList;
-
-
-
-(define-cstruct _PyWideStringList
-  ([length _ssize]   ;   /* _PyConfigInitEnum value */
-   [items  _wchar**]))
-
-(define _PyWideStringList* (_cpointer/null _PyWideStringList))
 
 
 ;; typedef struct {
@@ -758,15 +809,8 @@
 ;;     int exitcode;
 ;;     } PyStatus;
 
-(define _char* (_cpointer/null _int8))  ; assume _char is a byte
 
-(define-cstruct _PyStatus
-  ([_type (_enum '(_PyStatus_TYPE_OK    = 0
-                   _PyStatus_TYPE_ERROR = 1
-                   _PyStatus_TYPE_EXIT  = 2))]
-   [func     _char*]
-   [err_msg  _char*]
-   [exitcode _int]))
+
 
 (define-python PyConfig_InitPythonConfig   (_fun _PyConfig* -> _void))
 (define-python PyConfig_InitIsolatedConfig (_fun _PyConfig* -> _void))
@@ -782,6 +826,9 @@
 
 (define-python PyConfig_Read               (_fun _PyConfig*  -> _PyStatus))
 (define-python PyConfig_Clear              (_fun _PyConfig*  -> _void))
+
+(define-python Py_InitializeFromConfig     (_fun _PyConfig* -> _PyStatus))
+
 
 
 
