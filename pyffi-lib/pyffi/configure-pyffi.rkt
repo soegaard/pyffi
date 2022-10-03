@@ -290,10 +290,7 @@
            configure 'pyffi' using  <path-to-python>
 
        raco pyffi show
-           show the current 'pyffi' configuration
-
-       raco pyffi test
-           run the current test program"
+           show the current 'pyffi' configuration"
    #:args args
    (match args
      [(list "configure")                (configure)]
