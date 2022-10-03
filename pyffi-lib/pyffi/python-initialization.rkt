@@ -104,10 +104,8 @@
   #;(displayln "PyPreConfig_InitPythonConfig\n")
 
 
-  (set-PyPreConfig-utf8_mode! preconfig 1)
+  ; (set-PyPreConfig-utf8_mode! preconfig 1) ; doesn't work on GA
   (define (decode s) (Py_DecodeLocale s #f))
-  ; (define (decode s) s)
-
   
   #;(displayln "Before Py_PreInitialize")
   (let ([status (Py_PreInitialize preconfig)])
@@ -132,6 +130,7 @@
   (let ([pythonpath (getenv "PYTHONPATH")])
     (when pythonpath
       (set-PyConfig-pythonpath_env! config (decode pythonpath))))
+  
   
   #;(displayln "Before InitializeFromConfig")
   (let ([status (Py_InitializeFromConfig config)])
