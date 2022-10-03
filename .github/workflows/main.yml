@@ -99,5 +99,5 @@ jobs:
       - name: Push to Github Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          folder: htmls/manual-pyffi
+          folder: /home/runner/work/pyffi/htmls/manual-pyffi
           branch: gh-pages
