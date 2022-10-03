@@ -124,7 +124,9 @@
   (set-PyConfig-home!         config (decode home))
   ; (set-PyConfig-program_name! config (decode "python3.10"))
   (set-PyConfig-platlibdir! config   (decode (string-append home "/" "lib/python3.10/site-packages")))
-
+  (let ([pythonpath (getenv "PYTHONPATH")])
+    (when pythonpath
+      (set-PyConfig-pythonpath_env! config pythonpath)))
   
   #;(displayln "Before InitializeFromConfig")
   (let ([status (Py_InitializeFromConfig config)])
