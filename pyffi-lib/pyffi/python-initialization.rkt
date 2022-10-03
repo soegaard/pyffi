@@ -103,12 +103,16 @@
   (PyPreConfig_InitPythonConfig preconfig)
   #;(displayln "PyPreConfig_InitPythonConfig\n")
 
+  (set-PyPreConfig-isolated! preconfig 1)
+
+  
   #;(displayln "Before Py_PreInitialize")
   (let ([status (Py_PreInitialize preconfig)])
     (unless (zero? (PyStatus_Exception status))
       (Py_ExitStatusException status)))
   #;(displayln "After Py_PreInitialize\n")
 
+  
   ;; Initialization
 
   (define config (cast (malloc (ctype-sizeof _PyConfig))
