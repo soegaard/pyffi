@@ -121,7 +121,9 @@
   #;(displayln "After InitPythonConfig\n")
 
   (define (decode s) (Py_DecodeLocale s #f))
-  (set-PyConfig-home! config (decode home))
+  (set-PyConfig-home!         config (decode home))
+  ; (set-PyConfig-program_name! config (decode "python3.10"))
+  (set-PyConfig-platlibdir! config   (decode (string-append home "/" "lib/python3.10/site-packages")))
 
   
   #;(displayln "Before InitializeFromConfig")
