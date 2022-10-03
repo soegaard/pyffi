@@ -131,7 +131,8 @@
     (when pythonpath
       (set-PyConfig-pythonpath_env! config (decode pythonpath))))
 
-  (let ([status (PyConfig_Read config)])
+  ; Leads to error: "invalid memory reference.  Some debugging context lost" on GA
+  #;(let ([status (PyConfig_Read config)])
     (unless (zero? (PyStatus_Exception status))
       (Py_ExitStatusException status)))
 
