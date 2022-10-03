@@ -130,7 +130,11 @@
   (let ([pythonpath (getenv "PYTHONPATH")])
     (when pythonpath
       (set-PyConfig-pythonpath_env! config (decode pythonpath))))
-  
+
+  (let ([status (PyConfig_Read config)])
+    (unless (zero? (PyStatus_Exception status))
+      (Py_ExitStatusException status)))
+
   
   #;(displayln "Before InitializeFromConfig")
   (let ([status (Py_InitializeFromConfig config)])
