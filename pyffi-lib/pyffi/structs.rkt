@@ -1,6 +1,7 @@
 #lang racket/base
 (require "parameters.rkt"
-         racket/string)
+         racket/string
+         racket/serialize)
 
 (provide (struct-out pytype)
          (struct-out pyprocedure)
@@ -9,14 +10,34 @@
          (struct-out obj)
          (struct-out callable-obj)
          (struct-out method-obj)
-         (struct-out generator-obj))
+         (struct-out generator-obj)
+         (struct-out asis))
 
-(struct pytype(type racket-to-python python-to-racket))
+(struct pytype (type racket-to-python python-to-racket))
 
 (struct obj (type-name the-obj)
   #:transparent
   #:methods gen:custom-write
-  [(define (write-proc obj port mode) (obj-print obj port mode))])
+  [(define (write-proc obj port mode) (obj-print obj port mode))]
+  #:property prop:serializable
+  ; Note: The serialization doesn't serialize the Python object.
+  ;       Serialization was added to support logging of results of examples in the manual,
+  ;       but may not be needed at this point.
+  (make-serialize-info
+   (λ (this) (vector (obj-type-name this)))
+   (cons 'obj-deserialize-info 'pyffi/structs)
+   #f ; can cycle?
+   (or (current-load-relative-directory) (current-directory)))
+  )
+
+(provide obj-deserialize-info)
+(define obj-deserialize-info
+  (make-deserialize-info
+   ; make
+   (λ (type-name)
+     (obj type-name #f))
+   ; cycle make
+   (λ () 'todo)))
 
 (struct callable-obj obj (app)
   #:property prop:procedure (struct-field-index app))
@@ -112,5 +133,9 @@
 ;; be passed by positional arguments.
 
 
+; Used by the manual to serialize results from examples.
+(serializable-struct asis (s)
+  #:property prop:custom-write
+  (lambda (v p m) (display (asis-s v) p)))
 
 
