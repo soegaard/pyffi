@@ -14,7 +14,8 @@
                      "pict-lib"
                      "scribble-lib"
                      "racket-doc"
-                     "pyffi-lib"))
+                     "pyffi-lib"
+                     "rackunit-lib"))
 
 (define update-implies '("pyffi-lib"))
 
