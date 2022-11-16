@@ -621,8 +621,14 @@
 
 ;; Bytes objects are immutable sequences of single bytes. 
 
-(define-python PyBytes_FromString (_fun _string    -> [o : _PyObject*] -> (new-reference o)))
-(define-python PyBytes_AsString   (_fun _PyObject* -> _string))
+(define-python PyBytes_FromString        (_fun _string       -> [o : _PyObject*] -> (new-reference o)))
+(define-python PyBytes_FromStringAndSize (_fun _string _size -> [o : _PyObject*] -> (new-reference o)))
+
+(define-python PyBytes_AsString          (_fun _PyObject*    -> _bytes))
+
+; char *PyBytes_AsString(PyObject *o)
+; (define-python PyBytes_AsString          (_fun _PyObject* -> _bytes)) ; xxx
+
 
 ;;;
 ;;; The Very High Level Layer
