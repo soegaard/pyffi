@@ -15,7 +15,7 @@ on:
 
 # Environment variables
 env:
-  PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/"
+  PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.8/x64/"
   # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/"
   # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10"
 
@@ -54,9 +54,9 @@ jobs:
               python3 -c "import traceback"
               echo "DATA"        
               # /Users/runner/hostedtoolcache/Python/3.10.7/x64  # macos
-              ls /opt/hostedtoolcache/Python/3.10.7/x64          # ubuntu
+              ls /opt/hostedtoolcache/Python/3.10.8/x64          # ubuntu
               echo "LIBS"
-              ls /opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10
+              ls /opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10
       # Python Diagnostics - PYTHONPATH
       - name: Python Diagnostics (PYTHONPATH)
         run: ls $PYTHONPATH
