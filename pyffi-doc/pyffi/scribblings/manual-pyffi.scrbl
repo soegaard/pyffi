@@ -95,8 +95,9 @@
         ; (displayln (list 'output: vs))
         (apply values vs)))))
 
-@(define factory (make-log-based-eval-factory (list) "examples.log" mode))
-@;(define factory (make-log-based-eval-factory (list) "examples.log" 'replay))
+@(define-runtime-path examples.log "examples.log")
+@(define factory (make-log-based-eval-factory (list) examples.log mode))
+@;(define factory (make-log-based-eval-factory (list) examples.log 'replay))
 @;(define factory (make-base-eval-factory (list 'pyffi)))
 @(define (make-pyffi-eval)
    (let ([e (factory)])
