@@ -1,0 +1,2518 @@
+;; This file was created by make-log-based-eval
+((require pyffi pyffi/structs) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((require racket/port) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((initialize) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((post-initialize) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((require pyffi) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (initialize))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (post-initialize))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "1+2"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((require pyffi) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (initialize))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (post-initialize))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "12"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "12"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "34."))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "34.0"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "5+6j"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "5.0+6.0i"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "False"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#f"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "True"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list (run "None")))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(#<void>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (run "'Hello World'"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'Hello World')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "(1,2,3)"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "[1,2,3]"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (run "{'a': 1, 'b': 2}")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (run "'Hello World'"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "Hello World\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (run "(1,2,3)"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(1, 2, 3)\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (run "[1,2,3]"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "[1, 2, 3]\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (run "{'a': 1, 'b': 2}"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "{'a': 1, 'b': 2}\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring->string (run "'Hello World'"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"Hello World\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple->vector (run "(1,2,3)"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#(1 2 3)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist->list (run "[1,2,3]"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict->hash (run "{'a': 1, 'b': 2}"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#hash((\"a\" . 1) (\"b\" . 2))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (string->pystring "Hello World")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'Hello World')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pytuple #(1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pylist '(1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (hash->pydict (hash "a" 1 "b" 2))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'b': 2, 'a': 1})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring #\H #\e #\l #\l #\o)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'Hello')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pytuple 1 2 3))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist 1 2 3))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict "a" 1 "b" 2))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((x (in-pystring (string->pystring "Hello")))) x)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(#\\H #\\e #\\l #\\l #\\o)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((x (in-pytuple (vector->pytuple #(1 2 3))))) x)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((x (in-pylist (list->pylist '(1 2 3))))) x)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv
+            (for/list
+             (((k v) (in-pydict (hash->pydict (hash "a" 1 "b" 2)))))
+             (list k v))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(((obj \"str\" : 'b') 2) ((obj \"str\" : 'a') 1))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run* "x = 1+2"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "x"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv main.x)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv main)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"module\" : <module '__main__' (built-in)>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv builtins)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"module\" : <module 'builtins' (built-in)>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (builtins.abs -7))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "7"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (builtins.list "Hello")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : ['H', 'e', 'l', 'l', 'o'])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (builtins.range 2 5))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"range\" : range(2, 5))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (builtins.list (builtins.range 2 5))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [2, 3, 4])"))))
+ #""
+ #"")
+((define b builtins) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (b.abs -7))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "7"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv b.abs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "(obj callable \"builtin_function_or_method\" : <built-in function abs>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (map b.abs '(1 -2 3 -4))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3 4)"))))
+ #""
+ #"")
+((import sys) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv sys.version_info)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "(obj \"version_info\" : sys.version_info(major=3, minor=10, micro=2, releaselevel='final', serial=0))"))))
+ #""
+ #"")
+((import calendar) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (calendar.TextCalendar)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "(obj \"TextCalendar\" : <calendar.TextCalendar object at 0x1152d8ac0>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln ((calendar.TextCalendar) .formatmonth 2022 7))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "\n     July 2022\nMo Tu We Th Fr Sa Su\n             1  2  3\n 4  5  6  7  8  9 10\n11 12 13 14 15 16 17\n18 19 20 21 22 23 24\n25 26 27 28 29 30 31\n\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv
+            (displayln ((calendar.TextCalendar) .formatmonth 2022 7 #:w 9))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "\n                              July 2022\n  Monday   Tuesday  Wednesday  Thursday   Friday   Saturday   Sunday\n                                             1         2         3\n     4         5         6         7         8         9        10\n    11        12        13        14        15        16        17\n    18        19        20        21        22        23        24\n    25        26        27        28        29        30        31\n\n"))))
+ #""
+ #"")
+((define s (string->pystring "foo"))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (repr s))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"'foo'\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (writeln s))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'foo')\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (str s))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"foo\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (displayln s))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "foo\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (run* "def f(x): return x+1")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((define f main.f) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv f)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0 (u . "(obj callable \"function\" : <function f at 0x115213e20>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (f 41))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "42"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv
+            (run*
+             "def hello(name, title='Mr'): return 'Hello ' + title + ' ' + name")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (main.hello "Foo"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "Hello Mr Foo\n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln (main.hello #:title "Mrs" "Bar"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "Hello Mrs Bar\n"))))
+ #""
+ #"")
+((import calendar) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv calendar.Calendar)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0 (u . "(obj callable \"type\" : <class 'calendar.Calendar'>)"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (calendar.Calendar #:firstweekday 0)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0 (u . "(obj \"Calendar\" : <calendar.Calendar object at 0x1184eb430>)"))))
+ #""
+ #"")
+((define cal (calendar.Calendar #:firstweekday 0))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv cal.monthdatescalendar))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "(obj callable \"method\" : <bound method Calendar.monthdatescalendar of <calendar.Calendar object at 0x118533b20>>)"))))
+ #""
+ #"")
+((define year 2022) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((define month 9) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pyfirst (pyfirst (cal.monthdatescalendar year month)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"date\" : datetime.date(2022, 8, 29))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pyfirst (pyfirst (cal .monthdatescalendar year month)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"date\" : datetime.date(2022, 8, 29))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (cal .monthdatescalendar year month .pop 0 .pop 0)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"date\" : datetime.date(2022, 8, 29))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (displayln cal.__doc__)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "\n    Base calendar class. This class doesn't do any formatting. It simply\n    provides data to subclasses.\n    \n"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run "1/0"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  0
+  ()
+  0
+  ()
+  ()
+  (q
+   exn
+   "run: Python exception occurred;\n ZeroDivisionError: division by zero\n \n  File \"<string>\", line 1, in <module>\n"))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (run "[1+10, '2'+'20', (3,30), {4: 40}]")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [11, '220', (3, 30), {4: 40}])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (run "x = 'this is not an expression'")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  0
+  ()
+  0
+  ()
+  ()
+  (q
+   exn
+   "run: Python exception occurred;\n   File \"<string>\", line 1\n     x = 'this is not an expression'\n       ^\n SyntaxError: invalid syntax\n"))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (run* "x = 1+10"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv main.x)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "11"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist 1 2 3))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist? (pylist 1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist? (pylist)))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist? '(1 2 3)))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#f"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist 1 2 3 4))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3, 4])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist (pylist 1 2 3 4) 5 (pylist 6 7))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [[1, 2, 3, 4], 5, [6, 7]])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-ref (pylist "a" "b" "c" "d") 1)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"b\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pyfirst (pylist "a" "b" "c" "d"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"a\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pysecond (pylist "a" "b" "c" "d"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"b\""))))
+ #""
+ #"")
+((define xs (pylist 0 1 2 3 4)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-set! xs 1 #t))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [0, True, 2, 3, 4])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pylist '(1 2 3 4))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3, 4])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pylist '(1 "foo" #(3 4)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 'foo', (3, 4)])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pylist '(1 (2 3) #(4 (5 6))))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, [2, 3], (4, [5, 6])])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pylist '#(1 2 3 4))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3, 4])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pylist '#(1 "foo" #(3 4)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 'foo', (3, 4)])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pylist '#(1 (2 3) #(4 (5 6))))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, [2, 3], (4, [5, 6])])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-length (pylist 1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist->list (pylist 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3 #t #f (obj \"str\" : 'a'))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist->vector (pylist 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#(1 2 3 #t #f (obj \"str\" : 'a'))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist->pytuple (pylist 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3, True, False, 'a'))"))))
+ #""
+ #"")
+((define xs (pylist 0 1 2 3)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((x (in-pylist xs))) x)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(0 1 2 3)"))))
+ #""
+ #"")
+((define xs (pylist 0 1 2 3)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-insert! xs 2 #t)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [0, 1, True, 2, 3])"))))
+ #""
+ #"")
+((define xs (pylist 10 11 12 13))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-length xs))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "4"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-append-item! xs 14)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [10, 11, 12, 13, 14])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-length xs))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "5"))))
+ #""
+ #"")
+((define xs (pylist 1 2 3 4)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-reverse! xs))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [4, 3, 2, 1])"))))
+ #""
+ #"")
+((define xs (pylist 3 2 4 1)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist-sort! xs))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3, 4])"))))
+ #""
+ #"")
+((define ys (pylist 3 #t 2 4 #f #f 1))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pylist-sort! ys))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv ys)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [False, False, True, 1, 2, 3, 4])"))))
+ #""
+ #"")
+((define xs (pylist 1 2 3 #t #f "a"))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pylist-get-slice xs 1 3)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [2, 3])"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pytuple 1 2 3))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple? (pytuple 1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple? (pytuple)))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple? '(1 2 3)))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#f"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pytuple 1 2 3 4))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3, 4))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pytuple))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : ())"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple (pytuple 1 2 3 4) 5 (pytuple 6 7))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : ((1, 2, 3, 4), 5, (6, 7)))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple-ref (pytuple "a" "b" "c" "d") 1)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"b\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pytuple '(1 2 3 4))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3, 4))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pytuple '(1 "foo" #(3 4)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 'foo', (3, 4)))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (list->pytuple '(1 (2 3) #(4 (5 6))))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, [2, 3], (4, [5, 6])))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pytuple '#(1 2 3 4))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 2, 3, 4))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pytuple '#(1 "foo" #(3 4)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, 'foo', (3, 4)))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (vector->pytuple '#(1 (2 3) #(4 (5 6))))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (1, [2, 3], (4, [5, 6])))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple-length (pytuple 1 2 3))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple->list (pytuple 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(1 2 3 #t #f (obj \"str\" : 'a'))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple->vector (pytuple 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#(1 2 3 #t #f (obj \"str\" : 'a'))"))))
+ #""
+ #"")
+((define xs (pytuple->immutable-vector (pytuple 1 2 3 #t #f "a")))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv xs)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#(1 2 3 #t #f (obj \"str\" : 'a'))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (immutable? xs))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple->pylist (pytuple 1 2 3 #t #f "a"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 3, True, False, 'a'])"))))
+ #""
+ #"")
+((define xs (pytuple 0 1 2 3)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((x (in-pytuple xs))) x)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(0 1 2 3)"))))
+ #""
+ #"")
+((define xs (pytuple 1 2 3 #t #f "a"))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pytuple-get-slice xs 1 3)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"tuple\" : (2, 3))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict? (hash->pydict (hash "a" 1 "b" 2)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (hash->pydict (hash "a" 1 "b" 2))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'b': 2, 'a': 1})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (hash->pydict (hash 1 "x" 2 "y"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {1: 'x', 2: 'y'})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (hash->pydict (hash #(1 2) "tuple used as key"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {(1, 2): 'tuple used as key'})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict->hash (hash->pydict (hash "a" 1 "b" 2)))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'#hash((\"a\" . 1) (\"b\" . 2))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict->hash (hash->pydict (hash 1 "x" 2 "y")))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0 (u . "'#hash((1 . (obj \"str\" : 'x')) (2 . (obj \"str\" : 'y')))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv
+            (pydict->hash (hash->pydict (hash #(1 2) "tuple used as key")))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0 (u . "'#hash((#(1 2) . (obj \"str\" : 'tuple used as key')))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict "a" 1 "b" 2))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict 1 "x" 2 "y"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {1: 'x', 2: 'y'})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict #(1 2) "tuple used as key")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {(1, 2): 'tuple used as key'})"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-ref d "a"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "1"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-ref d "b"))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "2"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-ref d "c"))) (if (void? vvv) (void) (print vvv))))))
+ ((3) 0 () 0 () () (q exn "pydict-ref: no value found for key\n  key: \"c\""))
+ #""
+ #"")
+((define d (pydict "a" 1)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-set! d "a" 11)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-set! d "b" 22)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 11, 'b': 22})"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-remove! d "b")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-remove! d "c")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1})"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2})"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pydict-clear! d))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {})"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-contains? d "a")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-contains? d "x")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#f"))))
+ #""
+ #"")
+((define d1 (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((define d2 (pydict-copy d1)) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (list d1 d2))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "'((obj \"dict\" : {'a': 1, 'b': 2}) (obj \"dict\" : {'a': 1, 'b': 2}))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-set! d1 "a" 11)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (list d1 d2))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "'((obj \"dict\" : {'a': 11, 'b': 2}) (obj \"dict\" : {'a': 1, 'b': 2}))"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pydict-keys d))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : ['a', 'b'])"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2 "c" 1))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pydict-values d))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"list\" : [1, 2, 1])"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2 "c" 1))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv (pydict-count d))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((define d1 (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((define d2 (pydict "b" 22 "c" 33))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-merge! d1 d2))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d1)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 22, 'c': 33})"))))
+ #""
+ #"")
+((define d1 (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((define d2 (pydict "b" 22 "c" 33))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pydict-merge! d1 d2 #f)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . ""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ () (let ((vvv d1)) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"dict\" : {'a': 1, 'b': 2, 'c': 33})"))))
+ #""
+ #"")
+((define d (pydict "a" 1 "b" 2))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list (((key value) (in-pydict d))) (list key value))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(((obj \"str\" : 'a') 1) ((obj \"str\" : 'b') 2))"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (string->pystring "foo")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'foo')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring? (string->pystring "foo"))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#t"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring #\f #\o #\o)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'foo')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (string->pystring "foo")))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'foo')"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring->string (pystring #\f #\o #\o))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "\"foo\""))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring-length (pystring #\f #\o #\o))))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "3"))))
+ #""
+ #"")
+((define foo (pystring #\f #\o #\o))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring-ref foo 0))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "#\\f"))))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (pystring-ref foo 10))) (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  0
+  ()
+  0
+  ()
+  ()
+  (q exn "pystring-ref: index 10 out of range for the string \"foo\""))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (subpystring (string->pystring "foobarbaz") 3 6)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "(obj \"str\" : 'bar')"))))
+ #""
+ #"")
+((define x (string->pystring "foo"))
+ ((3) 0 () 0 () () (c values c (void)))
+ #""
+ #"")
+((asis
+  (with-output-to-string
+   (λ ()
+     (let ((vvv (for/list ((c (in-pystring x))) c)))
+       (if (void? vvv) (void) (print vvv))))))
+ ((3)
+  1
+  (((lib "pyffi/structs.rkt") . deserialize-info:asis-v0))
+  0
+  ()
+  ()
+  (c values c (0 (u . "'(#\\f #\\o #\\o)"))))
+ #""
+ #"")

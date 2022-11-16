@@ -2,11 +2,22 @@
 @;(require racket/gui/base)
 @; The following command will build the manual and open it in a browser.
 @; raco84 scribble +m --dest html --redirect-main http://docs.racket-lang.org manual-pyffi.scrbl && open html/manual-pyffi.html
+
+@;;; The package and first time users may not have Python 3.10 installed.
+@;;; Since the manual has examples that invokes Python, we need to record the results
+@;;; of the examples in a log file "examples.log". This is done my setting the mode
+@;;; the mode to 'record. On the package server the mode is 'replay.
+@;;; Remember to commit the log file and rerecord the examples when changes are made.
+
+@;(define mode 'record)
+@(define mode 'replay)
+
 @(require racket/sandbox racket/format racket/file racket/runtime-path racket/string racket/list) 
 @(require scribble/core scribble/html-properties (only-in xml cdata))
 @(require scribble/example)
 @(require (for-syntax racket/base syntax/parse))
 @(require (for-label pyffi))
+
 
 @; Used to reference other manuals.
 @(define reference.scrbl '(lib "scribblings/reference/reference.scrbl"))
@@ -36,14 +47,65 @@
 @(require racket/sandbox
           scribble/example)
 
-@(define factory (make-base-eval-factory (list)))
+@(require racket/gui/dynamic racket/port)
+@(define (make-log-based-eval-factory mod-paths
+                                      log-file mode
+                                      #:pretty-print? [pretty-print? #f])
+   (parameterize ([sandbox-namespace-specs
+      (cons (λ () 
+              (let ([ns
+                     ;; This namespace-creation choice needs to be consistent
+                     ;; with the sandbox (i.e., with `make-base-eval')
+                     (if gui?
+                         ((gui-dynamic-require 'make-gui-empty-namespace))
+                         (make-base-empty-namespace))])
+                (parameterize ([current-namespace ns])
+                  (for ([mod-path (in-list mod-paths)])
+                    (dynamic-require mod-path #f))
+                  (when pretty-print? (dynamic-require 'racket/pretty #f)))
+                ns))
+            (append mod-paths (if pretty-print? '(racket/pretty) '())))])
+     (lambda ()
+       (let ([ev (make-log-based-eval log-file mode)])
+         (when pretty-print?
+           (call-in-sandbox-context ev
+             (lambda ()
+               (current-print (dynamic-require 'racket/pretty 'pretty-print-handler)))))
+         ev))))
+
+@(require (only-in pyffi/structs obj?))
+
+@(require racket/match rackunit)
+@(require/expose racket/sandbox (evaluator-message?))
+@(define (wrap ev)
+   (lambda (x)
+     (call-with-values
+      (λ ()
+        ; (displayln (list 'input: x))
+        (if (evaluator-message? x)
+            (ev x)
+            (match x
+              [(cons (or 'require 'define 'import 'struct) _)
+               (ev x)]
+              [else
+               (ev `(asis (with-output-to-string 
+                            (λ () (let ([vvv ,x])
+                                    (if (void? vvv) (void) (print vvv)))))))])))
+      (λ vs
+        ; (displayln (list 'output: vs))
+        (apply values vs)))))
+
+@(define factory (make-log-based-eval-factory (list) "examples.log" mode))
+@;(define factory (make-log-based-eval-factory (list) "examples.log" 'replay))
+@;(define factory (make-base-eval-factory (list 'pyffi)))
 @(define (make-pyffi-eval)
    (let ([e (factory)])
-     (e '(require pyffi))
-     e))
+     (e '(require pyffi pyffi/structs))     
+     (e '(require racket/port))
+     (e '(initialize))
+     (e '(post-initialize))
+     (wrap e)))
 @(define pe (make-pyffi-eval))
-
-
 
 @title[#:tag "pyffi"]{pyffi - Use Python from Racket}
 
