@@ -4,4 +4,4 @@
 (define build-deps (list "base" "at-exp-lib"))
 
 (define raco-commands
-  (list (list "pyffi" 'pyffi-lib/configure-pyffi "configure pyffi" #f)))
+  (list (list "pyffi" 'pyffi/configure-pyffi "configure pyffi" #f)))
