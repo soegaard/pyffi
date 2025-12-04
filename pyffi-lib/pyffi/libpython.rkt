@@ -54,4 +54,7 @@
 ;       we need to use a "flat namespace" and therefore use `#:global? #t`,
 ;       when loading the library.
 
-(define-ffi-definer define-python (ffi-lib libpython-path #:global? #t))
+(require pyffi/parameters)
+(define lib (ffi-lib libpython-path #:global? #t))
+
+(define-ffi-definer define-python lib #:default-make-fail make-not-available)
