@@ -101,7 +101,8 @@
 @;(define factory (make-base-eval-factory (list 'pyffi)))
 @(define (make-pyffi-eval)
    (let ([e (factory)])
-     (e '(require pyffi pyffi/structs))     
+     (e '(require pyffi))
+     (e '(require pyffi/structs))
      (e '(require racket/port))
      (e '(initialize))
      (e '(post-initialize))
@@ -153,7 +154,8 @@ Alternatively, feel free to ask questions on the chat server
 
 @section[#:tag "supported-platforms"]{Supported Platforms}
 
-For now @tt{pyffi} supports Python 3.10 on macOS, Linux/Unix and Windows.
+For now @tt{pyffi} supports Python 3.10 on macOS and Linux/Unix.
+Windows is currently not supported.
 
 
 @section[#:tag "installation"]{Installation}
@@ -302,7 +304,7 @@ The overhead of @racket[run] is due to the parsing and compiling of its input st
 In contrast @racket[string->pystring] and friends use the C API to create the
 Python values directly.
 
-The data types have also have constructors:
+The data types also have constructors:
 
 @examples[#:label #f #:eval pe
           (pystring #\H #\e #\l #\l #\o)
@@ -432,7 +434,7 @@ In practice the identity of a Python object is represented by its address in mem
 
 To represent a Python object in Racket it is wrapped in an @racket[obj] struct.
 The structure contains the type name as a string and a pointer to the object.
-The wrapper set the struct property @racket[gen:custom-write] to
+The wrapper sets the structure property @racket[gen:custom-write] to
 display, write and print the wrapped objects nicely.
 
 The result of @tt{repr()} is used to write an object. @linebreak[]
