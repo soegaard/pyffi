@@ -15,7 +15,8 @@ on:
 
 # Environment variables
 env:
-  PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.8/x64/"
+  PYTHONPATH: "/opt/hostedtoolcache/Python/3.14.0/x64/"
+  # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.8/x64/"
   # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/"
   # PYTHONPATH: "/opt/hostedtoolcache/Python/3.10.7/x64/lib/python3.10"
 
