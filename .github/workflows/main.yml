@@ -75,7 +75,7 @@ jobs:
           sudo: never
       # Package Installation (pyffi-lib)
       - name: Package Installation - Local Packages
-        run: raco pkg install --scope installation pyffi-lib
+        run: raco pkg install --no-docs --scope installation pyffi-lib 
       # Configure Pyffi
       - name: Configure Pyffi
         run: |
