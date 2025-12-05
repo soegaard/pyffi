@@ -29,13 +29,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # Install Python 3.10
+      # Install Python 3.14
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.14'
       # Python Diagnostics - Sysconfig
       - name: Python Diagnostics
         run: python3 -m sysconfig
@@ -44,10 +44,10 @@ jobs:
         run: python3 -c 'from distutils.sysconfig import get_config_var; print(get_config_var("LDLIBRARY"))'
       # Python Diagnostics - Names of modules in standard library
       - name: Python Diagnostics - Names of modules in standard library
-        run: python3.10 -c "import sys ; print(sorted(sys.stdlib_module_names))"
+        run: python3.14 -c "import sys ; print(sorted(sys.stdlib_module_names))"
       # Python Diagnostics - Names of builtin modules
       - name: Python Diagnostics - Names of builtin modules
-        run: python3.10 -c "import sys ; print(sorted(sys.builtin_module_names))"
+        run: python3.14 -c "import sys ; print(sorted(sys.builtin_module_names))"
       # Python Diagnostics - Traceback
       - name: Python Diagnostics (traceback)
         run: |
