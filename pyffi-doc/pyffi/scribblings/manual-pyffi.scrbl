@@ -154,22 +154,22 @@ Alternatively, feel free to ask questions on the chat server
 
 @section[#:tag "supported-platforms"]{Supported Platforms}
 
-For now @tt{pyffi} supports Python 3.10 on macOS and Linux/Unix.
+For now @tt{pyffi} supports Python 3.10 and newer on macOS and Linux/Unix.
 Windows is currently not supported.
 
 
 @section[#:tag "installation"]{Installation}
 
-The plan is simple: install Python 3.10 then tell @tt{pyffi} where
+The plan is simple: install Python 3.1x then tell @tt{pyffi} where
 Python is installed.
 
 Optional: install @hyperlink["https://numpy.org/"]{NumPy} if you want
 to use @racket[pyffi/numpy].
 
 
-@subsection{Python 3.10}
+@subsection{Python 3.1x}
 
-In order to use @tt{pyffi} you need Python 3.10.
+In order to use @tt{pyffi} you need Python 3.10 or newer.
 
 The official distribution of Python is here:
 @hyperlink["https://www.python.org/downloads/"]{https://www.python.org/downloads/}
