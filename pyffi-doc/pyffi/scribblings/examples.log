@@ -1,5 +1,6 @@
 ;; This file was created by make-log-based-eval
-((require pyffi pyffi/structs) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((require pyffi) ((3) 0 () 0 () () (c values c (void))) #"" #"")
+((require pyffi/structs) ((3) 0 () 0 () () (c values c (void))) #"" #"")
 ((require racket/port) ((3) 0 () 0 () () (c values c (void))) #"" #"")
 ((initialize) ((3) 0 () 0 () () (c values c (void))) #"" #"")
 ((post-initialize) ((3) 0 () 0 () () (c values c (void))) #"" #"")
@@ -512,7 +513,13 @@
   0
   ()
   ()
-  (c values c (0 (u . "(obj \"module\" : <module '__main__' (built-in)>)"))))
+  (c
+   values
+   c
+   (0
+    (u
+     .
+     "(obj \"module\" : <module '__main__' (<class '_frozen_importlib.BuiltinImporter'>)>)"))))
  #""
  #"")
 ((asis
@@ -641,7 +648,7 @@
    (0
     (u
      .
-     "(obj \"version_info\" : sys.version_info(major=3, minor=10, micro=2, releaselevel='final', serial=0))"))))
+     "(obj \"version_info\" : sys.version_info(major=3, minor=14, micro=1, releaselevel='final', serial=0))"))))
  #""
  #"")
 ((import calendar) ((3) 0 () 0 () () (c values c (void))) #"" #"")
@@ -662,7 +669,7 @@
    (0
     (u
      .
-     "(obj \"TextCalendar\" : <calendar.TextCalendar object at 0x1152d8ac0>)"))))
+     "(obj \"TextCalendar\" : <calendar.TextCalendar object at 0x120f00e10>)"))))
  #""
  #"")
 ((asis
@@ -785,7 +792,7 @@
   (c
    values
    c
-   (0 (u . "(obj callable \"function\" : <function f at 0x115213e20>)"))))
+   (0 (u . "(obj callable \"function\" : <function f at 0x120cbb060>)"))))
  #""
  #"")
 ((asis
@@ -874,7 +881,7 @@
   (c
    values
    c
-   (0 (u . "(obj \"Calendar\" : <calendar.Calendar object at 0x1184eb430>)"))))
+   (0 (u . "(obj \"Calendar\" : <calendar.Calendar object at 0x120e4dbe0>)"))))
  #""
  #"")
 ((define cal (calendar.Calendar #:firstweekday 0))
@@ -898,7 +905,7 @@
    (0
     (u
      .
-     "(obj callable \"method\" : <bound method Calendar.monthdatescalendar of <calendar.Calendar object at 0x118533b20>>)"))))
+     "(obj callable \"method\" : <bound method Calendar.monthdatescalendar of <calendar.Calendar object at 0x120f00e10>>)"))))
  #""
  #"")
 ((define year 2022) ((3) 0 () 0 () () (c values c (void))) #"" #"")
@@ -962,7 +969,7 @@
    (0
     (u
      .
-     "\n    Base calendar class. This class doesn't do any formatting. It simply\n    provides data to subclasses.\n    \n"))))
+     "\nBase calendar class. This class doesn't do any formatting. It simply\nprovides data to subclasses.\n\n"))))
  #""
  #"")
 ((asis
