@@ -23,8 +23,11 @@
 
 ;; As I am writing this, DrRacket will find the system installed
 ;; version of Python in /usr/bin/python3 which is version 3.8.9.
+
 ;; In the terminal we find version 3.10:
 ;;   /Library/Frameworks/Python.framework/Versions/3.10/bin/python3
+;; Update: after installing 3.14:
+;;   /Library/Frameworks/Python.framework/Versions/3.14/bin/python3
 
 ;; That is:
 
@@ -53,6 +56,10 @@
     (or given-path-to-python
         (or (find-executable-path "python3")
             (find-executable-path "python")
+            (find-executable-path "python3.14")
+            (find-executable-path "python3.13")
+            (find-executable-path "python3.12")
+            (find-executable-path "python3.11")
             (find-executable-path "python3.10"))))
 
   (displayln "Configuration tool for `pyffi`.")
