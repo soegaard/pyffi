@@ -9,8 +9,8 @@
 @;;; the mode to 'record. On the package server the mode is 'replay.
 @;;; Remember to commit the log file and rerecord the examples when changes are made.
 
-@;(define mode 'record)
-@(define mode 'replay)
+@(define mode 'record)
+@;(define mode 'replay)
 
 @(require racket/sandbox racket/format racket/file racket/runtime-path racket/string racket/list) 
 @(require scribble/core scribble/html-properties (only-in xml cdata))
@@ -412,7 +412,7 @@ The documentation for @tt{formatmonth} shows its signature:
 
 @centered{@tt{formatmonth(theyear, themonth, w=0, l=0)}}
 
-The two first arguments @tt{theyear} and @tt{themonth} are postional arguments
+The two first arguments @tt{theyear} and @tt{themonth} are positional arguments
 and the two last arguments @tt{w} and @tt{l} are keyword arguments both has
 0 has as default value.
 
@@ -510,7 +510,7 @@ the two calls to @racket[pyfirst] with two invocations of @tt{.pop}.
 @examples[#:label #f #:eval pe
           (cal .monthdatescalendar year month  .pop 0 .pop 0)]
 
-Besides methods an object can have properties (atributes).
+Besides methods an object can have properties (attributes).
 The syntax is @tt{obj.attribute}. Most Python objects
 carry a little documentation in the oddly named @tt{__doc__} attribute.
 
@@ -576,7 +576,7 @@ The precise steps taken are:
         the standard library is fetched from the preferences 
         (keys @racket['pyffi:libdir] and @racket['pyffi:data]).}
   @item{Calls @python-docs["Py_Initialize"]{Py_Initialize}
-        which starts an Python interpreter. Initializes the
+        which starts a Python interpreter. Initializes the
         table of of loaded modules and creates the modules @tt{builtins},
         @tt{__main__} and @tt{sys}.}
   @item{Imports @tt{__main__}, @tt{builtins}, @tt{operator}, @tt{traceback} and @tt{inspect}.}
@@ -891,7 +891,7 @@ In Python notation: @tt{list[low:high]}.
 Python tuples correspond to immutable Racket vectors.
 
 Even though there is no datastructure in Racket called "tuple", 
-Python tuples will have the name "putuple" to match the names of
+Python tuples will have the name "pytuple" to match the names of
 @racket[pylist] and @racket[pydict].
 
 The operations @racket[pytuple], @racket[list->pytuple] and @racket[vector->pytuple]
@@ -1160,7 +1160,7 @@ Remove all key/value pairs from the dictionary.
 }
 
 
-@defproc[(pydict-contains? [d pydict?] [key any/c]) void?]{
+@defproc[(pydict-contains? [d pydict?] [key any/c]) boolean?]{
 Returns @racket[#t] if the pydict @racket[x] contains the key @racket[key].
 
                                
@@ -1173,7 +1173,7 @@ Returns @racket[#t] if the pydict @racket[x] contains the key @racket[key].
 
 
 @defproc[(pydict-copy [d pydict?]) pydict?]{
-Return a new dict with the same key/vaue pairings as the pydict @racket[d].
+Return a new dict with the same key/value pairings as the pydict @racket[d].
 
                                
 @examples[#:label #f #:eval pe
@@ -1203,7 +1203,7 @@ Return a pylist with all values in the pydict @racket[d].
 
 
 @defproc[(pydict-count [d pydict?]) integer?]{
-Returns the number of keys mapped by the pict @racket[hash].
+Returns the number of keys mapped by the pydict @racket[hash].
                                
 @examples[#:label #f #:eval pe
           (define d (pydict "a" 1  "b" 2 "c" 1))
@@ -1348,7 +1348,7 @@ Returns a sequence (that is also a stream) that is equivalent to using
 
 @subsection{Python Generators}
 
-Python generator correspond to Racket generators from @racket[racket/generator].
+Python generators correspond to Racket generators from @racket[racket/generator].
 Think of a generator as a function that can produce a series of values.
 
 If the body of Python function contains a @tt{yield} statement, calling the
