@@ -9,8 +9,8 @@
 @;;; the mode to 'record. On the package server the mode is 'replay.
 @;;; Remember to commit the log file and rerecord the examples when changes are made.
 
-@(define mode 'record)
-@;(define mode 'replay)
+@;(define mode 'record)
+@(define mode 'replay)
 
 @(require racket/sandbox racket/format racket/file racket/runtime-path racket/string racket/list) 
 @(require scribble/core scribble/html-properties (only-in xml cdata))
