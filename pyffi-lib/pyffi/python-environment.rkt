@@ -123,7 +123,22 @@
          [else
           (error 'get* (~a "got object of type : " typename))]))     
      (unless item
-       (error 'get (~a "not bound: yy " name " in " orig-sym)))
+       (if prefix
+           ;; A nested attribute of an already-resolved object is missing.
+           (error 'get (~a "not bound: " name " in " orig-sym))
+           ;; The *leading* name of a dotted reference is unbound, which almost
+           ;; always means the Python module `name` was never imported - most
+           ;; often a third-party package that is not installed in the
+           ;; interpreter pyffi is using.  Give an actionable message.
+           (error 'get
+                  (~a "the Python module `" name "` is not available "
+                      "(while resolving `" orig-sym "`).\n"
+                      "If it is a third-party package (such as numpy), install "
+                      "it in the Python environment pyffi is using and restart, "
+                      "for example:\n"
+                      "    python3 -m pip install " name "\n"
+                      "using the interpreter you configured with "
+                      "`raco pyffi configure`."))))
      (define new-prefix (if prefix (string-append prefix name ".") (string-append name ".")))
      (get* item names all-names new-prefix orig-sym type)]))
 
