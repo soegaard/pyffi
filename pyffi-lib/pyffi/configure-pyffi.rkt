@@ -49,6 +49,7 @@
 
 (define system-configuration        #f)
 (define system-configuration-string #f)
+(define selected-python-executable  #f)
 
 
 (define (get-configuration [given-path-to-python #f])
@@ -61,6 +62,7 @@
             (find-executable-path "python3.12")
             (find-executable-path "python3.11")
             (find-executable-path "python3.10"))))
+  (set! selected-python-executable path-to-python)
 
   (displayln "Configuration tool for `pyffi`.")
   (displayln "-------------------------------") 
@@ -142,8 +144,7 @@
                        (trim after))]))))
     (values group rest-lines))
 
-  (set! system-configuration (parse system-configuration-string))
-  path-to-python)
+  (set! system-configuration (parse system-configuration-string)))
 
 ;; Now the information is available in `system-configuration`.
 
@@ -266,12 +267,13 @@
   (display   "    ")
   (displayln new-platlibdir))
 
-(define (handle-runtime-paths path-to-python)
+(define (handle-home-and-ver path-to-python)
+  (define interpreter (or path-to-python selected-python-executable))
   (define data       (python-data))
-  (define executable (run-python-query path-to-python "import sys; print(sys.executable)"))
-  (define prefix     (run-python-query path-to-python "import sys; print(sys.base_prefix)"))
-  (define pyver      (run-python-query path-to-python "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"))
-  (define platlibdir (run-python-query path-to-python "import sysconfig; print(sysconfig.get_config_var('platlibdir'))"))
+  (define executable (run-python-query interpreter "import sys; print(sys.executable)"))
+  (define prefix     (run-python-query interpreter "import sys; print(sys.base_prefix)"))
+  (define pyver      (run-python-query interpreter "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"))
+  (define platlibdir (run-python-query interpreter "import sysconfig; print(sysconfig.get_config_var('platlibdir'))"))
   (when (and executable (not (equal? executable ""))) (set-new-executable executable))
   (when (and prefix (not (equal? prefix "")))     (set-new-home prefix))
   (when (and pyver (not (equal? pyver "")))       (set-new-pyver pyver))
@@ -280,17 +282,17 @@
     (set-new-venv data)))
 
 (define (configure [path-to-python #f])
-  (define executable (get-configuration path-to-python))
-  (handle-libdir executable)
+  (get-configuration path-to-python)
+  (handle-libdir path-to-python)
   (newline)
-  (handle-data   executable)
+  (handle-data   path-to-python)
   (newline)
-  (handle-runtime-paths executable))
+  (handle-home-and-ver path-to-python))
 
 (define (show)
   ;; Print every preference this package reads, with a short legend.
   ;; Keep this in sync with the preferences written by `configure` in
-  ;; `handle-libdir`, `handle-data`, and `handle-runtime-paths` above.
+  ;; `handle-libdir`, `handle-data`, and `handle-home-and-ver` above.
   (define (show-pref key label)
     (display "    ")
     (display label)
