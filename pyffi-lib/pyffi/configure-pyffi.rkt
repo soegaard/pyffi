@@ -49,6 +49,7 @@
 
 (define system-configuration        #f)
 (define system-configuration-string #f)
+(define selected-python-executable  #f)
 
 
 ;; --- Python subprocess environment ------------------------------------------
@@ -122,6 +123,7 @@
             (find-executable-path "python3.12")
             (find-executable-path "python3.11")
             (find-executable-path "python3.10"))))
+  (set! selected-python-executable path-to-python)
 
   (displayln "Configuration tool for `pyffi`.")
   (displayln "-------------------------------") 
@@ -306,6 +308,12 @@
   (display   "    ")
   (displayln new-home))
 
+(define (set-new-executable new-executable)
+  (put-preferences (list 'pyffi:executable) (list new-executable))
+  (displayln "The preference for the Python executable is now set to:")
+  (display   "    ")
+  (displayln new-executable))
+
 (define (set-new-pyver new-pyver)
   (put-preferences (list 'pyffi:pyver) (list new-pyver))
   (displayln "The preference for Python version is now set to:")
@@ -325,12 +333,15 @@
   (displayln new-platlibdir))
 
 (define (handle-home-and-ver path-to-python)
+  (define interpreter (or path-to-python selected-python-executable))
   (define data       (python-data))
-  (define prefix     (run-python-query path-to-python "import sys; print(sys.base_prefix)"))
-  (define pyver      (run-python-query path-to-python "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"))
-  (define platlibdir (run-python-query path-to-python "import sysconfig; print(sysconfig.get_config_var('platlibdir'))"))
+  (define executable (run-python-query interpreter "import sys; print(sys.executable)"))
+  (define prefix     (run-python-query interpreter "import sys; print(sys.base_prefix)"))
+  (define pyver      (run-python-query interpreter "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"))
+  (define platlibdir (run-python-query interpreter "import sysconfig; print(sysconfig.get_config_var('platlibdir'))"))
+  (when (and executable (not (equal? executable ""))) (set-new-executable executable))
   (when (and prefix (not (equal? prefix "")))     (set-new-home prefix))
-  (when (and pyver  (not (equal? pyver "")))      (set-new-pyver pyver))
+  (when (and pyver (not (equal? pyver "")))       (set-new-pyver pyver))
   (when (and platlibdir (not (equal? platlibdir ""))) (set-new-platlibdir platlibdir))
   (when (and data prefix (not (equal? data prefix)))
     (set-new-venv data)))
@@ -362,6 +373,7 @@
   (show-pref 'pyffi:libdir     "libdir    ")
   (show-pref 'pyffi:data       "data      ")
   (show-pref 'pyffi:home       "home      ")
+  (show-pref 'pyffi:executable "executable")
   (show-pref 'pyffi:pyver      "pyver     ")
   (show-pref 'pyffi:platlibdir "platlibdir")
   (show-pref 'pyffi:venv       "venv      ")
@@ -375,10 +387,11 @@
   (displayln "    home:       PYTHONHOME — Python's base prefix (where the")
   (displayln "                stdlib lives); differs from data when running")
   (displayln "                from a venv")
+  (displayln "    executable: configured Python executable; allows Python to")
+  (displayln "                detect and initialise its virtual environment")
   (displayln "    pyver:      Python major.minor, e.g. 3.12")
   (displayln "    platlibdir: sysconfig 'platlibdir' (usually 'lib' or 'lib64')")
-  (displayln "    venv:       venv root, if any — used to append")
-  (displayln "                <venv>/lib/python<pyver>/site-packages to sys.path"))
+  (displayln "    venv:       configured venv root, retained for diagnostics"))
 
 (define usage
   @~a{

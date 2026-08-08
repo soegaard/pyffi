@@ -72,6 +72,30 @@ jobs:
           raco pyffi show
           raco pyffi diagnostics
 
+      - name: Test virtual environment startup semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test_venv="$RUNNER_TEMP/pyffi-test-venv"
+          pth_target="$RUNNER_TEMP/pyffi-pth-target"
+          python3 -m venv "$test_venv"
+
+          base_site="$(python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+          venv_site="$("$test_venv/bin/python3" -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+          mkdir -p "$pth_target"
+
+          printf '%s\n' 'SOURCE = "base"' > "$base_site/pyffi_precedence_marker.py"
+          printf '%s\n' 'SOURCE = "base-only"' > "$base_site/pyffi_base_only_marker.py"
+          printf '%s\n' 'SOURCE = "venv"' > "$venv_site/pyffi_precedence_marker.py"
+          printf '%s\n' 'SOURCE = "pth"' > "$pth_target/pyffi_pth_marker.py"
+          printf '%s\n' "$pth_target" > "$venv_site/pyffi-test.pth"
+          trap 'rm -f "$base_site/pyffi_precedence_marker.py" "$base_site/pyffi_base_only_marker.py"' EXIT
+
+          raco pyffi configure "$test_venv/bin/python3"
+          PYFFI_TEST_VENV=1 raco test pyffi-tests/tests/test-configured-interpreter.rkt
+          raco pyffi configure "$(command -v python3)"
+
       - name: Package Installation (pyffi-doc)
         run: raco pkg install --scope installation pyffi-doc
 

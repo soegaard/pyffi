@@ -18,8 +18,7 @@
 ;;; Configuration
 ;;;
 
-; (define program-full-path "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10")
-(define program-full-path "python3.10")
+(define fallback-program-name "python3")
 
 ;; PYTHONHOME resolution order:
 ;;   1. 'pyffi:home preference (explicit user config via raco pyffi configure)
@@ -42,21 +41,38 @@
              "and no natipkg companion (e.g. pyffi-aarch64-linux-natipkg) is installed."
              "Either install a natipkg companion to use a bundled Python, or run"
              "`raco pyffi configure /path/to/python3` to point at a system install.")
+          "\n")
+          (current-continuation-marks))))
+
+(define executable (get-preference 'pyffi:executable (λ () #f)))
+(when (and (not executable)
+           (get-preference 'pyffi:venv (λ () #f)))
+  (raise (exn:fail:pyffi:not-configured
+          (string-join
+           '("pyffi's virtual-environment configuration predates executable tracking."
+             "Rerun `raco pyffi configure /path/to/python3` before using pyffi.")
            "\n")
           (current-continuation-marks))))
 
 
 ;; The actual libpython load is handled by libpython.rkt, which knows
 ;; how to discover the library across env vars, user prefs, the
-;; natipkg companion and the dynamic loader.  python-initialization
-;; only needs PYTHONHOME (the `home` value above) for Py_Initialize.
+;; natipkg companion and the dynamic loader.
 
 (define (set-environment-variables)
   (define (decode s) (Py_DecodeLocale s #f))
-  (Py_SetProgramName (decode "python3.10"))
-  ; (Py_SetProgramName (decode (build-path libdir)))
-  ; (Py_SetPath (Py_DecodeLocale (get-preference 'pyffi:data (λ () #f)) #f))
-  (Py_SetPythonHome  (decode home)))
+  ;; These setters are deprecated, but remain available across every Python
+  ;; version pyffi supports. They also avoid depending on PyConfig's changing
+  ;; C structure layout while preserving ordinary Python startup semantics.
+  (cond
+    [executable
+     ;; Leave PYTHONHOME unset so Python can find pyvenv.cfg beside the
+     ;; configured executable and apply normal virtual-environment semantics.
+     (Py_SetProgramName (decode executable))]
+    [else
+     ;; A bundled natipkg has no external executable to discover from.
+     (Py_SetProgramName (decode fallback-program-name))
+     (Py_SetPythonHome (decode home))]))
 
 ;;;
 ;;; Diagnostics
@@ -80,119 +96,18 @@
 ;;;
 
 
-#;(define (initialize)
+(define (initialize)
   (set-environment-variables)
   (Py_Initialize)
-  (initialize-main-and-builtins)
-  (initialize-builtin-constants) ; uses `run`
-  ; We can't run the initialization thunks here.
-  ; The Python modules are loaded yet.
-  #;(run-initialization-thunks))
-
-
-(require ffi/unsafe
-         #;(only-in ffi/unsafe malloc cast _cpointer ptr-ref cpointer-tag cpointer-push-tag!))
-
-
-(define (initialize)
-  ; (set-environment-variables)
-  ; (displayln PyConfig-tag) ; 'PyConfig
-  ; (define config (cast (ptr-add (malloc _PyConfig) 0) _pointer _PyConfig-pointer))
-
-  ;; Pre Initialization
-
-  (define preconfig (cast (malloc (ctype-sizeof _PyPreConfig))
-                            _pointer _PyPreConfig*))
-
-  ; (define preconfig (make-PyPreConfig 0 0 0 0 0 0 0 0 0 0))
-  
-  #;(displayln "Before PyPreConfig_InitPythonConfig")
-  (PyPreConfig_InitPythonConfig preconfig)
-  #;(displayln "PyPreConfig_InitPythonConfig\n")
-
-  
-  ; (set-PyPreConfig-utf8_mode! preconfig 1) ; doesn't work on GA
-
-  
-  #;(displayln "Before Py_PreInitialize")
-  (let ([status (Py_PreInitialize preconfig)])
-    (unless (zero? (PyStatus_Exception status))
-      (Py_ExitStatusException status)))
-  #;(displayln "After Py_PreInitialize\n")
-
-  
-  ;; Initialization
-
-  (define config (cast (malloc (ctype-sizeof _PyConfig))
-                       _pointer _PyConfig-pointer))
-  
-  #;(displayln "Before InitPythonConfig")
-  (PyConfig_InitPythonConfig config)
-  #;(displayln "After InitPythonConfig\n")
-
-  (define (decode s) (Py_DecodeLocale s #f))
-
-  ;; Read preferences with defaults.  Each `or` guards against a
-  ;; preference that was deliberately cleared to #f — `get-preference`
-  ;; returns #f in that case instead of the default thunk's value,
-  ;; and passing #f to `Py_DecodeLocale` crashes Python.
-  (define pyver      (or (get-preference 'pyffi:pyver      (λ () #f)) "3.12"))
-  (define platlibdir (or (get-preference 'pyffi:platlibdir (λ () #f)) "lib"))
-  (define venv       (get-preference 'pyffi:venv (λ () #f)))
-  (set-PyConfig-home!       config (decode home))
-  (set-PyConfig-platlibdir! config (decode platlibdir))
-  
-  #;(let ([pythonpath (getenv "PYTHONPATH")])
-    (when pythonpath
-      (set-PyConfig-pythonpath_env! config (decode pythonpath))))
-
-  ; Leads to error: "invalid memory reference.  Some debugging context lost" on GA
-  #;(let ([status (PyConfig_Read config)])
-    (unless (zero? (PyStatus_Exception status))
-      (Py_ExitStatusException status)))
-
-  
-  #;(displayln "Before InitializeFromConfig")
-  (let ([status (Py_InitializeFromConfig config)])
-    #;(displayln "Before exception check")
-    (unless (zero? (PyStatus_Exception status))
-      (Py_ExitStatusException status))
-    #;(displayln "After InitializeFromConfig"))
 
   (initialize-main-and-builtins)
 
   (initialize-builtin-constants) ; uses `run`
 
-  ;; Inject the venv's site-packages into sys.path here, while
-  ;; Python is up but no user-level imports have happened yet.
-  ;; Doing it later (e.g. inside post-initialize, where it used
-  ;; to live) is too late: any module imported between initialize
-  ;; and post-initialize — including numpy via initialize-numpy
-  ;; — would silently fail to find its venv-installed package
-  ;; because the venv path isn't on sys.path yet.
-  (inject-venv-path)
-
   ; We can't run the initialization thunks here.
   ; The Python modules are loaded yet.
   #;(run-initialization-thunks))
 
-
-;; Add the configured venv's site-packages directory to sys.path.
-;; No-op when the user has not configured a venv, or when the
-;; expected site-packages directory does not exist (e.g. the venv
-;; was built with a different Python minor version than
-;; pyffi:pyver records).
-(define (inject-venv-path)
-  (define venv-pref  (get-preference 'pyffi:venv  (λ () #f)))
-  (define pyver-pref (get-preference 'pyffi:pyver (λ () "3.12")))
-  (when venv-pref
-    (define sitepkg (string-append venv-pref "/lib/python" pyver-pref "/site-packages"))
-    (when (directory-exists? sitepkg)
-      (define import-site (PyImport_ImportModule "site"))
-      (define sys-mod     (PyImport_ImportModule "sys"))
-      (define sys-path    (PyObject_GetAttrString sys-mod "path"))
-      (PyList_Append sys-path (PyUnicode_FromString sitepkg))
-      (void))))
 
 (define (post-initialize)
   (run-initialization-thunks))
