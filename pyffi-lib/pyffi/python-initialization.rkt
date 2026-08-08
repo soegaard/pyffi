@@ -151,8 +151,11 @@
     [executable
      ;; Point Python at the configured interpreter and leave `home` unset.
      ;; PYTHONHOME overrides pyvenv.cfg detection; without it, Python derives
-     ;; the base installation and virtual-environment prefixes normally.
-     (set-PyConfig-program_name! config (decode executable))]
+     ;; the base installation and virtual-environment prefixes normally. Keep
+     ;; `executable` explicit because Python 3.14 otherwise resolves a venv's
+     ;; launcher symlink before looking beside it for pyvenv.cfg.
+     (set-PyConfig-program_name! config (decode executable))
+     (set-PyConfig-executable! config (decode executable))]
     [else
      ;; A bundled natipkg has no external executable to discover from.
      (set-PyConfig-home! config (decode home))])
