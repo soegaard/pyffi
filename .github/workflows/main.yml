@@ -94,6 +94,7 @@ jobs:
 
           raco pyffi configure "$test_venv/bin/python3"
           PYFFI_TEST_VENV=1 raco test pyffi-tests/tests/test-configured-interpreter.rkt
+          raco pyffi configure "$(command -v python3)"
 
       - name: Package Installation (pyffi-doc)
         run: raco pkg install --scope installation pyffi-doc

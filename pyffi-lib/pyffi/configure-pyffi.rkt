@@ -248,6 +248,18 @@
   (display   "    ")
   (displayln new-executable))
 
+(define (set-new-pyver new-pyver)
+  (put-preferences (list 'pyffi:pyver) (list new-pyver))
+  (displayln "The preference for Python version is now set to:")
+  (display   "    ")
+  (displayln new-pyver))
+
+(define (set-new-venv new-venv)
+  (put-preferences (list 'pyffi:venv) (list new-venv))
+  (displayln "The preference for venv path is now set to:")
+  (display   "    ")
+  (displayln new-venv))
+
 (define (set-new-platlibdir new-platlibdir)
   (put-preferences (list 'pyffi:platlibdir) (list new-platlibdir))
   (displayln "The preference for platlibdir is now set to:")
@@ -255,12 +267,17 @@
   (displayln new-platlibdir))
 
 (define (handle-runtime-paths path-to-python)
+  (define data       (python-data))
   (define executable (run-python-query path-to-python "import sys; print(sys.executable)"))
   (define prefix     (run-python-query path-to-python "import sys; print(sys.base_prefix)"))
+  (define pyver      (run-python-query path-to-python "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"))
   (define platlibdir (run-python-query path-to-python "import sysconfig; print(sysconfig.get_config_var('platlibdir'))"))
   (when (and executable (not (equal? executable ""))) (set-new-executable executable))
   (when (and prefix (not (equal? prefix "")))     (set-new-home prefix))
-  (when (and platlibdir (not (equal? platlibdir ""))) (set-new-platlibdir platlibdir)))
+  (when (and pyver (not (equal? pyver "")))       (set-new-pyver pyver))
+  (when (and platlibdir (not (equal? platlibdir ""))) (set-new-platlibdir platlibdir))
+  (when (and data prefix (not (equal? data prefix)))
+    (set-new-venv data)))
 
 (define (configure [path-to-python #f])
   (define executable (get-configuration path-to-python))
@@ -287,7 +304,9 @@
   (show-pref 'pyffi:data       "data      ")
   (show-pref 'pyffi:home       "home      ")
   (show-pref 'pyffi:executable "executable")
+  (show-pref 'pyffi:pyver      "pyver     ")
   (show-pref 'pyffi:platlibdir "platlibdir")
+  (show-pref 'pyffi:venv       "venv      ")
 
   (newline)
   (displayln "Meaning:")
@@ -300,7 +319,9 @@
   (displayln "                from a venv")
   (displayln "    executable: configured Python executable; allows Python to")
   (displayln "                detect and initialise its virtual environment")
-  (displayln "    platlibdir: sysconfig 'platlibdir' (usually 'lib' or 'lib64')"))
+  (displayln "    pyver:      Python major.minor, e.g. 3.12")
+  (displayln "    platlibdir: sysconfig 'platlibdir' (usually 'lib' or 'lib64')")
+  (displayln "    venv:       configured venv root, retained for diagnostics"))
 
 (define usage
   @~a{
