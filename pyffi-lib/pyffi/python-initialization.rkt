@@ -136,9 +136,13 @@
   ;; preference that was deliberately cleared to #f — `get-preference`
   ;; returns #f in that case instead of the default thunk's value,
   ;; and passing #f to `Py_DecodeLocale` crashes Python.
-  (define pyver      (or (get-preference 'pyffi:pyver      (λ () #f)) "3.12"))
   (define platlibdir (or (get-preference 'pyffi:platlibdir (λ () #f)) "lib"))
-  (define venv       (get-preference 'pyffi:venv (λ () #f)))
+  (define executable (get-preference 'pyffi:executable (λ () #f)))
+  (when executable
+    ;; Point Python at the configured interpreter so its normal startup reads
+    ;; pyvenv.cfg, applies include-system-site-packages, and processes .pth
+    ;; files exactly as running that interpreter directly would.
+    (set-PyConfig-program_name! config (decode executable)))
   (set-PyConfig-home!       config (decode home))
   (set-PyConfig-platlibdir! config (decode platlibdir))
   
@@ -163,36 +167,10 @@
 
   (initialize-builtin-constants) ; uses `run`
 
-  ;; Inject the venv's site-packages into sys.path here, while
-  ;; Python is up but no user-level imports have happened yet.
-  ;; Doing it later (e.g. inside post-initialize, where it used
-  ;; to live) is too late: any module imported between initialize
-  ;; and post-initialize — including numpy via initialize-numpy
-  ;; — would silently fail to find its venv-installed package
-  ;; because the venv path isn't on sys.path yet.
-  (inject-venv-path)
-
   ; We can't run the initialization thunks here.
   ; The Python modules are loaded yet.
   #;(run-initialization-thunks))
 
-
-;; Add the configured venv's site-packages directory to sys.path.
-;; No-op when the user has not configured a venv, or when the
-;; expected site-packages directory does not exist (e.g. the venv
-;; was built with a different Python minor version than
-;; pyffi:pyver records).
-(define (inject-venv-path)
-  (define venv-pref  (get-preference 'pyffi:venv  (λ () #f)))
-  (define pyver-pref (get-preference 'pyffi:pyver (λ () "3.12")))
-  (when venv-pref
-    (define sitepkg (string-append venv-pref "/lib/python" pyver-pref "/site-packages"))
-    (when (directory-exists? sitepkg)
-      (define import-site (PyImport_ImportModule "site"))
-      (define sys-mod     (PyImport_ImportModule "sys"))
-      (define sys-path    (PyObject_GetAttrString sys-mod "path"))
-      (PyList_Append sys-path (PyUnicode_FromString sitepkg))
-      (void))))
 
 (define (post-initialize)
   (run-initialization-thunks))
