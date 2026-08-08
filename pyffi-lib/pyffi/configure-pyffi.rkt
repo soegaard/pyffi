@@ -51,6 +51,67 @@
 (define system-configuration-string #f)
 
 
+;; --- Python subprocess environment ------------------------------------------
+;;
+;; This tool shells out to the target Python (`python -m sysconfig`,
+;; `python -c ...`).  When the user names an explicit interpreter, the ambient
+;; PYTHON* variables may belong to a *different* interpreter and misdirect the
+;; one we were told to use.  The confined snap Racket is the motivating case:
+;; it exports its own PYTHONPATH pointing at a bundled 3.12 stdlib, so running
+;; any other Python with `-m` fails with "Could not import runpy module".  When
+;; an explicit path is given we therefore scrub these variables for our
+;; subprocesses.  When auto-detecting we leave the environment alone: the
+;; `python3` found on PATH belongs with the surrounding environment.
+(define scrub-python-env? (make-parameter #f))
+
+(define scrubbed-python-vars (list #"PYTHONHOME" #"PYTHONPATH" #"PYTHONSTARTUP"))
+
+(define (python-subprocess-env)
+  (define src (current-environment-variables))
+  (apply make-environment-variables
+         (append*
+          (for/list ([name (in-list (environment-variables-names src))]
+                     #:unless (member name scrubbed-python-vars))
+            (list name (environment-variables-ref src name))))))
+
+(define (with-python-subprocess-env thunk)
+  (if (scrub-python-env?)
+      (parameterize ([current-environment-variables (python-subprocess-env)])
+        (thunk))
+      (thunk)))
+
+;; --- snap-aware diagnosis ---------------------------------------------------
+;;
+;; snapd sets SNAP/SNAP_NAME for a running snap.  A confined snap Racket runs
+;; in its own mount namespace and cannot see paths like /opt or /usr/local, so
+;; a Python installed there is invisible to it.  Detect that and print a
+;; targeted hint instead of a bare "command failed".
+(define (running-in-snap?)
+  (and (or (getenv "SNAP") (getenv "SNAP_NAME")) #t))
+
+(define (report-python-unreachable path-to-python)
+  (define visible?
+    (or (not path-to-python) (file-exists? path-to-python)))
+  (cond
+    [(and (running-in-snap?) (not visible?))
+     (newline)
+     (displayln "The Python executable is not visible from inside this Racket.")
+     (displayln "This is the confined snap Racket: it runs in its own mount")
+     (displayln "namespace and can only reach your home directory, not locations")
+     (displayln "such as /opt or /usr/local.  Either:")
+     (displayln "  * use a non-snap Racket (it can see the whole filesystem), or")
+     (displayln "  * point pyffi at a Python that lives under your home directory.")
+     (newline)]
+    [(running-in-snap?)
+     (newline)
+     (displayln "You appear to be running the confined snap Racket.  It exports")
+     (displayln "its own PYTHONPATH/PYTHONHOME and runs in a restricted namespace,")
+     (displayln "which can stop an external Python from running.  A non-snap Racket")
+     (displayln "avoids this.")
+     (newline)]
+    [else (void)]))
+
+
 (define (get-configuration [given-path-to-python #f])
   (define path-to-python
     (or given-path-to-python
@@ -87,12 +148,15 @@
   (define command (string-append str-path " -m sysconfig"))
   (set! system-configuration-string
     (with-output-to-string
-      (λ() (set! success (system command)))))
+      (λ() (with-python-subprocess-env
+             (λ () (set! success (system command)))))))
   (unless success
-    (displayln "An error occurred while running the command:")
-    (display   "    ")
-    (displayln command)
-    (displayln "Configuration of `pyffi` failed.")
+    (parameterize ([current-output-port (current-error-port)])
+      (displayln "An error occurred while running the command:")
+      (display   "    ")
+      (displayln command)
+      (report-python-unreachable path-to-python)
+      (displayln "Configuration of `pyffi` failed."))
     (exit 2))
 
   ; (displayln system-configuration-string)
@@ -221,7 +285,8 @@
                        (path->string path-to-python)
                        (or path-to-python "python3")))
   (define cmd (string-append str-path " -c " (format "~s" code)))
-  (define out (with-output-to-string (λ () (system cmd))))
+  (define out (with-output-to-string
+                (λ () (with-python-subprocess-env (λ () (system cmd))))))
   (string-trim out))
 
 (define (handle-data path-to-python)
@@ -271,12 +336,15 @@
     (set-new-venv data)))
 
 (define (configure [path-to-python #f])
-  (get-configuration path-to-python)
-  (handle-libdir path-to-python)
-  (newline)
-  (handle-data   path-to-python)
-  (newline)
-  (handle-home-and-ver path-to-python))
+  ;; Scrub PYTHON* variables for our subprocesses only when the user named an
+  ;; explicit interpreter; auto-detection leaves the ambient environment as is.
+  (parameterize ([scrub-python-env? (and path-to-python #t)])
+    (get-configuration path-to-python)
+    (handle-libdir path-to-python)
+    (newline)
+    (handle-data   path-to-python)
+    (newline)
+    (handle-home-and-ver path-to-python)))
 
 (define (show)
   ;; Print every preference this package reads, with a short legend.
