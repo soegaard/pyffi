@@ -42,6 +42,16 @@
              "and no natipkg companion (e.g. pyffi-aarch64-linux-natipkg) is installed."
              "Either install a natipkg companion to use a bundled Python, or run"
              "`raco pyffi configure /path/to/python3` to point at a system install.")
+          "\n")
+          (current-continuation-marks))))
+
+(define executable (get-preference 'pyffi:executable (λ () #f)))
+(when (and (not executable)
+           (get-preference 'pyffi:venv (λ () #f)))
+  (raise (exn:fail:pyffi:not-configured
+          (string-join
+           '("pyffi's virtual-environment configuration predates executable tracking."
+             "Rerun `raco pyffi configure /path/to/python3` before using pyffi.")
            "\n")
           (current-continuation-marks))))
 
@@ -137,7 +147,6 @@
   ;; returns #f in that case instead of the default thunk's value,
   ;; and passing #f to `Py_DecodeLocale` crashes Python.
   (define platlibdir (or (get-preference 'pyffi:platlibdir (λ () #f)) "lib"))
-  (define executable (get-preference 'pyffi:executable (λ () #f)))
   (when executable
     ;; Point Python at the configured interpreter so its normal startup reads
     ;; pyvenv.cfg, applies include-system-site-packages, and processes .pth

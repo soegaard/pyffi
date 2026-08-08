@@ -33,3 +33,15 @@
    (path->directory-path
     (simplify-path (string->path (run/string "__import__('sys').prefix"))))
    configured-venv))
+
+;; CI creates these marker modules in the base interpreter, the venv and a
+;; directory exposed only by a .pth file. Together they exercise the path
+;; semantics that a manually appended site-packages directory cannot provide.
+(when (getenv "PYFFI_TEST_VENV")
+  (check-equal? (run/string "__import__('pyffi_precedence_marker').SOURCE")
+                "venv")
+  (check-equal?
+   (run/string
+    "'absent' if __import__('importlib.util', fromlist=['util']).find_spec('pyffi_base_only_marker') is None else 'present'")
+   "absent")
+  (check-equal? (run/string "__import__('pyffi_pth_marker').SOURCE") "pth"))
