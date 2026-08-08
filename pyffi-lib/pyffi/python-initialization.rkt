@@ -147,12 +147,15 @@
   ;; returns #f in that case instead of the default thunk's value,
   ;; and passing #f to `Py_DecodeLocale` crashes Python.
   (define platlibdir (or (get-preference 'pyffi:platlibdir (λ () #f)) "lib"))
-  (when executable
-    ;; Point Python at the configured interpreter so its normal startup reads
-    ;; pyvenv.cfg, applies include-system-site-packages, and processes .pth
-    ;; files exactly as running that interpreter directly would.
-    (set-PyConfig-program_name! config (decode executable)))
-  (set-PyConfig-home!       config (decode home))
+  (cond
+    [executable
+     ;; Point Python at the configured interpreter and leave `home` unset.
+     ;; PYTHONHOME overrides pyvenv.cfg detection; without it, Python derives
+     ;; the base installation and virtual-environment prefixes normally.
+     (set-PyConfig-program_name! config (decode executable))]
+    [else
+     ;; A bundled natipkg has no external executable to discover from.
+     (set-PyConfig-home! config (decode home))])
   (set-PyConfig-platlibdir! config (decode platlibdir))
   
   #;(let ([pythonpath (getenv "PYTHONPATH")])
